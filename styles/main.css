@@ -27,7 +27,7 @@
 }
 
 #header-tagline{
-    padding-left: 5em;
+    text-align: end;
 }
 
 #logo-image{
@@ -42,4 +42,20 @@ body{
     display: flex;
     flex-direction: column;
     background-color: silver !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+a{
+    text-decoration: none;
+}
+
+.nav-link {
+    margin-left: 1em;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.nav-link:hover{
+    background-color: rgb(212, 204, 204);
 }
