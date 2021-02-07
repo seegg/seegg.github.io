@@ -3,6 +3,12 @@
     font-family: 'Montserrat', sans-serif;
 }
 
+.thin-rounded-border{
+    border-radius: 5px;
+    border-style: solid;
+    border-width: thin;
+}
+
 #blog-header{
     /* background-color: rgb(134, 184, 184); */
     width: 100%;
@@ -20,12 +26,6 @@
     border-color: darkgray;
 }
 
-.thin-rounded-border{
-    border-radius: 5px;
-    border-style: solid;
-    border-width: thin;
-}
-
 #header-tagline{
     text-align: end;
 }
@@ -41,7 +41,7 @@
 body{
     display: flex;
     flex-direction: column;
-    background-color: silver !important;
+    background-color: silver;
     margin: 0 !important;
     padding: 0 !important;
 }
@@ -56,6 +56,8 @@ a{
     font-weight: bold;
 }
 
+
 .nav-link:hover{
     background-color: rgb(212, 204, 204);
 }
+
