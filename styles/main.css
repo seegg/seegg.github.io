@@ -1,3 +1,20 @@
 :root{
     background-color: teal;
+    font-size: 16px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#blog-header{
+    background-color: rgb(134, 184, 184);
+    align-self: center;
+    width: 80%;
+    min-width: 40em;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
 }
