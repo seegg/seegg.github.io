@@ -5,11 +5,12 @@
 }
 
 #blog-header{
-    background-color: rgb(134, 184, 184);
+    /* background-color: rgb(134, 184, 184); */
     align-self: center;
-    width: 80%;
+    width: 70%;
     min-width: 40em;
     border-radius: 5px;
+    justify-content: center;
     display: flex;
     flex-direction: row;
 }
@@ -17,6 +18,10 @@
 #blog-title{
     display: flex;
     flex-direction: row;
+}
+
+#header-tagline{
+    padding-left: 5em;
 }
 
 #logo-image{
