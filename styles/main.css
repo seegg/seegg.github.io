@@ -62,6 +62,7 @@ a{
 main{
     max-width: 50em;
     margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 article{
