@@ -59,6 +59,7 @@ a{
 
 #index-main{
     max-width: 50em;
+    margin-top: 50px;
 
 }
 
@@ -66,4 +67,8 @@ a{
     margin: 10px;
     margin-top: 5px;
     margin-top: 5px;
+}
+
+.blog-entry-title{
+    margin-left: 10px;
 }
