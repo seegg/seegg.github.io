@@ -74,6 +74,11 @@ article{
     margin-top: 5px;
 }
 
+.a-padding-1{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 .blog-entry-title{
     margin-left: 10px;
 }
@@ -89,3 +94,5 @@ article{
 .alt-colour-2{
     background-color: var(--alt-colour-2);
 }
+
+
