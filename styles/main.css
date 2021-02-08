@@ -1,6 +1,8 @@
 :root{
     font-size: 16px;
     font-family: 'Montserrat', sans-serif;
+    --alt-colour-1: lightgray;
+    --alt-colour-2: rgb(219, 211, 211);
 }
 
 .thin-rounded-border{
@@ -57,10 +59,13 @@ a{
     background-color: rgb(212, 204, 204);
 }
 
-#index-main{
+main{
     max-width: 50em;
     margin-top: 50px;
+}
 
+article{
+    border-radius: 5px;
 }
 
 .a-margin-1{
@@ -71,4 +76,16 @@ a{
 
 .blog-entry-title{
     margin-left: 10px;
+}
+
+.text-summary{
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+}
+
+.alt-colour-1{
+    background-color: var(--alt-colour-1);
+}
+
+.alt-colour-2{
+    background-color: var(--alt-colour-2);
 }
