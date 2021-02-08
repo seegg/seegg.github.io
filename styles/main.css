@@ -101,3 +101,11 @@ article{
     background-color: var(--alt-colour-2);
 }
 
+.summary:hover{
+    position: relative;
+    left: 2px;
+    top: -2px;
+    box-shadow: 5px 5px 2px #888888;
+}
+
+
