@@ -39,7 +39,7 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: silver;
+   /* background-color: silver;*/
     margin: 0 !important;
     padding: 0 !important;
 }
@@ -63,7 +63,7 @@ main{
     max-width: 50em;
     margin-top: 50px;
     margin-bottom: 50px;
-    background-color: var(--alt-colour-1);
+    /*background-color: var(--alt-colour-1);*/
 }
 
 #blog-header{
