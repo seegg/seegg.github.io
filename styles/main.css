@@ -53,6 +53,7 @@ a{
     margin-left: 1em;
     border-radius: 3px;
     font-weight: bold;
+    letter-spacing: 0.2em;
 }
 
 
@@ -73,7 +74,7 @@ main{
 
 article{
     border-radius: 5px;
-    color: gray;
+    color: rgb(100, 100, 100);
 }
 
 .a-margin-1{
