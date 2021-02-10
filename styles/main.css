@@ -1,6 +1,7 @@
 :root{
     font-size: 16px;
     font-family: 'Montserrat', sans-serif;
+    overflow-y: scroll;
     --alt-colour-1: rgb(241, 241, 241);
     --alt-colour-2: silver;
 }
