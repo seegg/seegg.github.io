@@ -29,6 +29,8 @@
     flex-direction: row;
     /*border-color: darkgray;*/
 }
+
+
 #logo-image{
     border-radius: 50%;
     width: 100px;
@@ -146,5 +148,18 @@ footer{
 .med-thumb{
     width: 150px;
     height: auto;
+}
+
+.med-image{
+    width: 300px;
+    height: auto;
+}
+
+.green-text{
+    color: rgb(59, 109, 59);
+}
+
+.round-border{
+    border-radius: 50%;
 }
 
