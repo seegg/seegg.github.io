@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HTML CSS Javascript</title>
+    <link href="../../styles/main.css" rel="stylesheet" type="text/css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet"> 
+    <link href="../../images/logo.png" rel="icon" type="image/png">
+  </head>
+  <body>
+    <header id="blog-header">
+      <div id="blog-title" >
+        <img id="logo-image" class="thin-rounded-border" src='../../images/logo.png' alt="blog logo">
+        <div>
+          <div>
+            <h1 id="title-text">Welcome to my ramblings</h1>
+           <!-- <h6 id="header-tagline">. . . a place to collect my thoughts during the Dev Academy course</h6> -->
+        </div>
+        <nav>
+          <a class="nav-link" href="../../index.html">HOME</a>
+          <a class="nav-link" href="../../core.html">CORE</a>
+          <a class="nav-link" href="../../tech.html">TECH</a>
+        </nav>
+        </div>
+      </div>
+    </header>
+    <main>
+        <article class="blog-entry a-padding-1">
+            <header class="blog-header blog-entry-title">
+                <h3>HTML CSS and Javascript</h3>
+            </header>
+            <div style="display: flex; flex-direction: column;">
+                <p>
+                    In a webpage HTML provides the structure and CSS provides the presentation. HTML tells you where everything goes and what item belongs to which part while css tells each item how it looks. Colour, size and position are just a few of the ways css can affect the presentation. Like a house, html would be the structure while css is the paint.
+                </p>
+
+                <p>
+                    A program is a set of instructions that tells the computer what to do and control flow defines when each instruction is carried out. Usually the instructions are carried out sequentially like going from instructions 1 to 10, but there are sections where conditions are checked which can jump around the instruction set depending on the outcome. An example of this is the for loop, for example instructions 1 to 5 deals with washing a bunch of dishes.
+                </p>
+
+                <ol>
+                    <li>Pick up a dirty dish.</li>
+                    <li>Scrub the dish.</li>
+                    <li>Rinse the dish.</li>
+                    <li>Put away the dish.</li>
+                    <li>Check if there are any dirty dishes left, if there are goto 1 else goto 6.</li>
+                    <li>Relax.</li>
+                </ol>
+
+                <p>
+                    In this case, the instructions will never move past 5 until all the dishes are clean and put away.
+                </p>
+                <img class="med-image center" src="../../images/dishes.png" alt="dishes with bubbles">
+
+                <p>
+                    The Document Object Model or DOM is a representation of a webpage, it takes the content and structures it in such a way that programs are able to interact with it. One way to use the DOM is adding and removing content from a page such as finding all items of a certain type and putting a border around them. All of this and more can be accomplish through javascript.
+                </p>
+
+                <p>
+                    To access data in an array you provide it the index such as asking for the data in position 3 of the array. Do keep in mind that array indexes start counting from 0 so to get the data on position 3 the index is 2 <span class="green-text"><i>array[2]</i></span> and on position 1 the index is 0 <span class="green-text"><i>array[0]</i></span>. Data in objects is associated with keys, and to access the data a key is provided to the object in either dot <span class="green-text"><i>object.key</i></span> or bracket <span class="green-text"><i>object[key]</i></span> notations.
+                </p>
+
+                <p>
+                    Functions are a set of related instructions grouped together allowing them to be reused. Going back to the dishwashing example earlier, rather than writing the same instructions everytime you want to wash some dishes you can instead group those instructions together in a function called washDishes and call it anytime dishes need washing.
+                </p>
+                
+            </div>
+        </article>
+    </main>
+  </body>
+</html>
