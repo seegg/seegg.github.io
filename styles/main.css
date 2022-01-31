@@ -1,12 +1,27 @@
 *{
   margin: 0;
   padding: 0;
-  overflow-y: auto;
   max-width: 100%;
+  overflow-x: hidden;
+  background-color: black;
 }
 
-.container{
+section .intro{
   width: 100vw;
-  height: 100vh;
-  perspective: 10px;
+  height: 100vw;
+  position: relative;
+}
+
+.intro .background{
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.intro .foreground{
+  position: absolute;
+  background: none;
+  transform: translateY(-50%);
+  left: 50%;
+  transform: translateX(-50%);
 }
