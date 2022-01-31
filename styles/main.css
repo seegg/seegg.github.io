@@ -1,0 +1,12 @@
+*{
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  max-width: 100%;
+}
+
+.container{
+  width: 100vw;
+  height: 100vh;
+  perspective: 10px;
+}
