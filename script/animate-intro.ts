@@ -1,30 +1,33 @@
-//script to animate the intro splash screen
+//script to animate the intro screen.
+
 const container: HTMLDivElement = document.getElementById('intro-container') as HTMLDivElement;
 let bird: HTMLElement = document.getElementById('intro-bird') as HTMLImageElement;
 let birdParent: HTMLElement = document.getElementById('intro-sunset') as HTMLImageElement;
 
-type loadCheck = (value: unknown) => void;
+type imgLoadCheck = (value: unknown) => void;
 
-let birdResolve: loadCheck;
-const checkBird = new Promise(resolve => { birdResolve = resolve });
-let birdParentResolve: loadCheck;
-const checkBirdParent = new Promise(resolve => { birdParentResolve = resolve });
-
+//get the images for the animation.
 const birdImg = new Image();
 birdImg.src = "https://seegg.github.io/images/bird-d.png";
 birdImg.alt = "bird";
-birdImg.onload = () => {
-  birdResolve('bird loaded');
-}
 
 const birdParentImg = new Image();
 birdParentImg.src = "https://seegg.github.io/images/sunset.png";
 birdParentImg.alt = "sunset with birds";
-birdParentImg.onload = () => {
-  birdParentResolve('bird parent loaded');
-}
 
-Promise.all([checkBird, checkBirdParent])
+//assign promises to each image, call resolve in img onload event.
+const imgResolves = [birdImg, birdParentImg].map(img => {
+  let res: imgLoadCheck;
+  const imgPromise = new Promise(resolve => { res = resolve });
+  img.onload = () => {
+    res('loaded');
+  }
+  return imgPromise;
+})
+
+//check that both image is loaded and then replace the placeholders
+//and add classes to the img elements to trigger the animation.
+Promise.all(imgResolves)
   .then(() => {
     container.replaceChild(birdParentImg, birdParent);
     container.replaceChild(birdImg, bird);
@@ -32,18 +35,19 @@ Promise.all([checkBird, checkBirdParent])
     birdParent.classList.add('background');
     bird = birdImg;
     bird.classList.add('foreground');
-
   }).catch(err => console.error(err));
 
-
-document.addEventListener('scroll', () => {
+//call the resize image function in scroll and resize events.
+document.onscroll = () => {
   changeBirdSize();
-});
+}
 
 window.onresize = () => {
   changeBirdSize();
 }
 
+//chnage the size of the foreground img base on the ratio of scrolltop
+//and the background image's height.
 const changeBirdSize = () => {
   if (!bird || !birdParent) return;
   const distFromTop = document.documentElement.scrollTop;
@@ -52,11 +56,3 @@ const changeBirdSize = () => {
   bird.style.width = (sunBoundingRect.width * (heightRatio)).toString() + 'px';
   bird.style.height = (sunBoundingRect.height * (heightRatio)).toString() + 'px';
 }
-
-// function debounce(callback: (...param: any) => void, wait = 300) {
-//   let timer: number;
-//   return function (...args: any) {
-//     clearTimeout(timer);
-//     timer = setTimeout(() => { callback(...args) }, wait);
-//   }
-// }
