@@ -3,25 +3,38 @@
   padding: 0;
   max-width: 100%;
   overflow-x: hidden;
+}
+
+body{
   background-color: black;
 }
 
 section .intro{
   width: 100vw;
-  height: 100vw;
-  position: relative;
+  height: 100vh;
 }
 
 .intro .background{
+  width: 100%;
   position: absolute;
   left: 0;
   top: 0;
+  object-fit: contain;
 }
 
 .intro .foreground{
+  width: 100%;
   position: absolute;
-  background: none;
-  transform: translateY(-50%);
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  top: 0;
+  object-fit: contain;
+}
+
+.intro-text{
+  z-index: 10;
+}
+
+
+main{
+  min-height: 100vh;
 }
