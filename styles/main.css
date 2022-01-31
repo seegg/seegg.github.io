@@ -5,6 +5,14 @@
   overflow-x: hidden;
 }
 
+@keyframes slide-in-right{
+  0%{
+    transform:  translateX(100%) scale(2, 2);
+  }100%{
+    transform:  translateX(0) scale(1, 1);
+  }
+}
+
 body{
   background-color: black;
 }
@@ -23,6 +31,7 @@ section .intro{
 }
 
 .intro .foreground{
+  animation: 1s ease-out 0s 1 slide-in-right;
   width: 100%;
   position: absolute;
   left: 0;
