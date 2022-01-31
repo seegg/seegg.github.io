@@ -1,6 +1,32 @@
 "use strict";
-const bird = document.getElementById('intro-bird');
-const birdParent = document.getElementById('intro-sunset');
+const container = document.getElementById('intro-container');
+let bird = document.getElementById('intro-bird');
+let birdParent = document.getElementById('intro-sunset');
+let birdResolve;
+const checkBird = new Promise(resolve => { birdResolve = resolve; });
+let birdParentResolve;
+const checkBirdParent = new Promise(resolve => { birdParentResolve = resolve; });
+const birdImg = new Image();
+birdImg.src = "https://seegg.github.io/images/bird-d.png";
+birdImg.alt = "bird";
+birdImg.onload = () => {
+    birdResolve('bird loaded');
+};
+const birdParentImg = new Image();
+birdParentImg.src = "https://seegg.github.io/images/sunset.png";
+birdParentImg.alt = "sunset with birds";
+birdParentImg.onload = () => {
+    birdParentResolve('bird parent loaded');
+};
+Promise.all([checkBird, checkBirdParent])
+    .then(() => {
+    container.replaceChild(birdParentImg, birdParent);
+    container.replaceChild(birdImg, bird);
+    birdParent = birdParentImg;
+    birdParent.classList.add('background');
+    bird = birdImg;
+    bird.classList.add('foreground');
+}).catch(err => console.error(err));
 document.addEventListener('scroll', () => {
     changeBirdSize();
 });
@@ -16,10 +42,3 @@ const changeBirdSize = () => {
     bird.style.width = (sunBoundingRect.width * (heightRatio)).toString() + 'px';
     bird.style.height = (sunBoundingRect.height * (heightRatio)).toString() + 'px';
 };
-function debounce(callback, wait = 300) {
-    let timer;
-    return function (...args) {
-        clearTimeout(timer);
-        timer = setTimeout(() => { callback(...args); }, wait);
-    };
-}

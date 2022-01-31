@@ -30,6 +30,12 @@ body{
 section .intro{
   width: 100vw;
   height: 100vh;
+  text-align: center;
+}
+
+.intro * {
+  user-select: none;
+  pointer-events: none;
 }
 
 .intro .background{
@@ -52,8 +58,12 @@ section .intro{
 }
 
 .intro-text{
+  height: 100%;
+  top: 50%;
+  transform: translateY(50%);
   z-index: 10;
-  
+  color: #FFF;
+  font-size: 5rem;
 }
 
 
