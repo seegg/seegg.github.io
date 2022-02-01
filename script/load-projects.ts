@@ -4,11 +4,12 @@ import { Project } from "./types";
 const contentWrapper = document.getElementById('content');
 const imagePath = location.href + "images/";
 
+/**
+ * load all the projects for display.
+ */
 export const loadProjects = () => {
   if (contentWrapper) {
-    console.log(getProjects());
     getProjects().forEach(project => {
-      console.log('p', project);
       const view = createProjectComponent(project);
       contentWrapper.appendChild(view);
     })
@@ -17,7 +18,11 @@ export const loadProjects = () => {
 
 
 
-
+/**
+ * Create the product card to display a project.
+ * @param project 
+ * @returns 
+ */
 const createProjectComponent = (project: Project): HTMLElement => {
   //outer article 
   const projectContainer = document.createElement('article');
@@ -25,7 +30,7 @@ const createProjectComponent = (project: Project): HTMLElement => {
 
   //link to repo with github logo
   const repoLink = document.createElement('nav');
-  repoLink.classList.add('github-link');
+  repoLink.classList.add('nav-project');
 
   const repoAnchor = document.createElement('a');
   repoAnchor.href = project.repo || '';
@@ -39,13 +44,24 @@ const createProjectComponent = (project: Project): HTMLElement => {
   //container for the project details
   const secondArticle = document.createElement('article');
   secondArticle.classList.add('project');
+  secondArticle.onpointerenter = () => {
+    secondArticle.classList.add('project-select');
+    repoLink.classList.add('nav-project-moveY');
+  }
+  secondArticle.onpointerleave = () => {
+    secondArticle.classList.remove('project-select');
+    repoLink.classList.remove('nav-project-moveY');
+  }
+  secondArticle.onpointercancel = () => {
+    secondArticle.classList.remove('project-select');
+    repoLink.classList.remove('nav-project-moveY');
+  }
 
   // image for the project
   const imgWrapper = document.createElement('div');
   imgWrapper.classList.add('project-img-container');
   const projectImg = new Image();
   projectImg.src = imagePath + project.image;
-  console.log(projectImg.src);
 
   projectImg.classList.add('project-img');
   imgWrapper.appendChild(projectImg);

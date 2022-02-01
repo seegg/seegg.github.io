@@ -1,6 +1,9 @@
 //script to animate the intro screen.
 
-export const animateIntro = () => {
+export const animate = () => {
+
+  //The intro screen.
+
   const container: HTMLDivElement = document.getElementById('intro-container') as HTMLDivElement;
   const introContainer = document.getElementById('intro-container');
   let bird: HTMLElement = document.getElementById('intro-bird') as HTMLImageElement;
@@ -70,4 +73,5 @@ export const animateIntro = () => {
     bird.style.width = (sunBoundingRect.width * (heightRatio)).toString() + 'px';
     bird.style.height = (sunBoundingRect.height * (heightRatio)).toString() + 'px';
   }
+
 }

@@ -1,5 +1,5 @@
-import { animateIntro } from "./animate";
+import { animate } from "./animate";
 import { loadProjects } from './load-projects';
 
-animateIntro();
+animate();
 loadProjects();

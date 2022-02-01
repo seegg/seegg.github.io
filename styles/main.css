@@ -113,19 +113,20 @@ main{
   justify-content: center;
 }
 
-.github-link{
+.nav-project{
   display: flex;
   justify-content: end;
   margin: 10px;
   margin-bottom: 2px;
+  transition: transform 0.2s ease-in;
+}
+
+.nav-project-moveY{
+  transform: translateY(-5px);
 }
 
 .project-container{
   transition: transform 0.15s ease-in;
-}
-
-.project-container:hover{
-  transform: translate(0px, -5px);
 }
 
 .project{
@@ -141,10 +142,10 @@ main{
   flex-direction: column;
   align-items: center;
   box-shadow: 0;
-  transition: transform 0.15s ease-in;
+  transition: transform 0.2s ease-in;
 }
 
-.project:hover{
+.project-select{
   box-shadow: -1px 1px 1px 0px hsl(0, 0%, 50%),-2px 2px 0px 0px hsl(0, 0%, 70%),-3px 3px 0px 0px hsl(0, 0%, 90%), -5px 5px 1px 0px hsl(0, 0%, 100%);
   /* box-shadow: -5px 0px hsl(0, 0%, 80%), -5px 5px hsl(0, 0%, 50%) ; */
   transform: translate(5px, -5px);
@@ -208,6 +209,7 @@ main{
 .github-logo:hover{
   opacity: 1;
 }
+
 
 @media screen and (min-width: 800px) {
   .content{
