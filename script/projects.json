@@ -15,6 +15,14 @@
       "url": "https://seegg.github.io/tournament-bracket",
       "image": "bracket.png",
       "description": "A single elimination style bracket generator made using react."
+    },
+    {
+      "name": "Bounce",
+      "title": "Bounce",
+      "repo": "https://github.com/seegg/bounce",
+      "url": "https://seegg.github.io/bounce",
+      "image": "bounce.png",
+      "description": "Animate colliding balls in a canvas with inellastic collision. upload or link images to decorate the balls."
     }
   ]
 }

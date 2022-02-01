@@ -12,7 +12,7 @@
   padding: 0;
 }
 
-
+/* slind in animatin with a slight 'bounce' at the end */
 @keyframes slide-in-right{
   0%{
     transform:  translateX(100%) scale(1, 1);
@@ -125,7 +125,7 @@ main{
 }
 
 .project-container:hover{
-  transform: translate(5px, -5px);
+  transform: translate(0px, -5px);
 }
 
 .project{
@@ -146,7 +146,8 @@ main{
 
 .project:hover{
   box-shadow: -1px 1px 1px 0px hsl(0, 0%, 50%),-2px 2px 0px 0px hsl(0, 0%, 70%),-3px 3px 0px 0px hsl(0, 0%, 90%), -5px 5px 1px 0px hsl(0, 0%, 100%);
-  position: relative;
+  /* box-shadow: -5px 0px hsl(0, 0%, 80%), -5px 5px hsl(0, 0%, 50%) ; */
+  transform: translate(5px, -5px);
 }
 
 .project-img{
