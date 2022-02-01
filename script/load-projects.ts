@@ -2,16 +2,20 @@ import { getProjects } from "./data";
 import { Project } from "./types";
 
 const contentWrapper = document.getElementById('content');
+const imagePath = location.href + "images/";
 
 export const loadProjects = () => {
   if (contentWrapper) {
-    console.log('loading projects');
+    console.log(getProjects());
     getProjects().forEach(project => {
+      console.log('p', project);
       const view = createProjectComponent(project);
       contentWrapper.appendChild(view);
     })
   }
 }
+
+
 
 
 const createProjectComponent = (project: Project): HTMLElement => {
@@ -37,8 +41,11 @@ const createProjectComponent = (project: Project): HTMLElement => {
 
   // image for the project
   const imgWrapper = document.createElement('div');
+  imgWrapper.classList.add('project-img-container');
   const projectImg = new Image();
-  projectImg.src = project.img;
+  projectImg.src = imagePath + project.image;
+  console.log(projectImg.src);
+
   projectImg.classList.add('project-img');
   imgWrapper.appendChild(projectImg);
   secondArticle.appendChild(imgWrapper);
