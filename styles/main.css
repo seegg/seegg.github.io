@@ -37,6 +37,16 @@ body{
   background-color: black;
 }
 
+a {
+  text-decoration: inherit;
+  color: inherit;
+}
+
+a:visited {
+  text-decoration: inherit;
+  color: inherit;
+}
+
 
 section .intro{
   width: 100vw;
@@ -95,9 +105,17 @@ main{
   justify-content: center;
 }
 
+.github-link{
+  display: flex;
+  justify-content: end;
+  margin: 10px;
+  margin-bottom: 2px;
+}
+
 .project{
   position: relative;
   margin: 10px;
+  margin-top: 0;
   padding: 10px;
   width: 300px;
   height: 400px;
@@ -130,12 +148,14 @@ main{
 }
 
 .project-description{
+  max-height: 120px;
   margin-top: 5px;
   width: 100%;
 }
 
 .project-description > p{
   color: hsl(0, 0%, 70%);
+  text-overflow: ellipsis;
 }
 
 .project-img-container{
