@@ -24,6 +24,7 @@ const imgResolves = [birdImg, birdParentImg].map(img => {
 });
 Promise.all(imgResolves)
     .then(() => {
+    console.log('here');
     container.replaceChild(birdParentImg, birdParent);
     container.replaceChild(birdImg, bird);
     birdParent = birdParentImg;
@@ -31,7 +32,7 @@ Promise.all(imgResolves)
     bird = birdImg;
     bird.classList.add('foreground');
     changeIntroSectionHeight(birdParent.getBoundingClientRect().height);
-    document.getElementById('content').style.display = 'flex';
+    document.getElementById('content').classList.add('content-visible');
 }).catch(err => console.error(err));
 document.onscroll = () => {
     changeBirdSize();

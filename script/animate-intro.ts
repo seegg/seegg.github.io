@@ -39,6 +39,7 @@ const imgResolves = [birdImg, birdParentImg].map(img => {
 //and add classes to the img elements to trigger the animation.
 Promise.all(imgResolves)
   .then(() => {
+    console.log('here');
     container.replaceChild(birdParentImg, birdParent);
     container.replaceChild(birdImg, bird);
     birdParent = birdParentImg;
@@ -46,7 +47,7 @@ Promise.all(imgResolves)
     bird = birdImg;
     bird.classList.add('foreground');
     changeIntroSectionHeight(birdParent.getBoundingClientRect().height);
-    document.getElementById('content')!.style.display = 'flex';
+    document.getElementById('content')!.classList.add('content-visible');
   }).catch(err => console.error(err));
 
 //call the resize image function in scroll and resize events.
