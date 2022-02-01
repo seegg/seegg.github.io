@@ -1,0 +1,11 @@
+{
+  "projects": [
+    {
+      "name": "JS Date Picker",
+      "title": "JS Date Picker",
+      "url": "https://github.com/seegg/date-picker",
+      "image": "",
+      "description": "A date picker created using vanilla Javascript."
+    }
+  ]
+}
