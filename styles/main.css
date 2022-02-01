@@ -186,6 +186,15 @@ main{
   opacity: 1;
 }
 
+.github-logo{
+  opacity: 0.5;
+  transition: opacity 0.25s ease-in;
+}
+
+.github-logo:hover{
+  opacity: 1;
+}
+
 @media screen and (min-width: 800px) {
   .content{
     max-width: 660px;
