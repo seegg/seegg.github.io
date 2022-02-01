@@ -3,8 +3,9 @@
     {
       "name": "JS Date Picker",
       "title": "JS Date Picker",
+      "repo": "",
       "url": "https://github.com/seegg/date-picker",
-      "image": "",
+      "image": "https://raw.githubusercontent.com/seegg/seegg.github.io/main/images/brain.png",
       "description": "A date picker created using vanilla Javascript."
     }
   ]

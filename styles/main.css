@@ -169,7 +169,7 @@ main{
 }
 
 .content{
-  opacity: 0;
+  opacity: 1;
   padding: 10px;
   max-width: 340px;
   height: fit-content;
