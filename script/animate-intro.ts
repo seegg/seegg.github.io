@@ -1,10 +1,20 @@
 //script to animate the intro screen.
 
+const imgSize = { width: 1920, height: 1273 };
 const container: HTMLDivElement = document.getElementById('intro-container') as HTMLDivElement;
+const introContainer = document.getElementById('intro-container');
 let bird: HTMLElement = document.getElementById('intro-bird') as HTMLImageElement;
 let birdParent: HTMLElement = document.getElementById('intro-sunset') as HTMLImageElement;
 
 type imgLoadCheck = (value: unknown) => void;
+
+
+//set the height for the placeholder element.
+
+const changeIntroSectionHeight = (height: number) => {
+  if (introContainer) introContainer.style.height = height + 'px';
+};
+// changeIntroSectionHeight(window.screenX * (imgSize.height / imgSize.width));
 
 //get the images for the animation.
 const birdImg = new Image();
@@ -35,6 +45,8 @@ Promise.all(imgResolves)
     birdParent.classList.add('background');
     bird = birdImg;
     bird.classList.add('foreground');
+    changeIntroSectionHeight(birdParent.getBoundingClientRect().height);
+    document.getElementById('content')!.style.display = 'flex';
   }).catch(err => console.error(err));
 
 //call the resize image function in scroll and resize events.
@@ -44,6 +56,7 @@ document.onscroll = () => {
 
 window.onresize = () => {
   changeBirdSize();
+  changeIntroSectionHeight(birdParent.getBoundingClientRect().height);
 }
 
 //chnage the size of the foreground img base on the ratio of scrolltop

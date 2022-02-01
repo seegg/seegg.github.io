@@ -1,9 +1,13 @@
-*{
+* , *:before, *:after{ 
+  box-sizing:border-box; 
+  -moz-box-sizing:border-box; 
+  -webkit-box-sizing:border-box; 
+  -ms-box-sizing:border-box;
+  overflow-x: hidden;
   margin: 0;
   padding: 0;
-  max-width: 100%;
-  overflow-x: hidden;
 }
+
 
 @keyframes slide-in-right{
   0%{
@@ -29,9 +33,10 @@ body{
   background-color: black;
 }
 
+
 section .intro{
   width: 100vw;
-  height: 100vh;
+  max-width: 100%;
   display: flex;
   justify-content: center;
 }
@@ -41,9 +46,15 @@ section .intro{
   pointer-events: none;
 }
 
+@media screen and (min-width: 370px){
+  section .intro{
+    height:100vh;
+  }
+}
+
 .intro .background{
+  max-width: 100%;
   animation: 1.5s ease-out 0s 1 fade-in;
-  width: 100%;
   position: absolute;
   left: 0;
   top: 0;
@@ -53,6 +64,7 @@ section .intro{
 }
 
 .intro .foreground{
+  max-width: 100%;
   animation: 1.5s ease-out 0s 1 slide-in-right;
   width: 100%;
   position: absolute;
@@ -74,4 +86,48 @@ section .intro{
 
 main{
   min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
+
+.project{
+  margin: 10px;
+  width: 300px;
+  height: 300px;
+  border-radius: 5px;
+  background-color: aliceblue;
+}
+
+.content{
+  opacity: 0;
+  padding: 10px;
+  max-width: 340px;
+  height: fit-content;
+  background-color: rgb(41, 41, 39);
+  border-radius: 5px;
+  justify-content: center; 
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  display: none;
+  transform: opacity 0.5;
+}
+
+.content-visible{
+  opacity: 1;
+}
+
+@media screen and (min-width: 800px) {
+  .content{
+    max-width: 660px;
+    justify-content: start;
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .content{
+    max-width: 1300px;
+    justify-content: start;
+  }
+}
+

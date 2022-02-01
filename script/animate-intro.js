@@ -1,7 +1,13 @@
 "use strict";
+const imgSize = { width: 1920, height: 1273 };
 const container = document.getElementById('intro-container');
+const introContainer = document.getElementById('intro-container');
 let bird = document.getElementById('intro-bird');
 let birdParent = document.getElementById('intro-sunset');
+const changeIntroSectionHeight = (height) => {
+    if (introContainer)
+        introContainer.style.height = height + 'px';
+};
 const birdImg = new Image();
 birdImg.src = "https://seegg.github.io/images/bird-d.png";
 birdImg.alt = "bird";
@@ -24,12 +30,15 @@ Promise.all(imgResolves)
     birdParent.classList.add('background');
     bird = birdImg;
     bird.classList.add('foreground');
+    changeIntroSectionHeight(birdParent.getBoundingClientRect().height);
+    document.getElementById('content').style.display = 'flex';
 }).catch(err => console.error(err));
 document.onscroll = () => {
     changeBirdSize();
 };
 window.onresize = () => {
     changeBirdSize();
+    changeIntroSectionHeight(birdParent.getBoundingClientRect().height);
 };
 const changeBirdSize = () => {
     if (!bird || !birdParent)
