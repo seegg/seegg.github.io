@@ -33,6 +33,7 @@ section .intro{
   width: 100vw;
   height: 100vh;
   display: flex;
+  justify-content: center;
 }
 
 .intro * {
@@ -62,13 +63,12 @@ section .intro{
 }
 
 .intro-text{
-  position: absolute;
   height: 100%;
-  top: 50%;
-  left: 50%;
   z-index: 10;
   color: #FFF;
   font-size: 5rem;
+  display: flex;
+  align-items: center;
 }
 
 

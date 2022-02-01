@@ -36,7 +36,7 @@ const changeBirdSize = () => {
         return;
     const distFromTop = document.documentElement.scrollTop;
     const sunBoundingRect = birdParent.getBoundingClientRect();
-    const heightRatio = 1.0 - (distFromTop / sunBoundingRect.height) * 0.2;
+    const heightRatio = 1.0 - (distFromTop / sunBoundingRect.height) * 0.3;
     bird.style.width = (sunBoundingRect.width * (heightRatio)).toString() + 'px';
     bird.style.height = (sunBoundingRect.height * (heightRatio)).toString() + 'px';
 };
