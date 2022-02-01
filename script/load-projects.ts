@@ -11,7 +11,9 @@ export const loadProjects = () => {
   if (contentWrapper) {
     getProjects().forEach(project => {
       const view = createProjectComponent(project);
+      const view2 = createProjectPlaceholder();
       contentWrapper.appendChild(view);
+      contentWrapper.appendChild(view2);
     })
   }
 }
@@ -80,4 +82,40 @@ const createProjectComponent = (project: Project): HTMLElement => {
   projectContainer.appendChild(secondArticle);
 
   return projectContainer;
+}
+
+/**
+ * create a placeholder for the project until it loads.
+ * @returns 
+ */
+const createProjectPlaceholder = () => {
+  const placeholder = document.createElement('div');
+  placeholder.classList.add('placeholder-container');
+
+  const nav = document.createElement('div');
+  nav.classList.add('placeholder-nav');
+  const linkLogo = document.createElement('div');
+  linkLogo.classList.add('placeholder-nav-logo', 'placeholder')
+
+  nav.appendChild(linkLogo);
+  placeholder.appendChild(nav);
+
+  const project = document.createElement('div');
+  project.classList.add('placeholder-project', 'placeholder');
+
+  const image = document.createElement('div');
+  image.classList.add('placeholder-image', 'placeholder');
+  project.appendChild(image);
+
+  const title = document.createElement('div');
+  title.classList.add('placeholder-title', 'placeholder');
+  project.appendChild(title);
+
+  const description = document.createElement('div');
+  description.classList.add('placeholder-description', 'placeholder');
+  project.appendChild(description);
+
+  placeholder.appendChild(project);
+
+  return placeholder;
 }

@@ -30,7 +30,7 @@
       "repo": "https://github.com/seegg/safe-houses",
       "url": "https://tuohunga.herokuapp.com/",
       "image": "home.png",
-      "description": "Nodejs web application for managing safe house informations built using react and express. uses multi tier user roles for access control. overflow checkkkkkkkkkkkkkkkkkkkk"
+      "description": "Nodejs web application for managing safe house informations built using react and express. uses multi tier user roles for access control."
     },
     {
       "name": "Calculator",
