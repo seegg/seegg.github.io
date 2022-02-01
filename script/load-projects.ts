@@ -28,6 +28,7 @@ const createProjectComponent = (project: Project): HTMLElement => {
   repoLink.classList.add('github-link');
 
   const repoAnchor = document.createElement('a');
+  repoAnchor.href = project.repo || '';
   const gitHLogo = new Image();
   gitHLogo.src = "http://localhost:8000/images/GitHub-Mark-Light-32px.png"
   gitHLogo.classList.add('github-logo');

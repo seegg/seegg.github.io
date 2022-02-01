@@ -3,10 +3,18 @@
     {
       "name": "JS Date Picker",
       "title": "JS Date Picker",
-      "repo": "",
-      "url": "https://github.com/seegg/date-picker",
+      "repo": "https://github.com/seegg/date-picker",
+      "url": "https://seegg.github.io/date-picker",
       "image": "date-picker.png",
-      "description": "A date picker created using vanilla Javascript."
+      "description": "A date picker widget created using vanilla Javascript."
+    },
+    {
+      "name": "Tournament brackets",
+      "title": "Tournament brackets",
+      "repo": "https://github.com/seegg/tournament-bracket",
+      "url": "https://seegg.github.io/tournament-bracket",
+      "image": "bracket.png",
+      "description": "A single elimination style bracket generator made using react."
     }
   ]
 }

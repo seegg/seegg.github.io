@@ -15,9 +15,17 @@
 
 @keyframes slide-in-right{
   0%{
-    transform:  translateX(100%) scale(2, 2);
-  }75%{
-    transform: translateX(25%) scale(2, 2);
+    transform:  translateX(100%) scale(1, 1);
+  }25%{
+    transform: translateX(50%) scale(2, 2);
+  }35%{
+    transform: translateX(40%) scale(2, 2);
+  }65%{
+    transform: translateX(30%) scale(2, 2);
+  }70%{
+    transform: translateX(20%) scale(1.5, 1.5);
+  } 80%{
+    transform: translateX(-10%) scale(1.2, 1.2);
   }100%{
     transform:  translateX(0) scale(1, 1);
   }
@@ -79,7 +87,7 @@ section .intro{
 
 .intro .foreground{
   max-width: 100%;
-  animation: 2s ease-out 0s 1 slide-in-right;
+  animation: 3s ease-out 0s 1 slide-in-right;
   width: 100%;
   position: absolute;
   left: 0;
@@ -112,6 +120,14 @@ main{
   margin-bottom: 2px;
 }
 
+.project-container{
+  transition: transform 0.15s ease-in;
+}
+
+.project-container:hover{
+  transform: translate(5px, -5px);
+}
+
 .project{
   position: relative;
   margin: 10px;
@@ -124,16 +140,13 @@ main{
   display: flex;
   flex-direction: column;
   align-items: center;
-  bottom: 0px;
-  left: 0px;
-  transition: bottom left 5s;
+  box-shadow: 0;
+  transition: transform 0.15s ease-in;
 }
 
 .project:hover{
   box-shadow: -1px 1px 1px 0px hsl(0, 0%, 50%),-2px 2px 0px 0px hsl(0, 0%, 70%),-3px 3px 0px 0px hsl(0, 0%, 90%), -5px 5px 1px 0px hsl(0, 0%, 100%);
   position: relative;
-  bottom: 5px;
-  left: 5px;
 }
 
 .project-img{
