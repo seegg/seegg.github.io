@@ -6,8 +6,8 @@ export const animate = () => {
   const container: HTMLDivElement = document.getElementById('intro-container') as HTMLDivElement;
   const introContainer = document.getElementById('intro-container');
   const content = document.getElementById('content');
-  let bird: HTMLElement = document.getElementById('intro-bird') as HTMLImageElement;
-  let birdParent: HTMLElement = document.getElementById('intro-sunset') as HTMLImageElement;
+  let bird: HTMLElement;
+  let birdParent: HTMLElement;
 
   type imgLoadCheck = (value: unknown) => void;
 
@@ -44,36 +44,38 @@ export const animate = () => {
   //and add classes to the img elements to trigger the animation.
   Promise.all(imgResolves)
     .then(() => {
-      console.log('here');
-      container.replaceChild(birdParentImg, birdParent);
-      container.replaceChild(birdImg, bird);
+      container.appendChild(birdParentImg);
+      container.appendChild(birdImg);
       birdParent = birdParentImg;
       birdParent.classList.add('background', 'anim-fadein');
       bird = birdImg;
       bird.classList.add('foreground', 'anim-slide-in-right');
       changeIntroSectionHeight(birdParent.getBoundingClientRect().height);
-      // document.getElementById('content')?.classList.add('content-visible');
     }).catch(err => console.error(err));
 
   //call the resize image function in scroll and resize events.
   document.onscroll = () => {
-    changeBirdSize();
+    changeBirdSize(0.3);
     changeContentOpacityOnHeightShown();
   }
 
   window.onresize = () => {
-    changeBirdSize();
+    changeBirdSize(0.3);
     changeIntroSectionHeight(birdParent.getBoundingClientRect().height);
     changeContentOpacityOnHeightShown();
   }
 
-  //chnage the size of the foreground img base on the ratio of scrolltop
-  //and the background image's height.
-  const changeBirdSize = () => {
+  /**
+   * chnage the size of the foreground img base on the ratio of scrolltop
+   * and the background image's height.
+   * @param ratio a multiplier to change how fast/slow the foreground changes.
+   * @returns 
+   */
+  const changeBirdSize = (ratio: number) => {
     if (!bird || !birdParent) return;
     const distFromTop = document.documentElement.scrollTop;
     const sunBoundingRect = birdParent.getBoundingClientRect();
-    const heightRatio = 1.0 - (distFromTop / sunBoundingRect.height) * 0.3;
+    const heightRatio = 1.0 - (distFromTop / sunBoundingRect.height) * ratio;
     bird.style.width = (sunBoundingRect.width * (heightRatio)).toString() + 'px';
     bird.style.height = (sunBoundingRect.height * (heightRatio)).toString() + 'px';
   }
