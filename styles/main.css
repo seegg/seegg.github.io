@@ -162,7 +162,7 @@ main{
   transition: transform 0.2s ease-in;
 }
 
-.nav-project-moveY{
+.hasHover .nav-project-moveY{
   transform: translateY(-5px);
 }
 
@@ -188,9 +188,8 @@ main{
   overflow: hidden;
 }
 
-.project-select{
+.hasHover .project-select{
   box-shadow: -1px 1px 1px 0px hsl(0, 0%, 50%),-2px 2px 0px 0px hsl(0, 0%, 70%),-3px 3px 0px 0px hsl(0, 0%, 90%), -5px 5px 1px 0px hsl(0, 0%, 100%);
-  /* box-shadow: -5px 0px hsl(0, 0%, 80%), -5px 5px hsl(0, 0%, 50%) ; */
   transform: translate(5px, -5px);
 }
 
@@ -239,7 +238,7 @@ main{
   transition: opacity 0.25s ease-in;
 }
 
-.github-logo:hover{
+.hasHover .github-logo:hover{
   opacity: 1;
 }
 

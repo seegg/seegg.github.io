@@ -1,4 +1,5 @@
 //script to animate the intro screen.
+import { disableHoverOnTouch } from "./util";
 
 export const animate = () => {
 
@@ -10,6 +11,8 @@ export const animate = () => {
 
   type imgLoadCheck = (value: unknown) => void;
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  disableHoverOnTouch(content!);
 
   //set the height for the placeholder element.
 
