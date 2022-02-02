@@ -11,28 +11,38 @@ const imagePath = "https://raw.githubusercontent.com/seegg/seegg.github.io/main/
 export const loadProjects = () => {
   if (contentWrapper) {
     getProjects().forEach(project => {
-      //construct and attach the placeholder to DOM
+      //construct and attach the placeholder to the DOM
       const placeHolder = createProjectPlaceholder();
       contentWrapper.appendChild(placeHolder);
 
       //replace the placeholder once the acutal project card has finish
       //loading.
-      new Promise(resolve => {
+      new Promise<HTMLDivElement>(resolve => {
         resolve(
-          (() => {
+          ((): HTMLDivElement => {
             const projectCard = createProjectComponent(project);
-            return projectCard;
+            return projectCard as HTMLDivElement;
           })()
         )
       }).then((card) => {
-        contentWrapper.replaceChild(card as HTMLDivElement, placeHolder);
+        placeHolder.replaceWith(card);
         (card as HTMLDivElement).classList.add('anim-fadein');
       }).catch(err => console.error(err));
 
     })
-
-
   }
+}
+
+/**
+ * wrapper function for creating a HTMLelement and assigning classes to it.
+ * @param tagName tag name of HTMLElement
+ * @param arg comma seperated class names
+ * @returns 
+ */
+function createElementWithClasses<T extends keyof HTMLElementTagNameMap>(tagName: T, ...args: string[]) {
+  const elem = document.createElement(tagName);
+  elem.classList.add(...args);
+  return elem;
 }
 
 /**
@@ -46,8 +56,7 @@ const createProjectComponent = (project: Project): HTMLElement => {
   projectContainer.classList.add('project-container');
 
   //link to repo with github logo
-  const repoLink = document.createElement('nav');
-  repoLink.classList.add('nav-project');
+  const repoLink = createElementWithClasses('nav', 'nav-project');
 
   const repoAnchor = document.createElement('a');
   repoAnchor.href = project.repo || '';
@@ -59,8 +68,7 @@ const createProjectComponent = (project: Project): HTMLElement => {
   projectContainer.appendChild(repoLink);
 
   //container for the project details
-  const secondArticle = document.createElement('article');
-  secondArticle.classList.add('project');
+  const secondArticle = createElementWithClasses('article', 'project');
   secondArticle.onpointerenter = () => {
     secondArticle.classList.add('project-select');
     repoLink.classList.add('nav-project-moveY');
@@ -75,22 +83,25 @@ const createProjectComponent = (project: Project): HTMLElement => {
   }
 
   // image for the project
-  const imgWrapper = document.createElement('div');
-  imgWrapper.classList.add('project-img-container');
+  const imgWrapper = createElementWithClasses('div', 'project-img-container');
   const projectImg = new Image();
   projectImg.src = imagePath + project.image;
-
   projectImg.classList.add('project-img');
-  imgWrapper.appendChild(projectImg);
   secondArticle.appendChild(imgWrapper);
 
+  //append the image only after it loads.
+  projectImg.onload = (evt) => {
+    projectContainer.getElementsByClassName('project-img-container')[0].appendChild(projectImg);
+    (evt.target as HTMLImageElement).classList.add('anim-fadein');
+  }
+
   //inner article for descriptions
-  const innerArticle = document.createElement('article');
-  innerArticle.classList.add('project-description');
+  const innerArticle = createElementWithClasses('article', 'project-description');
+
   innerArticle.innerHTML = `<h4 class="project-title">${project.name}</h4><p>${project.description}</p>`
   secondArticle.appendChild(innerArticle);
 
-  //if the project has a site 
+  //if the project has a site, wrap the project card in an anchor tag for that site.
   if (project.url) {
     secondArticle.innerHTML = `<a href="${project.url}">${secondArticle.innerHTML}</a>`
   }
@@ -98,6 +109,8 @@ const createProjectComponent = (project: Project): HTMLElement => {
 
   return projectContainer;
 }
+
+
 
 /**
  * create a placeholder for the project until it loads.
