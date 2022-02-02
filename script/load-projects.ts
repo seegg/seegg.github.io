@@ -3,7 +3,8 @@ import { Project } from "./types";
 
 const contentWrapper = document.getElementById('content');
 // const imagePath = location.href + "images/";
-const imagePath = "https://raw.githubusercontent.com/seegg/seegg.github.io/main/images/"
+// const imagePath = "https://raw.githubusercontent.com/seegg/seegg.github.io/main/images/";
+const imagePath = "https://github.com/seegg/seegg.github.io/blob/main/images/";
 
 /**
  * load all the projects for display.
@@ -52,7 +53,7 @@ const createProjectComponent = (project: Project): HTMLElement => {
   const repoAnchor = document.createElement('a');
   repoAnchor.href = project.repo || '';
   const gitHLogo = new Image();
-  gitHLogo.src = "http://localhost:8000/images/GitHub-Mark-Light-32px.png"
+  gitHLogo.src = imagePath + "GitHub-Mark-Light-32px.png";
   gitHLogo.classList.add('github-logo');
   repoAnchor.appendChild(gitHLogo);
   repoLink.appendChild(repoAnchor);
