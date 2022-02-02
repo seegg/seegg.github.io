@@ -3,8 +3,7 @@ import { Project } from "./types";
 
 const contentWrapper = document.getElementById('content');
 // const imagePath = location.href + "images/";
-// const imagePath = "https://raw.githubusercontent.com/seegg/seegg.github.io/main/images/";
-const imagePath = "https://github.com/seegg/seegg.github.io/blob/main/images/";
+const imagePath = "https://raw.githubusercontent.com/seegg/seegg.github.io/main/images/";
 
 /**
  * load all the projects for display.
