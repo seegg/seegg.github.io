@@ -2,7 +2,8 @@ import { getProjects } from "./data";
 import { Project } from "./types";
 
 const contentWrapper = document.getElementById('content');
-const imagePath = location.href + "images/";
+// const imagePath = location.href + "images/";
+const imagePath = "https://github.com/seegg/seegg.github.io/blob/main/images/"
 
 /**
  * load all the projects for display.
