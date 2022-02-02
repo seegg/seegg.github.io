@@ -9,6 +9,14 @@
       "description": "A date picker widget created using vanilla Javascript."
     },
     {
+      "name": "Safe Houses",
+      "title": "Safe Houses",
+      "repo": "https://github.com/seegg/safe-houses",
+      "url": "https://tuohunga.herokuapp.com/",
+      "image": "home.png",
+      "description": "Nodejs web application for managing safe house informations built using react and express. uses multi tier user roles for access control."
+    },
+    {
       "name": "Tournament brackets",
       "title": "Tournament brackets",
       "repo": "https://github.com/seegg/tournament-bracket",
@@ -23,14 +31,6 @@
       "url": "https://seegg.github.io/bounce",
       "image": "bounce.png",
       "description": "Animate colliding balls in a canvas with inellastic collision. upload or link images to decorate the balls."
-    },
-    {
-      "name": "Safe Houses",
-      "title": "Safe Houses",
-      "repo": "https://github.com/seegg/safe-houses",
-      "url": "https://tuohunga.herokuapp.com/",
-      "image": "home.png",
-      "description": "Nodejs web application for managing safe house informations built using react and express. uses multi tier user roles for access control."
     },
     {
       "name": "Calculator",

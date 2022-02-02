@@ -9,8 +9,6 @@ export const animate = () => {
   let bird: HTMLElement;
   let birdParent: HTMLElement;
 
-  type imgLoadCheck = (value: unknown) => void;
-
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   disableHoverOnTouch(content!);
 
@@ -32,7 +30,7 @@ export const animate = () => {
 
   //assign promises to each image, call resolve in img onload event.
   const imgResolves = [birdImg, birdParentImg].map(img => {
-    let res: imgLoadCheck;
+    let res: (value: unknown) => void;
     const imgPromise = new Promise(resolve => { res = resolve });
     img.onload = () => {
       res('loaded');
@@ -79,6 +77,7 @@ export const animate = () => {
     if (!bird || !birdParent) return;
     const distFromTop = document.documentElement.scrollTop;
     const sunBoundingRect = birdParent.getBoundingClientRect();
+    if (distFromTop > sunBoundingRect.top) return;
     const heightRatio = 1.0 - (distFromTop / sunBoundingRect.height) * ratio;
     bird.style.width = (sunBoundingRect.width * (heightRatio)).toString() + 'px';
     bird.style.height = (sunBoundingRect.height * (heightRatio)).toString() + 'px';
@@ -91,6 +90,7 @@ export const animate = () => {
   const changeContentOpacityOnHeightShown = (threshold = 500) => {
     if (!content) return;
     let heightShown = window.innerHeight - content.getBoundingClientRect().top;
+    if (heightShown >= threshold) return;
     heightShown = Math.pow(heightShown * 0.05, 2);
     const opacity = heightShown <= 0 ? 0 : heightShown >= threshold ? 1 : heightShown / threshold;
     content.style.opacity = opacity.toString();
