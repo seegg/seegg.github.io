@@ -69,17 +69,16 @@ const createProjectComponent = (project: Project): HTMLElement => {
 
   //container for the project details
   const secondArticle = createElementWithClasses('article', 'project');
+
+  //animate the log and article body when mousing over it.
   secondArticle.onpointerenter = () => {
-    secondArticle.classList.add('project-select');
-    repoLink.classList.add('nav-project-moveY');
+    animteMouseEnterArticle(secondArticle, repoLink, gitHLogo, 'entering');
   }
   secondArticle.onpointerleave = () => {
-    secondArticle.classList.remove('project-select');
-    repoLink.classList.remove('nav-project-moveY');
+    animteMouseEnterArticle(secondArticle, repoLink, gitHLogo, 'leaving');
   }
   secondArticle.onpointercancel = () => {
-    secondArticle.classList.remove('project-select');
-    repoLink.classList.remove('nav-project-moveY');
+    animteMouseEnterArticle(secondArticle, repoLink, gitHLogo, 'leaving');
   }
 
   // image for the project
@@ -110,6 +109,18 @@ const createProjectComponent = (project: Project): HTMLElement => {
   return projectContainer;
 }
 
+/**
+ * wrapper for animating the enter and leave effects for the card.
+ */
+const animteMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, logo: HTMLElement, status: 'entering' | 'leaving') => {
+  if (status === "entering") {
+    article.classList.add('project-select');
+    repoLink.classList.add('nav-project-moveY');
+  } else {
+    article.classList.remove('project-select');
+    repoLink.classList.remove('nav-project-moveY');
+  }
+}
 
 
 /**

@@ -250,10 +250,15 @@ main{
 .github-logo{
   opacity: 0.5;
   transition: opacity 0.25s ease-in;
+  transition: transform 0.3s;
 }
 
 #content.hasHover .github-logo:hover{
   opacity: 1;
+}
+
+.rotate{
+  transform: rotate(-100deg);
 }
 
 /* Place holder items below */
