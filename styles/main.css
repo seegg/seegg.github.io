@@ -327,6 +327,17 @@ main{
 /* place holder items above */
 
 
+.contact{
+  
+}
+
+footer{
+  display: flex;
+  justify-content: center;
+  color: white;
+  padding: 20px;
+}
+
 @media screen and (min-width: 800px) {
   .content{
     max-width: 660px;
