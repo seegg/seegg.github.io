@@ -51,18 +51,22 @@ export const animate = () => {
       bird = birdImg;
       bird.classList.add('foreground', 'anim-slide-in-right');
       changeIntroSectionHeight(birdParent.getBoundingClientRect().height);
+      changeContentOpacityOnHeightShown();
+      showScrollReminder();
     }).catch(err => console.error(err));
 
   //call the resize image function in scroll and resize events.
   document.onscroll = () => {
     changeBirdSize(0.3);
     changeContentOpacityOnHeightShown();
+    showScrollReminder();
   }
 
   window.onresize = () => {
     changeBirdSize(0.3);
     changeIntroSectionHeight(birdParent.getBoundingClientRect().height);
     changeContentOpacityOnHeightShown();
+    showScrollReminder();
   }
 
   /**
@@ -86,9 +90,21 @@ export const animate = () => {
    */
   const changeContentOpacityOnHeightShown = (threshold = 500) => {
     if (!content) return;
-    const heightShown = window.innerHeight - content.getBoundingClientRect().top;
+    let heightShown = window.innerHeight - content.getBoundingClientRect().top;
+    heightShown = Math.pow(heightShown * 0.05, 2);
     const opacity = heightShown <= 0 ? 0 : heightShown >= threshold ? 1 : heightShown / threshold;
     content.style.opacity = opacity.toString();
+  }
+
+
+  /**
+   * show the scoll reminder if content is not visible
+   */
+  const showScrollReminder = () => {
+    if (!content) return;
+    if (window.innerHeight - content.getBoundingClientRect().top > 0) {
+      document.getElementById('scroll-reminder')?.classList.remove('show-scroll');
+    }
   }
 
 
