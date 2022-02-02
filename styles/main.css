@@ -79,7 +79,6 @@ a:visited {
   color: inherit;
 }
 
-
 section .intro{
   width: 100vw;
   max-width: 100%;
@@ -135,6 +134,24 @@ main{
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+.content{
+  opacity: 0;
+  padding: 10px;
+  max-width: 340px;
+  height: fit-content;
+  background: none;
+  border-radius: 5px;
+  justify-content: center; 
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  display: flex;
+  transition: opacity 1.5s;
+}
+
+.content-visible{
+  opacity: 1;
 }
 
 .nav-project{
@@ -215,24 +232,6 @@ main{
   background-color: black;
   width: 280px;
   height: 260px;
-}
-
-.content{
-  opacity: 1;
-  padding: 10px;
-  max-width: 340px;
-  height: fit-content;
-  background: none;
-  border-radius: 5px;
-  justify-content: center; 
-  flex-shrink: 0;
-  flex-wrap: wrap;
-  display: flex;
-  transition: opacity 1.5s;
-}
-
-.content-visible{
-  opacity: 1;
 }
 
 .github-logo{

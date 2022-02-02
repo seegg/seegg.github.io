@@ -2,10 +2,9 @@
 
 export const animate = () => {
 
-  //The intro screen.
-
   const container: HTMLDivElement = document.getElementById('intro-container') as HTMLDivElement;
   const introContainer = document.getElementById('intro-container');
+  const content = document.getElementById('content');
   let bird: HTMLElement = document.getElementById('intro-bird') as HTMLImageElement;
   let birdParent: HTMLElement = document.getElementById('intro-sunset') as HTMLImageElement;
 
@@ -56,11 +55,13 @@ export const animate = () => {
   //call the resize image function in scroll and resize events.
   document.onscroll = () => {
     changeBirdSize();
+    changeContentOpacityOnHeightShown();
   }
 
   window.onresize = () => {
     changeBirdSize();
     changeIntroSectionHeight(birdParent.getBoundingClientRect().height);
+    changeContentOpacityOnHeightShown();
   }
 
   //chnage the size of the foreground img base on the ratio of scrolltop
@@ -74,4 +75,17 @@ export const animate = () => {
     bird.style.height = (sunBoundingRect.height * (heightRatio)).toString() + 'px';
   }
 
+  /**
+   * adjust the content's opacity base on how much is visible on screen.
+   * @param threshold the height where opacity becomes 1.
+   */
+  const changeContentOpacityOnHeightShown = (threshold = 600) => {
+    if (!content) return;
+    const heightShown = window.innerHeight - content.getBoundingClientRect().top;
+    const opacity = heightShown <= 0 ? 0 : heightShown >= threshold ? 1 : heightShown / threshold;
+    content.style.opacity = opacity.toString();
+  }
+
+
 }
+
