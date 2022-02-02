@@ -79,7 +79,7 @@ export const animate = () => {
    * adjust the content's opacity base on how much is visible on screen.
    * @param threshold the height where opacity becomes 1.
    */
-  const changeContentOpacityOnHeightShown = (threshold = 600) => {
+  const changeContentOpacityOnHeightShown = (threshold = 500) => {
     if (!content) return;
     const heightShown = window.innerHeight - content.getBoundingClientRect().top;
     const opacity = heightShown <= 0 ? 0 : heightShown >= threshold ? 1 : heightShown / threshold;
