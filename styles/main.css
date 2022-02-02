@@ -41,6 +41,30 @@
   
 }
 
+@keyframes fade-out {
+  0%{
+    opacity: 1;
+  }100%{
+    opacity: 0;
+  }
+}
+
+.anim-fadein{
+  animation: 1.5s ease-in-out 0s 1 fade-in;
+}
+
+.anim-fadein-long{
+  animation: 2.5s ease-out 0s 1 fade-in;
+}
+
+.anim-fadeout{
+  animation: 1.5s ease-out 0s 1 fade-out;
+}
+
+.anim-slide-in-right{
+  animation: 3s ease-out 0s 1 slide-in-right;
+}
+
 body{
   background-color: black;
 }
@@ -76,7 +100,7 @@ section .intro{
 
 .intro .background{
   max-width: 100%;
-  animation: 1.5s ease-out 0s 1 fade-in;
+  /* animation: 1.5s ease-out 0s 1 fade-in; */
   position: absolute;
   left: 0;
   top: 0;
@@ -87,7 +111,7 @@ section .intro{
 
 .intro .foreground{
   max-width: 100%;
-  animation: 3s ease-out 0s 1 slide-in-right;
+  /* animation: 3s ease-out 0s 1 slide-in-right; */
   width: 100%;
   position: absolute;
   left: 0;
@@ -284,7 +308,6 @@ main{
   width: 0px;
   border-left: 40px solid transparent;
   border-right: 40px solid transparent;
-  
   border-bottom: 40px solid hsl(17, 71%, 12%);
 }
 

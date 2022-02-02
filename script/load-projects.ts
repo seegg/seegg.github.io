@@ -10,14 +10,35 @@ const imagePath = location.href + "images/";
 export const loadProjects = () => {
   if (contentWrapper) {
     getProjects().forEach(project => {
-
       const placeHolder = createProjectPlaceholder();
       contentWrapper.appendChild(placeHolder);
+
+      let res: (value: unknown) => void;
+
+      new Promise(resolve => { res = resolve })
+        .then((card) => {
+          contentWrapper.replaceChild(card as HTMLDivElement, placeHolder);
+          (card as HTMLDivElement).classList.add('anim-fadein');
+        }).catch(err => console.error(err));
+
+      setTimeout(() => {
+        res(
+          (() => {
+            const projectCard = createProjectComponent(project);
+            return projectCard;
+          })()
+        )
+      }, Math.floor(Math.random() * 1500));
     })
+
+
   }
 }
 
-
+// (() => {
+//   const projectCard = createProjectComponent(project);
+//   return projectCard;
+// })()
 
 /**
  * Create the product card to display a project.

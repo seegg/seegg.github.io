@@ -46,9 +46,9 @@ export const animate = () => {
       container.replaceChild(birdParentImg, birdParent);
       container.replaceChild(birdImg, bird);
       birdParent = birdParentImg;
-      birdParent.classList.add('background');
+      birdParent.classList.add('background', 'anim-fadein');
       bird = birdImg;
-      bird.classList.add('foreground');
+      bird.classList.add('foreground', 'anim-slide-in-right');
       changeIntroSectionHeight(birdParent.getBoundingClientRect().height);
       // document.getElementById('content')?.classList.add('content-visible');
     }).catch(err => console.error(err));
