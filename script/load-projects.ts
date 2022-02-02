@@ -10,10 +10,9 @@ const imagePath = location.href + "images/";
 export const loadProjects = () => {
   if (contentWrapper) {
     getProjects().forEach(project => {
-      const view = createProjectComponent(project);
-      const view2 = createProjectPlaceholder();
-      contentWrapper.appendChild(view);
-      contentWrapper.appendChild(view2);
+
+      const placeHolder = createProjectPlaceholder();
+      contentWrapper.appendChild(placeHolder);
     })
   }
 }
@@ -105,6 +104,15 @@ const createProjectPlaceholder = () => {
 
   const image = document.createElement('div');
   image.classList.add('placeholder-image', 'placeholder');
+  const triangle = document.createElement('div');
+  const triangleBig = document.createElement('div');
+  const triangleContainer = document.createElement('div');
+  triangle.classList.add('placeholder-triangle');
+  triangleBig.classList.add('placeholder-triangle-big');
+  triangleContainer.classList.add('triangle-container');
+  triangleContainer.appendChild(triangleBig);
+  triangleContainer.appendChild(triangle);
+  image.appendChild(triangleContainer);
   project.appendChild(image);
 
   const title = document.createElement('div');
