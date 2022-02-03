@@ -383,7 +383,7 @@ footer{
   font-size: 2rem;
   font-weight: bolder;
   opacity: 0;
-  animation: blink 2s ease 4s infinite;
+  animation: blink 2s ease 3s infinite;
 }
 
 .hide-scroll{
