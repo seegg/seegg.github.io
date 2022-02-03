@@ -6,7 +6,7 @@
       "repo": "https://github.com/seegg/date-picker",
       "url": "https://seegg.github.io/date-picker",
       "image": "date-picker.png",
-      "description": "A date picker widget created using vanilla Javascript."
+      "description": "A date picker widget created using vanilla JS that can easily be added to any webpage."
     },
     {
       "name": "Safe Houses",
