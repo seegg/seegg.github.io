@@ -77,7 +77,7 @@ export const animate = () => {
     if (!bird || !birdParent) return;
     const distFromTop = document.documentElement.scrollTop;
     const sunBoundingRect = birdParent.getBoundingClientRect();
-    if (distFromTop > sunBoundingRect.top) return;
+    if (distFromTop >= sunBoundingRect.height) return;
     const heightRatio = 1.0 - (distFromTop / sunBoundingRect.height) * ratio;
     bird.style.width = (sunBoundingRect.width * (heightRatio)).toString() + 'px';
     bird.style.height = (sunBoundingRect.height * (heightRatio)).toString() + 'px';
@@ -90,7 +90,6 @@ export const animate = () => {
   const changeContentOpacityOnHeightShown = (threshold = 500) => {
     if (!content) return;
     let heightShown = window.innerHeight - content.getBoundingClientRect().top;
-    if (heightShown >= threshold) return;
     heightShown = Math.pow(heightShown * 0.05, 2);
     const opacity = heightShown <= 0 ? 0 : heightShown >= threshold ? 1 : heightShown / threshold;
     content.style.opacity = opacity.toString();
@@ -104,6 +103,8 @@ export const animate = () => {
     if (!content) return;
     if (window.innerHeight - content.getBoundingClientRect().top > 0) {
       document.getElementById('scroll-reminder')?.classList.remove('show-scroll');
+    } else {
+      document.getElementById('scroll-reminder')?.classList.add('show-scroll');
     }
   }
 
