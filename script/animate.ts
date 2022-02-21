@@ -47,7 +47,7 @@ export const animate = () => {
       birdParent = birdParentImg;
       birdParent.classList.add('background', 'anim-fadein');
       bird = birdImg;
-      bird.classList.add('foreground', 'anim-slide-in-right');
+      bird.classList.add('foreground', 'anim-fadein');
       changeIntroSectionHeight(birdParent.getBoundingClientRect().height);
       changeContentOpacityOnHeightShown();
       showScrollReminder();
