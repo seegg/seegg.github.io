@@ -10,6 +10,10 @@ const imagePath = "https://raw.githubusercontent.com/seegg/seegg.github.io/main/
  */
 export const loadProjects = () => {
   if (contentWrapper) {
+    setContentWrapperWidth(330, 20, contentWrapper);
+
+    window.onresize = () => { setContentWrapperWidth(320, 20, contentWrapper) };
+
     getProjects().forEach(project => {
       //construct and attach the placeholder to the DOM
       const placeHolder = createProjectPlaceholder();
@@ -127,6 +131,20 @@ const animteMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, lo
   }
 }
 
+/**
+ * set the width of the content container as a multiple of the width of the project card.
+ * as long as it's less than the size of the outer container.
+ * @param width The width for each indvidual project card.
+ * @param constant
+ */
+const setContentWrapperWidth = (cardWidth: number, padding: number, wrapper: HTMLElement) => {
+  const parentWidth = wrapper.parentElement?.clientWidth;
+  if (parentWidth !== undefined) {
+    let width = parentWidth - (parentWidth % cardWidth);
+    width += padding;
+    wrapper.style.width = width + 'px';
+  }
+}
 
 /**
  * create a placeholder for the project until it loads.
@@ -147,17 +165,6 @@ const createProjectPlaceholder = () => {
   const project = document.createElement('div');
   project.classList.add('placeholder-project', 'placeholder');
 
-  // const image = document.createElement('div');
-  // image.classList.add('placeholder-image', 'placeholder');
-  // const triangle = document.createElement('div');
-  // const triangleBig = document.createElement('div');
-  // const triangleContainer = document.createElement('div');
-  // triangle.classList.add('placeholder-triangle');
-  // triangleBig.classList.add('placeholder-triangle-big');
-  // triangleContainer.classList.add('triangle-container');
-  // triangleContainer.appendChild(triangleBig);
-  // triangleContainer.appendChild(triangle);
-  // image.appendChild(triangleContainer);
   const image = createImgPlaceHolder();
   project.appendChild(image);
 
