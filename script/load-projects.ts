@@ -12,7 +12,7 @@ export const loadProjects = () => {
   if (contentWrapper) {
     setContentWrapperWidth(330, 20, contentWrapper);
 
-    window.onresize = () => { setContentWrapperWidth(320, 20, contentWrapper) };
+    window.addEventListener('resize', () => { setContentWrapperWidth(320, 20, contentWrapper), false })
 
     getProjects().forEach(project => {
       //construct and attach the placeholder to the DOM

@@ -130,14 +130,14 @@ section .intro{
   z-index: -1;
 }
 
-.intro-text{
+/* .intro-text{
   height: 100%;
   z-index: 10;
   color: #FFF;
   font-size: 5rem;
   display: flex;
   align-items: center;
-}
+} */
 
 
 main{
@@ -150,7 +150,7 @@ main{
 .content{
   opacity: 0;
   padding: 10px;
-  width: 1620px;
+  min-width: 340px;
   max-width: fit-content;
   height: fit-content;
   background: none;

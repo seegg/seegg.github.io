@@ -60,12 +60,12 @@ export const animate = () => {
     showScrollReminder();
   }
 
-  window.onresize = () => {
+  window.addEventListener('resize', () => {
     changeBirdSize(0.3);
     changeIntroSectionHeight(birdParent.getBoundingClientRect().height);
     changeContentOpacityOnHeightShown();
     showScrollReminder();
-  }
+  }, false)
 
   /**
    * chnage the size of the foreground img base on the ratio of scrolltop
