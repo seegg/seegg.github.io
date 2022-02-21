@@ -82,17 +82,22 @@ const createProjectComponent = (project: Project): HTMLElement => {
   }
 
   // image for the project
-  const imgWrapper = createElementWithClasses('div', 'project-img-container');
-  const projectImg = new Image();
-  projectImg.src = imagePath + project.image;
-  projectImg.classList.add('project-img');
-  secondArticle.appendChild(imgWrapper);
+  let imgWrapper;
+  if (project.image) {
+    imgWrapper = createElementWithClasses('div', 'project-img-container');
+    const projectImg = new Image();
+    projectImg.src = imagePath + project.image;
+    projectImg.classList.add('project-img');
 
-  //append the image only after it loads.
-  projectImg.onload = (evt) => {
-    projectContainer.getElementsByClassName('project-img-container')[0].appendChild(projectImg);
-    (evt.target as HTMLImageElement).classList.add('anim-fadein');
+    //append the image only after it loads.
+    projectImg.onload = (evt) => {
+      projectContainer.getElementsByClassName('project-img-container')[0].appendChild(projectImg);
+      (evt.target as HTMLImageElement).classList.add('anim-fadein');
+    }
+  } else {
+    imgWrapper = createImgPlaceHolder();
   }
+  secondArticle.appendChild(imgWrapper);
 
   //inner article for descriptions
   const innerArticle = createElementWithClasses('article', 'project-description');
@@ -142,17 +147,18 @@ const createProjectPlaceholder = () => {
   const project = document.createElement('div');
   project.classList.add('placeholder-project', 'placeholder');
 
-  const image = document.createElement('div');
-  image.classList.add('placeholder-image', 'placeholder');
-  const triangle = document.createElement('div');
-  const triangleBig = document.createElement('div');
-  const triangleContainer = document.createElement('div');
-  triangle.classList.add('placeholder-triangle');
-  triangleBig.classList.add('placeholder-triangle-big');
-  triangleContainer.classList.add('triangle-container');
-  triangleContainer.appendChild(triangleBig);
-  triangleContainer.appendChild(triangle);
-  image.appendChild(triangleContainer);
+  // const image = document.createElement('div');
+  // image.classList.add('placeholder-image', 'placeholder');
+  // const triangle = document.createElement('div');
+  // const triangleBig = document.createElement('div');
+  // const triangleContainer = document.createElement('div');
+  // triangle.classList.add('placeholder-triangle');
+  // triangleBig.classList.add('placeholder-triangle-big');
+  // triangleContainer.classList.add('triangle-container');
+  // triangleContainer.appendChild(triangleBig);
+  // triangleContainer.appendChild(triangle);
+  // image.appendChild(triangleContainer);
+  const image = createImgPlaceHolder();
   project.appendChild(image);
 
   const title = document.createElement('div');
@@ -166,4 +172,20 @@ const createProjectPlaceholder = () => {
   placeholder.appendChild(project);
 
   return placeholder;
+}
+
+const createImgPlaceHolder = () => {
+  const imageContainer = document.createElement('div');
+  imageContainer.classList.add('placeholder-image', 'placeholder');
+  const triangle = document.createElement('div');
+  const triangleBig = document.createElement('div');
+  const triangleContainer = document.createElement('div');
+  triangle.classList.add('placeholder-triangle');
+  triangleBig.classList.add('placeholder-triangle-big');
+  triangleContainer.classList.add('triangle-container');
+  triangleContainer.appendChild(triangleBig);
+  triangleContainer.appendChild(triangle);
+  imageContainer.appendChild(triangleContainer);
+
+  return imageContainer;
 }

@@ -406,14 +406,14 @@ footer{
 
 @media screen and (min-width: 800px) {
   .content{
-    max-width: 660px;
+    max-width: fit-content;
     justify-content: start;
   }
 }
 
 @media screen and (min-width: 1400px) {
   .content{
-    max-width: 1300px;
+    max-width: fit-content;
     justify-content: start;
   }
 }
