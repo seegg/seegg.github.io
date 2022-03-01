@@ -30,7 +30,15 @@
       "repo": "https://github.com/seegg/bounce",
       "url": "https://seegg.github.io/bounce",
       "image": "bounce.png",
-      "description": "Animate colliding balls in a canvas with inellastic collision. upload or link images to decorate the balls."
+      "description": "Bounce balls in a canvas with inellastic collision. upload or link images to decorate the balls."
+    },
+    {
+      "name": "animate trace border",
+      "title": "Trace Border",
+      "repo": "https://github.com/seegg/trace-border-animation",
+      "url": "https://seegg.github.io/trace-border-animation/demo",
+      "image": "img1.png",
+      "description": "React wrapper component to animate tracing a border around wrapped contents."
     },
     {
       "name": "Budget Tracker API",
