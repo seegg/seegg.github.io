@@ -43,7 +43,7 @@ export const animate = () => {
   Promise.all(imgResolves)
     .then(() => {
       container.appendChild(birdParentImg);
-      container.appendChild(birdImg);
+      // container.appendChild(birdImg);
       birdParent = birdParentImg;
       birdParent.classList.add('background', 'anim-fadein');
       bird = birdImg;
