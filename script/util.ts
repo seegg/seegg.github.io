@@ -51,6 +51,7 @@ export function createElementWithClasses<T extends keyof HTMLElementTagNameMap>(
  */
 export const createNavItem = (href: string, src: string, ...classes: string[]) => {
   const anchor = document.createElement('a');
+  anchor.href = href;
   const logoImg = new Image();
   logoImg.src = src;
   logoImg.classList.add(...classes);

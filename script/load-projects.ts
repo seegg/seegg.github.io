@@ -57,22 +57,26 @@ const createProjectComponent = (project: Project): HTMLElement => {
 
   const gitHubLink = createNavItem(project.repo || '', imagePath + "GitHub-Mark-Light-32px.png", 'nav-logo');
   repoLink.appendChild(gitHubLink);
+
+  if (project.url) {
+    const link = createNavItem(project.url, '../images/link.png', 'nav-logo');
+    repoLink.prepend(link);
+  }
+
   projectContainer.appendChild(repoLink);
-
-
 
   //container for the project details
   const secondArticle = createElementWithClasses('article', 'project');
 
   //animate the log and article body when mousing over it.
   projectContainer.onpointerenter = () => {
-    animateMouseEnterArticle(secondArticle, repoLink, repoLink, 'entering');
+    animateMouseEnterArticle(secondArticle, repoLink, 'entering');
   };
   projectContainer.onpointerleave = () => {
-    animateMouseEnterArticle(secondArticle, repoLink, repoLink, 'leaving');
+    animateMouseEnterArticle(secondArticle, repoLink, 'leaving');
   };
   projectContainer.onpointercancel = () => {
-    animateMouseEnterArticle(secondArticle, repoLink, repoLink, 'leaving');
+    animateMouseEnterArticle(secondArticle, repoLink, 'leaving');
   };
 
   // image for the project
@@ -96,13 +100,9 @@ const createProjectComponent = (project: Project): HTMLElement => {
   //inner article for descriptions
   const innerArticle = createElementWithClasses('article', 'project-description');
 
-  innerArticle.innerHTML = `<h4 class="project-title">${project.name}</h4><p>${project.description}</p>`
+  innerArticle.innerHTML = `<a href="${project.url}"><h4 class="project-title">${project.name}</h4></a><p>${project.description}</p>`
   secondArticle.appendChild(innerArticle);
 
-  //if the project has a site, wrap the project card in an anchor tag for that site.
-  if (project.url) {
-    secondArticle.innerHTML = `<a href="${project.url}">${secondArticle.innerHTML}</a>`
-  }
   projectContainer.appendChild(secondArticle);
 
   return projectContainer;
@@ -111,7 +111,7 @@ const createProjectComponent = (project: Project): HTMLElement => {
 /**
  * wrapper for animating the enter and leave effects for the card.
  */
-const animateMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, logo: HTMLElement, status: 'entering' | 'leaving') => {
+const animateMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, status: 'entering' | 'leaving') => {
   if (status === "entering") {
     article.classList.add('project-select');
     repoLink.classList.add('nav-project-moveY');

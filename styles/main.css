@@ -286,6 +286,9 @@ main{
 }
 
 .nav-logo{
+  margin-right: 5px;
+  width: 32px;
+  height: 32px;
   opacity: 0.5;
   transition: opacity 0.25s ease-in;
   transition: transform 0.3s;
