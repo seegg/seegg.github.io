@@ -15,11 +15,13 @@ const imagePath = "https://raw.githubusercontent.com/seegg/seegg.github.io/main/
  */
 export const loadProjects = () => {
   if (projectsContainer) {
-    setprojectsContainerWidth(310, 160, 1750);
 
-    window.addEventListener('resize', () => { setprojectsContainerWidth(310, 160, 1750), false })
+    const projects = getProjects();
+    setprojectsContainerWidth(projects.length, 310, 160, 1750);
 
-    getProjects().forEach(project => {
+    window.addEventListener('resize', () => { setprojectsContainerWidth(projects.length, 310, 160, 1750), false })
+
+    projects.forEach(project => {
       //construct and attach the placeholder to the DOM
       const placeHolder = createProjectPlaceholder();
       projectsContainer.appendChild(placeHolder);
@@ -142,13 +144,14 @@ const animateMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, c
  * set the width of the content container as a multiple of the width of the project card.
  * as long as it's less than the size of the outer container.
  */
-const setprojectsContainerWidth = (fullCardWidth: number, partialCardWidth: number, maxWidth: number) => {
+const setprojectsContainerWidth = (cardNumber: number, fullCardWidth: number, partialCardWidth: number, maxWidth: number) => {
 
   const parentWidth = contentContainer?.clientWidth;
   if (parentWidth !== undefined && projectsContainer) {
     const maxCards = Math.floor((parentWidth - fullCardWidth) / 160);
-    const width = Math.min(Math.max(fullCardWidth, maxCards * partialCardWidth + (fullCardWidth - partialCardWidth)), maxWidth);
+    const width = Math.min(Math.max(fullCardWidth, Math.min(maxCards, cardNumber) * partialCardWidth + (fullCardWidth - partialCardWidth)), maxWidth);
     projectsContainer.style.width = width + 'px';
+    console.log(width);
   }
 };
 
