@@ -6,7 +6,7 @@ export const disableHoverOnTouch = (container: HTMLElement): void => {
   let lastTouchTime = 0;
 
   const enableHover = () => {
-    if (new Date().getTime() - lastTouchTime < 500) return;
+    // if (new Date().getTime() - lastTouchTime < 500) return;
     container.classList.add('hasHover');
   };
 
@@ -18,7 +18,7 @@ export const disableHoverOnTouch = (container: HTMLElement): void => {
     lastTouchTime = new Date().getTime();
   };
 
-  document.addEventListener('touchstart', updateLastTouchTime, true);
+  // document.addEventListener('touchstart', updateLastTouchTime, true);
   document.addEventListener('touchstart', disableHover, true);
   document.addEventListener('mousemove', enableHover, true);
 }
@@ -29,4 +29,16 @@ export function debounce(callback: (...param: unknown[]) => void, wait = 300) {
     clearTimeout(timer);
     timer = setTimeout(() => { callback(...args) }, wait);
   }
+}
+
+/**
+ * wrapper function for creating a HTMLelement and assigning classes to it.
+ * @param tagName tag name of HTMLElement
+ * @param arg comma seperated class names
+ * @returns 
+ */
+export function createElementWithClasses<T extends keyof HTMLElementTagNameMap>(tagName: T, ...args: string[]) {
+  const elem = document.createElement(tagName);
+  elem.classList.add(...args);
+  return elem;
 }

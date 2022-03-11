@@ -1,5 +1,5 @@
 //script to animate the intro screen.
-import { disableHoverOnTouch } from "./util";
+
 
 export const animate = () => {
 
@@ -8,9 +8,6 @@ export const animate = () => {
   const content = document.getElementById('content');
   let bird: HTMLElement;
   let birdParent: HTMLElement;
-
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  disableHoverOnTouch(content!);
 
   //set the height for the placeholder element.
 

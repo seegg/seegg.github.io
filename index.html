@@ -10,6 +10,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Semi+Expanded:wght@200;400&display=swap"
     rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Encode+Sans+Semi+Expanded:wght@200;400&family=Noto+Sans&display=swap"
+    rel="stylesheet">
   <title>Hi, I am Yuan</title>
   <link rel="stylesheet" href="styles/main.css" type="text/css" />
   <script src="./script/bundle.js" defer></script>
@@ -25,12 +30,29 @@
   <main id="main">
     <nav class="tab-nav">
       <ol>
-        <li class="tab">Projects</li>
+        <li class="tab selected">Projects</li>
         <li class="tab">About</li>
         <li class="tab">Contacts</li>
       </ol>
     </nav>
-    <div class="content hide" id="content"></div>
+
+    <div class="content knob" id="content">
+      <section id="projects" class=""></section>
+      <section id="about" class="hide">
+        <p>Hi, I am Yuan.</p>
+      </section>
+      <section id="contacts" class="hide">
+        <address class="contact">
+          <a href="https://github.com/seegg"><img class="contact-logo"
+              src="https://raw.githubusercontent.com/seegg/seegg.github.io/main/images/GitHub-Mark-Light-32px.png"
+              alt="github link"></a>
+        </address>
+        <address class="contact">
+          <a href="https://www.linkedin.com/in/yuan-tan-yt/"><img class="contact-logo" src="./images/In-Blue-Logo.png"
+              alt="linkedin link"></a>
+        </address>
+      </section>
+    </div>
   </main>
   <footer>
     <address class="contact">

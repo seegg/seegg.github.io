@@ -1,7 +1,12 @@
 import { getProjects } from "./data";
 import { Project } from "./types";
+import { createElementWithClasses } from "./util";
 
-const contentWrapper = document.getElementById('content');
+const projectsContainer = document.getElementById('projects');
+const contentContainer = document.getElementById('content');
+
+console.log(contentContainer?.classList);
+
 // const imagePath = location.href + "images/";
 const imagePath = "https://raw.githubusercontent.com/seegg/seegg.github.io/main/images/";
 
@@ -9,15 +14,15 @@ const imagePath = "https://raw.githubusercontent.com/seegg/seegg.github.io/main/
  * load all the projects for display.
  */
 export const loadProjects = () => {
-  if (contentWrapper) {
-    setContentWrapperWidth(330, 20, contentWrapper);
+  if (projectsContainer) {
+    // setprojectsContainerWidth(330, 20, projectsContainer);
 
-    window.addEventListener('resize', () => { setContentWrapperWidth(320, 20, contentWrapper), false })
+    // window.addEventListener('resize', () => { setprojectsContainerWidth(320, 20, projectsContainer), false })
 
     getProjects().forEach(project => {
       //construct and attach the placeholder to the DOM
       const placeHolder = createProjectPlaceholder();
-      contentWrapper.appendChild(placeHolder);
+      projectsContainer.appendChild(placeHolder);
 
       //replace the placeholder once the acutal project card has finish
       //loading.
@@ -35,19 +40,7 @@ export const loadProjects = () => {
 
     })
   }
-}
-
-/**
- * wrapper function for creating a HTMLelement and assigning classes to it.
- * @param tagName tag name of HTMLElement
- * @param arg comma seperated class names
- * @returns 
- */
-function createElementWithClasses<T extends keyof HTMLElementTagNameMap>(tagName: T, ...args: string[]) {
-  const elem = document.createElement(tagName);
-  elem.classList.add(...args);
-  return elem;
-}
+};
 
 /**
  * Create the product card to display a project.
@@ -56,8 +49,8 @@ function createElementWithClasses<T extends keyof HTMLElementTagNameMap>(tagName
  */
 const createProjectComponent = (project: Project): HTMLElement => {
   //outer article 
-  const projectContainer = document.createElement('article');
-  projectContainer.classList.add('project-container');
+  const projectContainer = createElementWithClasses('section', 'project-container');
+  // projectContainer.classList.add('project-container');
 
   //link to repo with github logo
   const repoLink = createElementWithClasses('nav', 'nav-project');
@@ -75,15 +68,15 @@ const createProjectComponent = (project: Project): HTMLElement => {
   const secondArticle = createElementWithClasses('article', 'project');
 
   //animate the log and article body when mousing over it.
-  secondArticle.onpointerenter = () => {
+  projectContainer.onpointerenter = () => {
     animateMouseEnterArticle(secondArticle, repoLink, gitHLogo, 'entering');
-  }
-  secondArticle.onpointerleave = () => {
+  };
+  projectContainer.onpointerleave = () => {
     animateMouseEnterArticle(secondArticle, repoLink, gitHLogo, 'leaving');
-  }
-  secondArticle.onpointercancel = () => {
+  };
+  projectContainer.onpointercancel = () => {
     animateMouseEnterArticle(secondArticle, repoLink, gitHLogo, 'leaving');
-  }
+  };
 
   // image for the project
   let imgWrapper;
@@ -137,7 +130,7 @@ const animateMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, l
  * @param width The width for each indvidual project card.
  * @param constant
  */
-const setContentWrapperWidth = (cardWidth: number, padding: number, wrapper: HTMLElement) => {
+const setprojectsContainerWidth = (cardWidth: number, padding: number, wrapper: HTMLElement) => {
   const parentWidth = wrapper.parentElement?.clientWidth;
   if (parentWidth !== undefined) {
     let width = parentWidth - (parentWidth % cardWidth);
@@ -151,29 +144,24 @@ const setContentWrapperWidth = (cardWidth: number, padding: number, wrapper: HTM
  * @returns 
  */
 const createProjectPlaceholder = () => {
-  const placeholder = document.createElement('div');
-  placeholder.classList.add('placeholder-container');
+  const placeholder = createElementWithClasses('div', 'placeholder-container');
 
-  const nav = document.createElement('div');
-  nav.classList.add('placeholder-nav');
-  const linkLogo = document.createElement('div');
-  linkLogo.classList.add('placeholder-nav-logo', 'placeholder')
+
+  const nav = createElementWithClasses('div', 'placeholder-nav');
+  const linkLogo = createElementWithClasses('div', 'placeholder-nav-logo', 'placeholder');
 
   nav.appendChild(linkLogo);
   placeholder.appendChild(nav);
 
-  const project = document.createElement('div');
-  project.classList.add('placeholder-project', 'placeholder');
+  const project = createElementWithClasses('div', 'placeholder-project', 'placeholder');
 
   const image = createImgPlaceHolder();
   project.appendChild(image);
 
-  const title = document.createElement('div');
-  title.classList.add('placeholder-title', 'placeholder');
+  const title = createElementWithClasses('div', 'placeholder-title', 'placeholder');
   project.appendChild(title);
 
-  const description = document.createElement('div');
-  description.classList.add('placeholder-description', 'placeholder');
+  const description = createElementWithClasses('div', 'placeholder-description', 'placeholder');
   project.appendChild(description);
 
   placeholder.appendChild(project);
@@ -182,14 +170,10 @@ const createProjectPlaceholder = () => {
 }
 
 const createImgPlaceHolder = () => {
-  const imageContainer = document.createElement('div');
-  imageContainer.classList.add('placeholder-image', 'placeholder');
-  const triangle = document.createElement('div');
-  const triangleBig = document.createElement('div');
-  const triangleContainer = document.createElement('div');
-  triangle.classList.add('placeholder-triangle');
-  triangleBig.classList.add('placeholder-triangle-big');
-  triangleContainer.classList.add('triangle-container');
+  const imageContainer = createElementWithClasses('div', 'placeholder-image', 'placeholder');
+  const triangle = createElementWithClasses('div', 'placeholder-triangle');
+  const triangleBig = createElementWithClasses('div', 'placeholder-triangle-big');
+  const triangleContainer = createElementWithClasses('div', 'triangle-container');
   triangleContainer.appendChild(triangleBig);
   triangleContainer.appendChild(triangle);
   imageContainer.appendChild(triangleContainer);
