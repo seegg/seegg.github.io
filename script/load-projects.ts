@@ -24,8 +24,8 @@ export const loadProjects = () => {
       const placeHolder = createProjectPlaceholder();
       projectsContainer.appendChild(placeHolder);
 
-      //replace the placeholder once the acutal project card has finish
-      //loading.
+      // replace the placeholder once the acutal project card has finish loading.
+
       new Promise<HTMLDivElement>(resolve => {
         resolve(
           ((): HTMLDivElement => {

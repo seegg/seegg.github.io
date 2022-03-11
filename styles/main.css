@@ -61,15 +61,15 @@
 }
 
 .anim-fadein{
-  animation: 1.5s ease-in-out 0s 1 fade-in;
+  animation: 0.5s ease-in-out 0s 1 fade-in;
 }
 
 .anim-fadein-long{
-  animation: 2.5s ease-out 0s 1 fade-in;
+  animation: 1.5s ease-out 0s 1 fade-in;
 }
 
 .anim-fadeout{
-  animation: 1.5s ease-out 0s 1 fade-out;
+  animation: 0.5s ease-out 0s 1 fade-out;
 }
 
 .anim-slide-in-right{
@@ -149,6 +149,8 @@ main{
 #projects{
   display: flex;
   flex-wrap: wrap;
+  transition: all 0.25s ease-in-out;
+  width: 1000px;
 }
 
 .nav-project{
@@ -325,6 +327,7 @@ main{
   height: 400px;
   border-radius: 5px;
   background-color: hsl(0, 0%, 15%);
+  border: 2px solid black;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -356,7 +359,7 @@ main{
 }
 
 .placeholder-container{
-  overflow: hidden;
+  width: 160px;
 }
 
 /* place holder items above */
@@ -432,6 +435,7 @@ ol{
   font-family: 'Encode Sans Semi Expanded', sans-serif;
   font-family: 'Noto Sans', sans-serif;
   position: relative;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
