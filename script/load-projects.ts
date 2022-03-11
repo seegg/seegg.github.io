@@ -1,6 +1,6 @@
 import { getProjects } from "./data";
 import { Project } from "./types";
-import { createElementWithClasses } from "./util";
+import { createElementWithClasses, createNavItem } from "./util";
 
 const projectsContainer = document.getElementById('projects');
 const contentContainer = document.getElementById('content');
@@ -55,27 +55,24 @@ const createProjectComponent = (project: Project): HTMLElement => {
   //link to repo with github logo
   const repoLink = createElementWithClasses('nav', 'nav-project');
 
-  const repoAnchor = document.createElement('a');
-  repoAnchor.href = project.repo || '';
-  const gitHLogo = new Image();
-  gitHLogo.src = imagePath + "GitHub-Mark-Light-32px.png";
-  gitHLogo.classList.add('github-logo');
-  repoAnchor.appendChild(gitHLogo);
-  repoLink.appendChild(repoAnchor);
+  const gitHubLink = createNavItem(project.repo || '', imagePath + "GitHub-Mark-Light-32px.png", 'nav-logo');
+  repoLink.appendChild(gitHubLink);
   projectContainer.appendChild(repoLink);
+
+
 
   //container for the project details
   const secondArticle = createElementWithClasses('article', 'project');
 
   //animate the log and article body when mousing over it.
   projectContainer.onpointerenter = () => {
-    animateMouseEnterArticle(secondArticle, repoLink, gitHLogo, 'entering');
+    animateMouseEnterArticle(secondArticle, repoLink, repoLink, 'entering');
   };
   projectContainer.onpointerleave = () => {
-    animateMouseEnterArticle(secondArticle, repoLink, gitHLogo, 'leaving');
+    animateMouseEnterArticle(secondArticle, repoLink, repoLink, 'leaving');
   };
   projectContainer.onpointercancel = () => {
-    animateMouseEnterArticle(secondArticle, repoLink, gitHLogo, 'leaving');
+    animateMouseEnterArticle(secondArticle, repoLink, repoLink, 'leaving');
   };
 
   // image for the project

@@ -42,3 +42,18 @@ export function createElementWithClasses<T extends keyof HTMLElementTagNameMap>(
   elem.classList.add(...args);
   return elem;
 }
+
+/**
+ * create a nav item for project cards.
+ * @param href link
+ * @param src image scr
+ * @param classes image css classes
+ */
+export const createNavItem = (href: string, src: string, ...classes: string[]) => {
+  const anchor = document.createElement('a');
+  const logoImg = new Image();
+  logoImg.src = src;
+  logoImg.classList.add(...classes);
+  anchor.appendChild(logoImg);
+  return anchor;
+};
