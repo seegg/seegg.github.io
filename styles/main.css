@@ -113,18 +113,6 @@ a:visited {
   z-index: -1;
 }
 
-@media screen and (min-width: 700px) {
-  .background{
-    max-width: none;
-    /* animation: 1.5s ease-out 0s 1 fade-in; */
-    position: absolute;
-    left: 0;
-    top: 0;
-    object-fit: cover;
-    background-color: black;
-    z-index: -1;
-  }
-}
 
 .intro .foreground{
   max-width: 100%;
@@ -162,11 +150,11 @@ main{
   opacity: 0;
   padding: 10px;
   min-width: 340px;
+  width: 100%;
   height: fit-content;
   background: none;
   border-radius: 5px;
   justify-content: center; 
-  flex-shrink: 0;
   flex-wrap: wrap;
   display: flex;
   border-top:5px solid white;
@@ -182,7 +170,7 @@ main{
   display: flex;
   flex-wrap: wrap;
   width: fit-content;
-  max-width: 1110px;
+  max-width: 1750px;
 }
 
 .nav-project{
@@ -190,28 +178,33 @@ main{
   justify-content: end;
   margin: 10px;
   margin-bottom: 2px;
-  transition: transform 0.2s ease-in;
+  transition: all 0.2s ease-in;
 }
 
-#content.hasHover .nav-project-moveY{
+.nav-project-moveY{
   transform: translateY(-20px);
 }
 
 .project-container{
   transition: transform 0.15s ease-in;
-  /* overflow: hidden; */
+  outline: none;
   display: flex;
   flex-direction: column;
   transition: width 0.5s;
 }
 
+.full-card-size{
+  position: relative;
+  width: 310px;
+}
 
-@media screen and (min-width: 900px) {
-  .hasHover .project-container{
+
+@media screen and (min-width: 600px) {
+   .project-container{
     width: 160px;
   }
 
-  .project-container:hover{
+  .full-card-size{
     position: relative;
     width: 310px;
   }
@@ -221,6 +214,7 @@ main{
   position: relative;
   margin: 5px;
   margin-top: 0;
+  margin-bottom: 20px;
   padding: 10px;
   width: 300px;
   height: 400px;
@@ -236,7 +230,7 @@ main{
   overflow: hidden;
 }
 
-#content.hasHover .project-select{
+#content .project-select{
   box-shadow: -15px 15px 2px 0px rgba(0, 0, 0, 0.5);
   transform: translate(5px, -20px);
 }
@@ -289,12 +283,15 @@ main{
   margin-right: 5px;
   width: 32px;
   height: 32px;
-  opacity: 0.5;
-  transition: opacity 0.25s ease-in;
-  transition: transform 0.3s;
+  opacity: 0.2;
+  transition: opacity 0.25s ease-in, transform 0.3s;
 }
 
-#content.hasHover .nav-logo:hover{
+.nav-logo-partial{
+  opacity: 0.4;
+}
+
+.nav-logo:hover{
   opacity: 1;
 }
 

@@ -4,13 +4,15 @@
  */
 export const disableHoverOnTouch = (container: HTMLElement): void => {
   let lastTouchTime = 0;
-
+  container.classList.add('hasHover');
   const enableHover = () => {
     // if (new Date().getTime() - lastTouchTime < 500) return;
     container.classList.add('hasHover');
+    container.classList.remove('touch-device');
   };
 
   const disableHover = () => {
+    container.classList.add('touch-device');
     container.classList.remove('hasHover');
   };
 

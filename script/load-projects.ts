@@ -15,9 +15,9 @@ const imagePath = "https://raw.githubusercontent.com/seegg/seegg.github.io/main/
  */
 export const loadProjects = () => {
   if (projectsContainer) {
-    // setprojectsContainerWidth(330, 20, projectsContainer);
+    setprojectsContainerWidth(310, 160, 1750);
 
-    // window.addEventListener('resize', () => { setprojectsContainerWidth(320, 20, projectsContainer), false })
+    window.addEventListener('resize', () => { setprojectsContainerWidth(310, 160, 1750), false })
 
     getProjects().forEach(project => {
       //construct and attach the placeholder to the DOM
@@ -50,7 +50,7 @@ export const loadProjects = () => {
 const createProjectComponent = (project: Project): HTMLElement => {
   //outer article 
   const projectContainer = createElementWithClasses('section', 'project-container');
-  // projectContainer.classList.add('project-container');
+  projectContainer.tabIndex = -1;
 
   //link to repo with github logo
   const repoLink = createElementWithClasses('nav', 'nav-project');
@@ -58,10 +58,9 @@ const createProjectComponent = (project: Project): HTMLElement => {
   const gitHubLink = createNavItem(project.repo || '', imagePath + "GitHub-Mark-Light-32px.png", 'nav-logo');
   repoLink.appendChild(gitHubLink);
 
-  if (project.url) {
-    const link = createNavItem(project.url, '../images/link.png', 'nav-logo');
-    repoLink.prepend(link);
-  }
+  const link = createNavItem(project.url || '', '../images/link.png', 'nav-logo');
+  repoLink.prepend(link);
+
 
   projectContainer.appendChild(repoLink);
 
@@ -70,13 +69,24 @@ const createProjectComponent = (project: Project): HTMLElement => {
 
   //animate the log and article body when mousing over it.
   projectContainer.onpointerenter = () => {
-    animateMouseEnterArticle(secondArticle, repoLink, 'entering');
+    projectContainer.focus();
+    animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
   };
   projectContainer.onpointerleave = () => {
-    animateMouseEnterArticle(secondArticle, repoLink, 'leaving');
+    if (contentContainer?.classList.contains('touch-device')) return;
+    console.log('leaving');
+    animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
   };
   projectContainer.onpointercancel = () => {
-    animateMouseEnterArticle(secondArticle, repoLink, 'leaving');
+    animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
+  };
+  projectContainer.onblur = () => {
+    animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
+  }
+  projectContainer.onfocus = () => {
+    if (!contentContainer?.classList.contains('touch-device')) return;
+    console.log('entering');
+    animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
   };
 
   // image for the project
@@ -106,35 +116,41 @@ const createProjectComponent = (project: Project): HTMLElement => {
   projectContainer.appendChild(secondArticle);
 
   return projectContainer;
-}
+};
 
 /**
  * wrapper for animating the enter and leave effects for the card.
  */
-const animateMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, status: 'entering' | 'leaving') => {
+const animateMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, container: HTMLElement, status: 'entering' | 'leaving') => {
+
+  const logoImgs = Array.from(repoLink.querySelectorAll('img')) as HTMLImageElement[];
+
   if (status === "entering") {
     article.classList.add('project-select');
-    repoLink.classList.add('nav-project-moveY');
+    repoLink.classList.add('nav-project-moveY', 'nav-project-partial');
+    logoImgs.forEach(img => img.classList.add('nav-logo-partial'));
+    container.classList.add('full-card-size');
   } else {
     article.classList.remove('project-select');
-    repoLink.classList.remove('nav-project-moveY');
+    repoLink.classList.remove('nav-project-moveY', 'nav-project-partial');
+    container.classList.remove('full-card-size');
+    logoImgs.forEach(img => img.classList.remove('nav-logo-partial'));
   }
-}
+};
 
 /**
  * set the width of the content container as a multiple of the width of the project card.
  * as long as it's less than the size of the outer container.
- * @param width The width for each indvidual project card.
- * @param constant
  */
-const setprojectsContainerWidth = (cardWidth: number, padding: number, wrapper: HTMLElement) => {
-  const parentWidth = wrapper.parentElement?.clientWidth;
-  if (parentWidth !== undefined) {
-    let width = parentWidth - (parentWidth % cardWidth);
-    width += padding;
-    wrapper.style.width = width + 'px';
+const setprojectsContainerWidth = (fullCardWidth: number, partialCardWidth: number, maxWidth: number) => {
+
+  const parentWidth = contentContainer?.clientWidth;
+  if (parentWidth !== undefined && projectsContainer) {
+    const maxCards = Math.floor((parentWidth - fullCardWidth) / 160);
+    const width = Math.min(Math.max(fullCardWidth, maxCards * partialCardWidth + (fullCardWidth - partialCardWidth)), maxWidth);
+    projectsContainer.style.width = width + 'px';
   }
-}
+};
 
 /**
  * create a placeholder for the project until it loads.
@@ -164,7 +180,7 @@ const createProjectPlaceholder = () => {
   placeholder.appendChild(project);
 
   return placeholder;
-}
+};
 
 const createImgPlaceHolder = () => {
   const imageContainer = createElementWithClasses('div', 'placeholder-image', 'placeholder');
@@ -176,4 +192,4 @@ const createImgPlaceHolder = () => {
   imageContainer.appendChild(triangleContainer);
 
   return imageContainer;
-}
+};
