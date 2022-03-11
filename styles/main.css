@@ -223,7 +223,7 @@ main{
   flex-direction: column;
   align-items: center;
   box-shadow: 0;
-  transition: transform 0.2s ease-in;
+  transition: transform 0.2s ease-in, box-shadow 0.2s ease-in;
   overflow: hidden;
 }
 

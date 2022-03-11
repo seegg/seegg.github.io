@@ -5,8 +5,6 @@ import { createElementWithClasses, createNavItem } from "./util";
 const projectsContainer = document.getElementById('projects');
 const contentContainer = document.getElementById('content');
 
-console.log(contentContainer?.classList);
-
 // const imagePath = location.href + "images/";
 const imagePath = "https://raw.githubusercontent.com/seegg/seegg.github.io/main/images/";
 
@@ -76,7 +74,6 @@ const createProjectComponent = (project: Project): HTMLElement => {
   };
   projectContainer.onpointerleave = () => {
     if (contentContainer?.classList.contains('touch-device')) return;
-    console.log('leaving');
     animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
   };
   projectContainer.onpointercancel = () => {
@@ -87,7 +84,6 @@ const createProjectComponent = (project: Project): HTMLElement => {
   }
   projectContainer.onfocus = () => {
     if (!contentContainer?.classList.contains('touch-device')) return;
-    console.log('entering');
     animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
   };
 
@@ -151,7 +147,6 @@ const setprojectsContainerWidth = (cardNumber: number, fullCardWidth: number, pa
     const maxCards = Math.floor((parentWidth - fullCardWidth) / 160);
     const width = Math.min(Math.max(fullCardWidth, Math.min(maxCards, cardNumber) * partialCardWidth + (fullCardWidth - partialCardWidth)), maxWidth);
     projectsContainer.style.width = width + 'px';
-    console.log(width);
   }
 };
 
