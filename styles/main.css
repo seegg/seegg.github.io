@@ -90,33 +90,40 @@ a:visited {
   color: inherit;
 }
 
-section .intro{
+/* section .intro{
   width: 100vw;
   max-width: 100%;
   display: flex;
   justify-content: center;
-}
+} */
 
 .intro * {
   user-select: none;
   pointer-events: none;
 }
 
-@media screen and (min-width: 370px){
-  section .intro{
-    height:100vh;
-  }
-}
-
-.intro .background{
-  max-width: 100%;
+.background{
   /* animation: 1.5s ease-out 0s 1 fade-in; */
+  max-width: 100%;
   position: absolute;
   left: 0;
   top: 0;
-  object-fit: contain;
+  object-fit: cover;
   background-color: black;
   z-index: -1;
+}
+
+@media screen and (min-width: 700px) {
+  .background{
+    max-width: none;
+    /* animation: 1.5s ease-out 0s 1 fade-in; */
+    position: absolute;
+    left: 0;
+    top: 0;
+    object-fit: cover;
+    background-color: black;
+    z-index: -1;
+  }
 }
 
 .intro .foreground{
@@ -130,21 +137,19 @@ section .intro{
   z-index: -1;
 }
 
-/* .intro-text{
-  height: 100%;
-  z-index: 10;
-  color: #FFF;
-  font-size: 5rem;
-  display: flex;
-  align-items: center;
-} */
+@media screen and (min-width: 370px){
+  section .intro{
+    height:100vh;
+  }
+}
 
 
 main{
   min-height: 100vh;
   width: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .content{
@@ -405,17 +410,57 @@ footer{
   display: block;
 }
 
-/* @media screen and (min-width: 800px) {
-  .content{
-    max-width: fit-content;
-    justify-content: start;
-  }
+.hide{
+  display: none;
 }
 
-@media screen and (min-width: 1400px) {
-  .content{
-    max-width: fit-content;
-    justify-content: start;
-  }
-} */
+ol{
+  all: initial;
+  display: flex;
+}
 
+.tab-nav{
+  display: flex;
+}
+
+.tab{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2rem;
+  font-size: 1rem;
+  color: white;
+  width: 6rem;
+  transition: all 0.25s;
+  user-select: none;
+}
+
+.tab::after{
+  content: '';
+  background-color: darkgray;
+  z-index: -200;
+}
+
+.tab::before{
+  content: '';
+  width: 0;
+  height: 2rem;
+  position: absolute;
+  /* left: 0; */
+  right:0;
+  top: 0;
+  background-color: aliceblue;
+  z-index: -100;
+  transition: width 0.5s;
+}
+
+.tab:hover{
+  color: black;
+}
+
+.tab:hover::before{
+  left: 0;
+  width: 6rem;
+  transition: width 0.5s;
+}
