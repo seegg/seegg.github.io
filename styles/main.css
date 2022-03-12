@@ -113,7 +113,7 @@ a:visited {
 
 
 main{
-  min-height: 100vh;
+  min-height: 500px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -209,29 +209,6 @@ main{
   transform: translate(5px, -20px);
 }
 
-@media screen and (min-width: 450px) {
-  .project-container{
-   width: 160px;
- }
-
- .nav-project-moveY{
-  transform: translateY(10px);
-  z-index: 10;
-}
-
- .full-card-size{
-   position: relative;
-   width: 250px;
- }
-
- #content .project-select{
-   position: relative;
-  box-shadow: -15px 15px 2px rgba(0, 0, 0, 0.5);
-  transform: translate(-55px, -30px);
-}
-
-}
-
 .project-img{
   max-width: 270px;
   max-height: 250px;
@@ -281,6 +258,7 @@ main{
 }
 
 .nav-logo{
+  border-radius: 50px;
   margin-right: 5px;
   width: 32px;
   height: 32px;
@@ -500,6 +478,43 @@ ol{
   left: 0;
   width: 6rem;
   transition: width 0.25s;
+}
+
+@media screen and (min-width: 450px) {
+  .project-container{
+    width: 160px;
+  }
+
+  .nav-project-moveY{
+    transform: translateY(10px);
+    z-index: 10;
+  }
+
+  .full-card-size{
+    position: relative;
+    width: 250px;
+  }
+
+  #content .project-select{
+    position: relative;
+    box-shadow: -15px 15px 2px rgba(0, 0, 0, 0.5);
+    transform: translate(-55px, -30px);
+  }
+
+  .nav-logo{
+    opacity: 0.2;
+  }
+
+  .nav-logo-partial{
+    opacity: 1;
+  }
+
+  .nav-logo-partial:hover {
+    transform: scale(1.2);
+    border-radius: 50px;
+    box-shadow: 0px 0px 5px black;  
+  }
+
 }
 
 /* Rules for sizing the icon. */

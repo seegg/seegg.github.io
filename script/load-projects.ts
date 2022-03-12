@@ -133,12 +133,12 @@ const animateMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, c
 
   if (status === "entering") {
     article.classList.add('project-select');
-    repoLink.classList.add('nav-project-moveY', 'nav-project-partial');
+    repoLink.classList.add('nav-project-moveY');
     logoImgs.forEach(img => img.classList.add('nav-logo-partial'));
     container.classList.add('full-card-size');
   } else {
     article.classList.remove('project-select');
-    repoLink.classList.remove('nav-project-moveY', 'nav-project-partial');
+    repoLink.classList.remove('nav-project-moveY');
     container.classList.remove('full-card-size');
     logoImgs.forEach(img => img.classList.remove('nav-logo-partial'));
   }
