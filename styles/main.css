@@ -286,6 +286,10 @@ main{
   transition: opacity 0.25s ease-in, transform 0.3s;
 }
 
+.nav-log-partial{
+  opacity: 1;
+}
+
 .nav-logo:hover{
   opacity: 1;
 }

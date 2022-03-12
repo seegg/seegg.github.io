@@ -76,7 +76,7 @@ const createProjectComponent = (project: Project): HTMLElement => {
   const secondArticle = createElementWithClasses('article', 'project');
 
   //animate the log and article body when mousing over it.
-  projectContainer.onpointerenter = () => {
+  secondArticle.onpointerenter = () => {
     projectContainer.focus();
     animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
   };
