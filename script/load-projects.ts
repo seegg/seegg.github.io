@@ -13,11 +13,19 @@ const imagePath = "https://raw.githubusercontent.com/seegg/seegg.github.io/main/
  */
 export const loadProjects = () => {
   if (projectsContainer) {
+    //project card dimensions.
+    const fullCardWidth = 250; //expanded card size
+    const partialCardWidth = 160; //overlapping card size
+    const maxWidth = 1690; //max container width
+    const minWidth = 310; //min container width, acutal size of each project card.
 
+    //Calculate initial size of project container.
     const projects = getProjects();
-    setprojectsContainerWidth(projects.length, 310, 160, 1750);
+    setprojectsContainerWidth(projects.length, fullCardWidth, partialCardWidth, maxWidth, minWidth);
 
-    window.addEventListener('resize', () => { setprojectsContainerWidth(projects.length, 310, 160, 1750), false })
+    //Recalculate the container everytime window resizes.
+    window.addEventListener('resize',
+      () => { setprojectsContainerWidth(projects.length, fullCardWidth, partialCardWidth, maxWidth, minWidth) });
 
     projects.forEach(project => {
       //construct and attach the placeholder to the DOM
@@ -140,12 +148,12 @@ const animateMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, c
  * set the width of the content container as a multiple of the width of the project card.
  * as long as it's less than the size of the outer container.
  */
-const setprojectsContainerWidth = (cardNumber: number, fullCardWidth: number, partialCardWidth: number, maxWidth: number) => {
+const setprojectsContainerWidth = (cardNumber: number, fullCardWidth: number, partialCardWidth: number, maxWidth: number, minWidth = 310) => {
 
   const parentWidth = contentContainer?.clientWidth;
   if (parentWidth !== undefined && projectsContainer) {
     const maxCards = Math.floor((parentWidth - fullCardWidth) / 160);
-    const width = Math.min(Math.max(fullCardWidth, Math.min(maxCards, cardNumber) * partialCardWidth + (fullCardWidth - partialCardWidth)), maxWidth);
+    const width = Math.min(Math.max(minWidth, Math.min(maxCards, cardNumber) * partialCardWidth + (fullCardWidth - partialCardWidth)), maxWidth);
     projectsContainer.style.width = width + 'px';
   }
 };

@@ -175,24 +175,12 @@ main{
   outline: none;
   display: flex;
   flex-direction: column;
-  transition: width 0.5s;
+  transition: all 0.5s;
 }
 
 .full-card-size{
   position: relative;
   width: 310px;
-}
-
-
-@media screen and (min-width: 600px) {
-   .project-container{
-    width: 160px;
-  }
-
-  .full-card-size{
-    position: relative;
-    width: 310px;
-  }
 }
 
 .project{
@@ -217,6 +205,29 @@ main{
 #content .project-select{
   box-shadow: -15px 15px 2px 0px rgba(0, 0, 0, 0.5);
   transform: translate(5px, -20px);
+}
+
+@media screen and (min-width: 450px) {
+  .project-container{
+   width: 160px;
+ }
+
+ .nav-project-moveY{
+  transform: translateY(10px);
+  z-index: 10;
+}
+
+ .full-card-size{
+   position: relative;
+   width: 250px;
+ }
+
+ #content .project-select{
+   position: relative;
+  box-shadow: -15px 15px 2px rgba(0, 0, 0, 0.5);
+  transform: translate(-55px, -30px);
+}
+
 }
 
 .project-img{
@@ -249,11 +260,6 @@ main{
   transition: background-color 0.25s ease-out;
 }
 
-.project:hover .project-description{
-  background-color: hsl(0, 0%, 5%);
-  transition: background-color 0.25s ease-in;
-}
-
 .project-description > p{
   color: hsl(0, 0%, 70%);
   min-height: 90px;
@@ -278,10 +284,6 @@ main{
   height: 32px;
   opacity: 0.2;
   transition: opacity 0.25s ease-in, transform 0.3s;
-}
-
-.nav-logo-partial{
-  opacity: 0.4;
 }
 
 .nav-logo:hover{
