@@ -512,7 +512,7 @@ ol{
   .nav-logo-partial:hover {
     transform: scale(1.2);
     border-radius: 50px;
-    box-shadow: 0px 0px 5px black;  
+    box-shadow: 0px 0px 1px 2px black;  
   }
 
 }
