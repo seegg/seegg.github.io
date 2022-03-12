@@ -63,10 +63,10 @@ const createProjectComponent = (project: Project): HTMLElement => {
   //link to repo with github logo
   const repoLink = createElementWithClasses('nav', 'nav-project');
 
-  const gitHubLink = createNavItem(project.repo || '#', imagePath + "GitHub-Mark-Light-32px.png", 'nav-logo');
+  const gitHubLink = createNavItem(project.repo || '#', imagePath + "GitHub-Mark-Light-32px.png", 'nav-icon');
   repoLink.appendChild(gitHubLink);
   //external link for project, if any.
-  const link = createNavItem(project.url || '#', '../images/link.png', 'nav-logo');
+  const link = createNavItem(project.url || '#', '../images/link.png', 'nav-icon');
   repoLink.prepend(link);
 
 
@@ -134,13 +134,13 @@ const animateMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, c
   if (status === "entering") {
     article.classList.add('project-select');
     repoLink.classList.add('nav-project-moveY');
-    logoImgs.forEach(img => img.classList.add('nav-logo-partial'));
+    logoImgs.forEach(img => img.classList.add('nav-icon-partial'));
     container.classList.add('full-card-size');
   } else {
     article.classList.remove('project-select');
     repoLink.classList.remove('nav-project-moveY');
     container.classList.remove('full-card-size');
-    logoImgs.forEach(img => img.classList.remove('nav-logo-partial'));
+    logoImgs.forEach(img => img.classList.remove('nav-icon-partial'));
   }
 };
 
@@ -167,7 +167,7 @@ const createProjectPlaceholder = () => {
 
 
   const nav = createElementWithClasses('div', 'placeholder-nav');
-  const linkLogo = createElementWithClasses('div', 'placeholder-nav-logo', 'placeholder');
+  const linkLogo = createElementWithClasses('div', 'placeholder-nav-icon', 'placeholder');
 
   nav.appendChild(linkLogo);
   placeholder.appendChild(nav);
