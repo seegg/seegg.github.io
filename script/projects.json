@@ -54,6 +54,13 @@
       "url": "https://seegg.github.io/calculator",
       "image": "calculator.png",
       "description": "Simple calculator app for learning JS and CSS."
+    },
+    {
+      "name": "Personal Page",
+      "title": "Personal page",
+      "repo": "https://github.com/seegg/seegg.github.io",
+      "url": "https://seegg.github.io/",
+      "description": "This web page"
     }
   ]
 }
