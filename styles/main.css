@@ -146,11 +146,16 @@ main{
   opacity: 1;
 }
 
-#projects{
+.projects{
   display: flex;
   flex-wrap: wrap;
   transition: all 0.25s ease-in-out;
   width: 1000px;
+}
+
+.contacts{
+  display: flex;
+  justify-content: center;
 }
 
 .nav-project{
@@ -435,12 +440,11 @@ ol{
   display: flex;
 }
 
-.tab-nav{
-  display: flex;
-  margin-bottom: 1rem;
+.tab-nav-bar{
+  margin-bottom: 20px;
 }
 
-.tab{
+.tab-nav{
   font-family: 'Encode Sans Semi Expanded', sans-serif;
   font-family: 'Noto Sans', sans-serif;
   position: relative;
@@ -457,13 +461,13 @@ ol{
   margin-left: 5px;
 }
 
-.tab::after{
+.tab-nav::after{
   content: '';
   background-color: darkgray;
   z-index: -200;
 }
 
-.tab::before{
+.tab-nav::before{
   content: '';
   width: 0;
   height: 2rem;
@@ -475,16 +479,16 @@ ol{
   transition: width 0.5s;
 }
 
-.tab.selected{
+.tab-nav.selected{
   background-color: white;
   color: black;
 }
 
-.tab:hover{
+.tab-nav:hover{
   color: black;
 }
 
-.tab:hover::before{
+.tab-nav:hover::before{
   left: 0;
   width: 6rem;
   transition: width 0.5s;

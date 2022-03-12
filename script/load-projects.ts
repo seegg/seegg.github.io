@@ -55,10 +55,10 @@ const createProjectComponent = (project: Project): HTMLElement => {
   //link to repo with github logo
   const repoLink = createElementWithClasses('nav', 'nav-project');
 
-  const gitHubLink = createNavItem(project.repo || '', imagePath + "GitHub-Mark-Light-32px.png", 'nav-logo');
+  const gitHubLink = createNavItem(project.repo || '#', imagePath + "GitHub-Mark-Light-32px.png", 'nav-logo');
   repoLink.appendChild(gitHubLink);
-
-  const link = createNavItem(project.url || '', '../images/link.png', 'nav-logo');
+  //external link for project, if any.
+  const link = createNavItem(project.url || '#', '../images/link.png', 'nav-logo');
   repoLink.prepend(link);
 
 
