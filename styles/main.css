@@ -13,6 +13,7 @@
   padding: 0;
 }
 
+
 /* slind in animatin with a slight 'bounce' at the end */
 @keyframes slide-in-right{
   0%{
@@ -230,6 +231,12 @@ main{
   padding-top: 3px;
   padding-bottom: 3px;
   text-overflow: ellipsis;
+}
+
+.project-description::-webkit-scrollbar {
+  width: 5px;
+  background-color: darkgray;
+  border-radius: 5px;
 }
 
 .project-img-container{
