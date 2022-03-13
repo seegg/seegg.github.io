@@ -124,7 +124,7 @@ main{
 
 .projects{
   display: flex;
-  flex-wrap: wrap-reverse;
+  flex-wrap: wrap;
   transition: all 0.25s ease-in-out;
   width: 1000px;
 }
