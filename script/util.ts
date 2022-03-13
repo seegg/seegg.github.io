@@ -61,3 +61,12 @@ export const createNavItem = (href: string, src: string, ...classes: string[]) =
   anchor.appendChild(logoImg);
   return anchor;
 };
+
+export const sleep = async (duration: number) => {
+  const timeOutID = await new Promise(resolve => {
+    const id = setTimeout(() => {
+      resolve(id);
+    }, duration);
+  });
+  return timeOutID as number;
+}

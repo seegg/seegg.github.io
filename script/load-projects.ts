@@ -46,7 +46,7 @@ export const loadProjects = () => {
         if (currentVisibleProjectHeight >= visibleHeightThreshold) {
           //once visible height on the projects is bigger than threshold
           //remove intro only css classes and remove this listener.
-          (Array.from(projectsContainer.childNodes) as HTMLElement[]).forEach(project => {
+          (Array.from(projectsContainer.children) as HTMLElement[]).forEach(project => {
             project.classList.remove(cssIntroOnce);
             const navBar = project.getElementsByClassName('nav-project')[0];
             navBar.classList.remove(cssInvisible);
