@@ -60,7 +60,7 @@
 
 .anim-fadein{ animation: 0.5s ease-in-out 0s 1 fade-in; }
 
-.anim-fadein-long{ animation: 1.5s ease-out 0s 1 fade-in; }
+.anim-fadein-long{ animation: 1.5s ease-in 0s 1 fade-in; }
 
 .anim-fadeout{ animation: 0.5s ease-out 0s 1 fade-out; }
 
@@ -112,6 +112,7 @@ main{
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-x: hidden;
 }
 
 .contacts{
@@ -258,7 +259,6 @@ main{
   width: 32px;
   height: 32px;
   opacity: 1;
-  /* transition: opacity 0.25s ease-in, transform 0.25s; */
   transition: all 0.25s ease-in-out;
 }
 
@@ -386,8 +386,6 @@ footer{
   animation: blink 2s ease 1.5s infinite;
 }
 
-.hide-scroll{ display: none; }
-
 .show-scroll{ display: block; }
 
 .hide{ display: none; }
@@ -448,15 +446,12 @@ ol{
 }
 
 @media screen and (min-width: 450px) {
-  .project-container{
-    width: 160px;
-    animation: open-deck 1s ease-in-out;
-  }
 
-  .nav-project{
-    animation: fade-in-inherit 1.5s ease-in;
-    /* opacity: 0; */
-  }
+  .anim-open-deck:not(.intro-only-once){ animation: open-deck 1s ease-in-out; }
+
+  .anim-close-deck{ animation: close-deck 1s ease-in-out; }
+
+  .project-container{ width: 160px; }
 
   .nav-project-moveY{
     transform: translateY(10px);
@@ -488,6 +483,10 @@ ol{
     border-radius: 50px;
     box-shadow: 0px 0px 1px 1px black;  
   }
+
+  .intro-only-once{ width: 10px; }
+
+  .invisible {visibility: hidden;}
 
 }
 

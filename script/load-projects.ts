@@ -5,6 +5,11 @@ import { createElementWithClasses, createNavItem } from "./util";
 const projectsContainer = document.getElementById('projects');
 const contentContainer = document.getElementById('content');
 
+//css utility classes
+const cssFadeInLong = 'anim-fadein-long';
+const cssIntroOnce = 'intro-only-once';
+const cssInvisible = 'invisible';
+
 // const imagePath = location.href + "images/";
 const imagePath = "https://raw.githubusercontent.com/seegg/seegg.github.io/main/images/";
 
@@ -27,6 +32,34 @@ export const loadProjects = () => {
     window.addEventListener('resize',
       () => { setprojectsContainerWidth(projects.length, fullCardWidth, partialCardWidth, maxWidth, minWidth) });
 
+    //add intro only listener, if projects are not visible. don't play deck open animation
+    //until a certain threshold is meet.
+    const visibleProjectHeight = projectsContainer ?
+      window.innerHeight - projectsContainer.getBoundingClientRect().top : 0;
+
+    const visibleHeightThreshold = 300;
+    if (visibleProjectHeight < visibleHeightThreshold) {
+      document.addEventListener('scroll', function introDeckAnimation() {
+        const currentVisibleProjectHeight = projectsContainer ?
+          window.innerHeight - projectsContainer.getBoundingClientRect().top : 0;
+
+        if (currentVisibleProjectHeight >= visibleHeightThreshold) {
+          //once visible height on the projects is bigger than threshold
+          //remove intro only css classes and remove this listener.
+          (Array.from(projectsContainer.childNodes) as HTMLElement[]).forEach(project => {
+            project.classList.remove(cssIntroOnce);
+            const navBar = project.getElementsByClassName('nav-project')[0];
+            navBar.classList.remove(cssInvisible);
+            navBar.classList.add(cssFadeInLong);
+          });
+          //remove listener
+          document.removeEventListener('scroll', introDeckAnimation);
+        }
+      });
+    }
+
+    console.log(visibleProjectHeight);
+    //load projects from projects.json
     projects.forEach(project => {
       //construct and attach the placeholder to the DOM
       const placeHolder = createProjectPlaceholder();
@@ -37,7 +70,7 @@ export const loadProjects = () => {
       new Promise<HTMLDivElement>(resolve => {
         resolve(
           ((): HTMLDivElement => {
-            const projectCard = createProjectComponent(project);
+            const projectCard = createProjectComponent(project, visibleProjectHeight);
             return projectCard as HTMLDivElement;
           })()
         )
@@ -46,7 +79,9 @@ export const loadProjects = () => {
         (card as HTMLDivElement).classList.add('anim-fadein');
       }).catch(err => console.error(err));
 
-    })
+
+    });
+
   }
 };
 
@@ -55,13 +90,13 @@ export const loadProjects = () => {
  * @param project 
  * @returns 
  */
-const createProjectComponent = (project: Project): HTMLElement => {
-  //outer article 
-  const projectContainer = createElementWithClasses('section', 'project-container');
+const createProjectComponent = (project: Project, visibleContent: number): HTMLElement => {
+  //project container 
+  const projectContainer = createElementWithClasses('section', 'project-container', 'anim-open-deck');
   projectContainer.tabIndex = -1;
 
   //link to repo with github logo
-  const repoLink = createElementWithClasses('nav', 'nav-project');
+  const repoLink = createElementWithClasses('nav', 'nav-project', cssFadeInLong);
 
   const gitHubLink = createNavItem(project.repo || '#', imagePath + "GitHub-Mark-Light-32px.png", 'nav-icon');
   repoLink.appendChild(gitHubLink);
@@ -69,10 +104,9 @@ const createProjectComponent = (project: Project): HTMLElement => {
   const link = createNavItem(project.url || '#', '../images/link.png', 'nav-icon');
   repoLink.prepend(link);
 
-
   projectContainer.appendChild(repoLink);
 
-  //container for the project details
+  //container for the project image and project details
   const secondArticle = createElementWithClasses('article', 'project');
 
   //animate the log and article body when mousing over it.
@@ -95,22 +129,10 @@ const createProjectComponent = (project: Project): HTMLElement => {
     animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
   };
 
-  // image for the project
-  let imgWrapper;
-  if (project.image) {
-    imgWrapper = createElementWithClasses('div', 'project-img-container');
-    const projectImg = new Image();
-    projectImg.src = imagePath + project.image;
-    projectImg.classList.add('project-img');
+  const projectImg = project.image ? imagePath + project.image : null;
 
-    //append the image only after it loads.
-    projectImg.onload = (evt) => {
-      projectContainer.getElementsByClassName('project-img-container')[0].appendChild(projectImg);
-      (evt.target as HTMLImageElement).classList.add('anim-fadein');
-    }
-  } else {
-    imgWrapper = createImgPlaceHolder();
-  }
+  // image for the project
+  const imgWrapper: HTMLDivElement = createProjectImage(projectImg);
   secondArticle.appendChild(imgWrapper);
 
   //inner article for descriptions
@@ -120,6 +142,12 @@ const createProjectComponent = (project: Project): HTMLElement => {
   secondArticle.appendChild(innerArticle);
 
   projectContainer.appendChild(secondArticle);
+
+  if (visibleContent < 300) {
+    projectContainer.classList.add(cssIntroOnce);
+    repoLink.classList.add(cssInvisible);
+    repoLink.classList.remove(cssFadeInLong)
+  }
 
   return projectContainer;
 };
@@ -159,12 +187,35 @@ const setprojectsContainerWidth = (cardNumber: number, fullCardWidth: number, pa
 };
 
 /**
+ * Create the image component for the project card.
+ * @param imgSrc
+ * @returns 
+ */
+const createProjectImage = (imgSrc: string | null) => {
+  //start with a placeholder element. replace the placeholder if an image is available.
+  const placeHolder: HTMLDivElement = createImgPlaceHolder();
+  if (imgSrc) {
+    const wrapper = createElementWithClasses('div', 'project-img-container');
+    const projectImg = new Image();
+    projectImg.src = imgSrc;
+    projectImg.classList.add('project-img');
+    wrapper.appendChild(projectImg);
+
+    projectImg.onload = () => {
+      //replace placholder when image finish loading.
+      placeHolder.parentElement?.replaceChild(wrapper, placeHolder);
+      projectImg.classList.add(cssFadeInLong);
+    }
+  }
+  return placeHolder;
+};
+
+/**
  * create a placeholder for the project until it loads.
  * @returns 
  */
 const createProjectPlaceholder = () => {
   const placeholder = createElementWithClasses('div', 'placeholder-container');
-
 
   const nav = createElementWithClasses('div', 'placeholder-nav');
   const linkLogo = createElementWithClasses('div', 'placeholder-nav-icon', 'placeholder');
