@@ -28,7 +28,6 @@
 @keyframes fade-in {
   0%{opacity: 0;}
   100%{opacity: 1;}
-  
 }
 
 @keyframes fade-out {
@@ -40,6 +39,23 @@
   0%{opacity: 0;}
   50%{opacity: 0.5;}
   100%{opacity: 0;}
+}
+
+@keyframes open-deck {
+  0%{width: 10px;}
+  50%{width: 10px}
+  100%{width: 160px;}
+}
+
+@keyframes close-deck {
+  0%{width: 160px;}
+  60%{width: 10px;}
+  100%{width: 10px}
+}
+
+@keyframes fade-in-inherit {
+  0%{opacity: 0;}
+  100%{opacity: inherit;}
 }
 
 .anim-fadein{ animation: 0.5s ease-in-out 0s 1 fade-in; }
@@ -325,9 +341,6 @@ main{
 
 .placeholder-container{ width: 160px; }
 
-/* place holder items above */
-
-
 .contact{
   display: flex;
   justify-content: center;
@@ -437,6 +450,12 @@ ol{
 @media screen and (min-width: 450px) {
   .project-container{
     width: 160px;
+    animation: open-deck 1s ease-in-out;
+  }
+
+  .nav-project{
+    animation: fade-in-inherit 1.5s ease-in;
+    /* opacity: 0; */
   }
 
   .nav-project-moveY{
