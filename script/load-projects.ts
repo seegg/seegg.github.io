@@ -97,13 +97,11 @@ const createProjectComponent = (project: Project, visibleContent: number): HTMLE
 
   //link to repo with github logo
   const repoLink = createElementWithClasses('nav', 'nav-project', cssFadeInLong);
-
   const gitHubLink = createNavItem(project.repo || '#', imagePath + "GitHub-Mark-Light-32px.png", 'nav-icon');
   repoLink.appendChild(gitHubLink);
   //external link for project, if any.
   const link = createNavItem(project.url || '#', '../images/link.png', 'nav-icon');
   repoLink.prepend(link);
-
   projectContainer.appendChild(repoLink);
 
   //container for the project image and project details
@@ -130,7 +128,6 @@ const createProjectComponent = (project: Project, visibleContent: number): HTMLE
   };
 
   const projectImg = project.image ? imagePath + project.image : null;
-
   // image for the project
   const imgWrapper: HTMLDivElement = createProjectImage(projectImg);
   secondArticle.appendChild(imgWrapper);
@@ -140,7 +137,6 @@ const createProjectComponent = (project: Project, visibleContent: number): HTMLE
 
   innerArticle.innerHTML = `<a href="${project.url}"><h4 class="project-title">${project.name}</h4></a><p>${project.description}</p>`
   secondArticle.appendChild(innerArticle);
-
   projectContainer.appendChild(secondArticle);
 
   if (visibleContent < 300) {
