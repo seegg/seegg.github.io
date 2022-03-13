@@ -1,22 +1,6 @@
 {
   "projects": [
     {
-      "name": "JS Date Picker",
-      "title": "JS Date Picker",
-      "repo": "https://github.com/seegg/date-picker",
-      "url": "https://seegg.github.io/date-picker",
-      "image": "date-picker.png",
-      "description": "A date picker widget created using vanilla JS that can easily be added to any webpage."
-    },
-    {
-      "name": "animate trace border",
-      "title": "Trace Border",
-      "repo": "https://github.com/seegg/trace-border-animation",
-      "url": "https://seegg.github.io/trace-border-animation/demo",
-      "image": "img1.png",
-      "description": "React wrapper component to animate tracing a border around wrapped contents."
-    },
-    {
       "name": "Safe Houses",
       "title": "Safe Houses",
       "repo": "https://github.com/seegg/safe-houses",
@@ -61,6 +45,22 @@
       "repo": "https://github.com/seegg/seegg.github.io",
       "url": "https://seegg.github.io/",
       "description": "This web page"
+    },
+    {
+      "name": "JS Date Picker",
+      "title": "JS Date Picker",
+      "repo": "https://github.com/seegg/date-picker",
+      "url": "https://seegg.github.io/date-picker",
+      "image": "date-picker.png",
+      "description": "A date picker widget created using vanilla JS that can easily be added to any webpage."
+    },
+    {
+      "name": "animate trace border",
+      "title": "Trace Border",
+      "repo": "https://github.com/seegg/trace-border-animation",
+      "url": "https://seegg.github.io/trace-border-animation/demo",
+      "image": "img1.png",
+      "description": "React wrapper component to animate tracing a border around wrapped contents."
     }
   ]
 }
