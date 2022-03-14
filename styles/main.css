@@ -462,7 +462,7 @@ ol{
 
   .anim-close-deck{ animation: close-deck 1s ease-in-out; }
 
-  .project-container{ width: 160px; }
+  .project-container{ width: 160px; height: fit-content;}
 
   .nav-project-moveY{
     transform: translateY(10px);
