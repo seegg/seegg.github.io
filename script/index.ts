@@ -1,10 +1,10 @@
 import { animate } from "./animate";
 import { loadProjects } from './load-projects';
-import { disableHoverOnTouch } from './util';
+import { addCssClassToTouchDevices } from './util';
 import { setUpNavBar } from './nav';
 
-//add class to content container to check whether it's touch device or not.
-disableHoverOnTouch(document.getElementById('content') || null);
+//add hasTouch class to content container to check whether it's touch device or not.
+addCssClassToTouchDevices(document.getElementById('content') || null);
 
 setUpNavBar();
 animate();

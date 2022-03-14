@@ -2,7 +2,7 @@
  * Enable and disabled hover effects by adding and removing a class from parent container.
  * @param container HTMLElement parent node containing all the elements that is to be checked.
  */
-export const disableHoverOnTouch = (container: HTMLElement | null): void => {
+export const addCssClassToTouchDevices = (container: HTMLElement | null): void => {
   if (container === null) return;
   // const lastTouchTime = 0;
   container.classList.add('hasHover');
