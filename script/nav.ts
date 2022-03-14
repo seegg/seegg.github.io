@@ -12,30 +12,57 @@ const cssCloseDeck = 'anim-close-deck';
 const cssOpenDeck = 'anim-open-deck';
 const screenWidthThreshold = 450;
 
+//save the value as object property to make sure it's up to date and not just a snapshot.
+const currentIndex: { current: number | null } = { current: null };
+
 
 export const setUpNavBar = async () => {
 
   //navigation bar at the top
   navBar.forEach(async (tab, index) => {
     tab.addEventListener('click', async () => {
+      //ignore clicks to the same tab.
+      if (tab.classList.contains(cssSelected)) return;
 
-      //open and close project cards animation. only if screen width is above threshold.
-      if (window.innerWidth >= screenWidthThreshold) {
-        if (index !== 0 && navBar[0].classList.contains(cssSelected)) {
-          await closeDeck();
-        } else if (index === 0) {
-          openDeck();
-        }
-      }
+      currentIndex.current = index;
+      //save a reference to the current selected tab before it's changed.
+      const currentSelectIsProject = navBar[0].classList.contains(cssSelected);
 
       tab.classList.add(cssSelected);
-      await toggleContent(index, tabs);
 
       navBar.forEach((otherTabs, index2) => {
         if (index2 !== index) {
           otherTabs.classList.remove(cssSelected);
         }
       })
+
+      // open and close project cards animation. only if screen width is above threshold.
+      // decide what to do base on if index equals currentIndex to make sure corrent content is
+      // rendered.
+      if (window.innerWidth >= screenWidthThreshold) {
+        let deckClosing = false;
+        if (currentSelectIsProject) {
+          deckClosing = true;
+          await closeDeck();
+        }
+
+        if (index === 0) {
+          openDeck();
+        }
+
+        //changing away from project tab and then back quickly.
+        if (deckClosing && currentIndex.current === 0) return;
+        //clicking multiple different tabs during  deck closing transition.
+        if (index !== currentIndex.current) return;
+
+        // await toggleContent(index, tabs);
+
+      } else {
+        // await toggleContent(index, tabs);
+      }
+      await toggleContent(index, tabs);
+
+
     })
   });
 
@@ -58,6 +85,9 @@ export const setUpNavBar = async () => {
 
 };
 
+/**
+ * close deck transistion
+ */
 const closeDeck = async () => {
   tabs[0].classList.add(cssFadeOut);
   Array.from(tabs[0].children).forEach(child => {
@@ -65,8 +95,13 @@ const closeDeck = async () => {
     child.classList.add(cssCloseDeck);
   });
   await sleep(500);
+
+
 }
 
+/**
+ * open deck transition
+ */
 const openDeck = () => {
   tabs[0].classList.remove(cssFadeOut);
   Array.from(tabs[0].children).forEach(child => {
