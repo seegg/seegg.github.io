@@ -7,7 +7,12 @@ import { collapseDeckOnScroll } from './collapseDeckOnScroll';
 //add hasTouch class to content container to check whether it's touch device or not.
 addCssClassToTouchDevices(document.getElementById('content') || null);
 
-setUpNavBar(570);
-animate();
-loadProjects();
-collapseDeckOnScroll(450);
+const setUp = async () => {
+
+  setUpNavBar(570);
+  animate();
+  await loadProjects();
+  collapseDeckOnScroll(570);
+};
+
+setUp();

@@ -16,7 +16,7 @@ const imagePath = "https://raw.githubusercontent.com/seegg/seegg.github.io/main/
 /**
  * load all the projects for display.
  */
-export const loadProjects = () => {
+export const loadProjects = async () => {
   if (projectsContainer) {
     //project card dimensions.
     const fullCardWidth = 250; //expanded card size
@@ -60,16 +60,15 @@ export const loadProjects = () => {
       });
     }
 
-
     //load projects from projects.json
-    projects.forEach(project => {
+    projects.forEach(async project => {
       //construct and attach the placeholder to the DOM
       const placeHolder = createProjectPlaceholder();
       projectsContainer.appendChild(placeHolder);
 
       // replace the placeholder once the acutal project card has finish loading.
 
-      new Promise<HTMLDivElement>(resolve => {
+      await new Promise<HTMLDivElement>(resolve => {
         resolve(
           ((): HTMLDivElement => {
             const projectCard = createProjectComponent(project, visibleProjectHeight);
@@ -79,12 +78,10 @@ export const loadProjects = () => {
       }).then((card) => {
         placeHolder.replaceWith(card);
         (card as HTMLDivElement).classList.add('anim-fadein');
-      }).catch(err => console.error(err));
-
-
+      }).catch(err => console.error(err))
     });
-
   }
+
 };
 
 /**
@@ -94,7 +91,7 @@ export const loadProjects = () => {
  */
 const createProjectComponent = (project: Project, visibleContent: number): HTMLElement => {
   //project container 
-  const projectContainer = createElementWithClasses('section', 'project-container', 'anim-open-deck');
+  const projectContainer = createElementWithClasses('section', 'project-card', 'anim-open-deck');
   projectContainer.tabIndex = -1;
 
   //link to repo with github logo

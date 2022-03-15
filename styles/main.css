@@ -2,6 +2,8 @@
   font-family: 'Encode Sans Semi Expanded', sans-serif;
   --icon-size-w: 28px;
   --icon-size-h: 28px;
+  --project-bg-colour: hsl(0, 20%, 30%);
+  --min-content-height: 536px;
 }
 
 * , *:before, *:after{ 
@@ -109,7 +111,7 @@ a:visited {
 
 
 main{
-  min-height: 800px;
+  /* min-height: 800px; */
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -128,6 +130,7 @@ main{
   padding: 10px;
   min-width: 340px;
   width: 100%;
+  min-height: var(--min-content-height);
   height: fit-content;
   background: none;
   border-radius: 5px;
@@ -145,7 +148,6 @@ main{
   display: flex;
   flex-wrap: wrap;
   transition: all 0.25s ease-in-out;
-  width: 1000px;
 }
 
 .contacts{
@@ -164,8 +166,9 @@ main{
 
 .nav-project-moveY{ transform: translateY(-20px); }
 
-.project-container{
+.project-card{
   transition: transform 0.15s ease-in;
+  height: 536px;
   outline: none;
   display: flex;
   flex-direction: column;
@@ -187,7 +190,7 @@ main{
   height: 400px;
   border-radius: 5px;
   box-sizing: border-box;
-  background-color: hsl(0, 33%, 29%);
+  background-color: var(--project-bg-colour);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -341,7 +344,7 @@ main{
   border-bottom: 20px solid hsl(120, 91%, 9%);
 }
 
-.placeholder-container{ width: 160px; }
+.placeholder-container{ width: 310px; }
 
 .contact{
   width: 32px;
@@ -455,13 +458,38 @@ ol{
   transition: width 0.25s;
 }
 
+.tab-items li:nth-child(1){
+  margin-left: 0;
+}
+
+
+.close-deck-height{
+  height: 10px;
+}
+
+.tab-nav-fixed{
+  position: fixed;
+  z-index: 20;
+  /* left: -50%; */
+  top: 10px;
+  /* transform: translateX(50%); */
+}
+
+.nav-filler{
+  height: 32px;
+  visibility: hidden;
+}
+
 @media screen and (min-width: 570px) {
+
+  .close-deck-height{height: 10px;}
 
   .anim-open-deck:not(.intro-only-once){ animation: open-deck 1s ease-in-out; }
 
   .anim-close-deck{ animation: close-deck 1s ease-in-out; }
 
-  .project-container{ width: 160px; height: fit-content;}
+  .project-card{ width: 160px; height: 536px;}
+  .placeholder-container{ width: 160px; }
 
   .nav-project-moveY{
     transform: translateY(10px);
