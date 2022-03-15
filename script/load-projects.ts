@@ -30,7 +30,9 @@ export const loadProjects = () => {
 
     //Recalculate the container everytime window resizes.
     window.addEventListener('resize',
-      () => { setprojectsContainerWidth(projects.length, fullCardWidth, partialCardWidth, maxWidth, minWidth) });
+      () => {
+        setprojectsContainerWidth(projects.length, fullCardWidth, partialCardWidth, maxWidth, minWidth);
+      });
 
     //add intro only listener, if projects are not visible. don't play deck open animation
     //until a certain threshold is meet.
@@ -58,7 +60,7 @@ export const loadProjects = () => {
       });
     }
 
-    console.log(visibleProjectHeight);
+
     //load projects from projects.json
     projects.forEach(project => {
       //construct and attach the placeholder to the DOM
@@ -178,7 +180,7 @@ const setprojectsContainerWidth = (cardNumber: number, fullCardWidth: number, pa
   if (parentWidth !== undefined && projectsContainer) {
     const maxCards = Math.floor((parentWidth - fullCardWidth) / 160);
     const width = Math.min(Math.max(minWidth, Math.min(maxCards, cardNumber) * partialCardWidth + (fullCardWidth - partialCardWidth)), maxWidth);
-    projectsContainer.style.width = width + 'px';
+    projectsContainer.style.width = width + 10 + 'px';
   }
 };
 

@@ -16,7 +16,7 @@ const screenWidthThreshold = 450;
 const currentIndex: { current: number | null } = { current: null };
 
 
-export const setUpNavBar = async () => {
+export const setUpNavBar = async (widthThreshold = screenWidthThreshold) => {
 
   //navigation bar at the top
   navBar.forEach(async (tab, index) => {
@@ -39,7 +39,7 @@ export const setUpNavBar = async () => {
       // open and close project cards animation. only if screen width is above threshold.
       // decide what to do base on if index equals currentIndex to make sure corrent content is
       // rendered.
-      if (window.innerWidth >= screenWidthThreshold) {
+      if (window.innerWidth >= widthThreshold) {
         let deckClosing = false;
         if (currentSelectIsProject) {
           deckClosing = true;
