@@ -3,7 +3,7 @@
   --icon-size-w: 28px;
   --icon-size-h: 28px;
   --project-bg-colour: hsl(0, 20%, 30%);
-  --min-content-height: 536px;
+  --min-content-height: 608px;
 }
 
 * , *:before, *:after{ 
@@ -467,6 +467,10 @@ ol{
   height: 10px;
 }
 
+.close-deck-full-height{
+  height: 0px;
+}
+
 .tab-nav-fixed{
   position: fixed;
   z-index: 20;
@@ -477,6 +481,8 @@ ol{
 
 .nav-filler{
   height: 32px;
+  width: 10px;
+  margin-bottom: 20px;
   visibility: hidden;
 }
 
