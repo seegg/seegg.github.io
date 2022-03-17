@@ -1,9 +1,14 @@
 const contentContainer = document.getElementById('content') as HTMLDivElement;
 const projectContainer = document.getElementById('projects');
+const intro = document.getElementById('intro-container');
 const navBar = document.getElementById('tab-nav-bar');
 const navBarFiller = document.getElementById('nav-filler');
 const fixedNavBar = 'tab-nav-fixed';
 const closeCard = 'close-deck-height';
+const closeCardFull = 'close-deck-full-height';
+const hide = 'hide';
+const moveY = 'moveY-30';
+let heightThreshold = 220;
 
 /**
  * 
@@ -12,42 +17,38 @@ const closeCard = 'close-deck-height';
 export const collapseDeckOnScroll = (maxWidth: number) => {
   const projectCards = Array.from(document.getElementsByClassName('project-card')) as HTMLElement[];
   let currentIndex = 0;
-  let prevScrollY = window.scrollY;
+  const prevScrollY = window.scrollY;
 
-  let prevTime = 0;
-  document.addEventListener('scroll', () => {
+  for (let i = 1; i < projectCards.length - 1; i++) {
+    projectCards[i].classList.add(closeCard);
+  }
 
+  document.addEventListener('scroll', (evt) => {
     const top = contentContainer.getBoundingClientRect().top;
-    const scrollYDiff = window.scrollY - prevScrollY;
-    console.log('scrolling');
     if (top <= 0) {
       toggleNavBarFixedPosition('fixed');
-      const currentTime = new Date().getTime();
-      if (currentTime - prevTime >= 500) {
-        if (scrollYDiff > 0) {
-          console.log('triggered');
-          prevTime = currentTime;
-          projectCards[currentIndex].classList.add(closeCard);
-          currentIndex++;
-        } else {
-          projectCards[currentIndex].classList.remove(closeCard);
-          currentIndex--;
-        }
-        window.scrollTo({
-          top: 220,
-          left: 0,
-          behavior: 'smooth'
-        });
-      }
 
     } else {
       toggleNavBarFixedPosition('not-fixed');
     }
 
-    prevScrollY = window.scrollY;
+  });
+
+  projectContainer?.addEventListener('click', () => {
+    try {
+      projectCards[currentIndex].classList.add(closeCard);
+      projectCards[currentIndex + 1].classList.remove(closeCard);
+      currentIndex++;
+    } catch (err) {
+      console.log(err);
+    }
 
   })
 
+  new ResizeObserver(() => {
+    heightThreshold = intro!.getBoundingClientRect().height - 10;
+    console.log(heightThreshold);
+  }).observe(intro!);
 }
 
 const toggleNavBarFixedPosition = (state: 'fixed' | 'not-fixed') => {

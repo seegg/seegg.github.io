@@ -173,6 +173,7 @@ main{
   display: flex;
   flex-direction: column;
   transition: all 0.5s;
+  transform-style: preserve-3d;
 }
 
 .full-card-size{
@@ -484,6 +485,15 @@ ol{
   width: 10px;
   margin-bottom: 20px;
   visibility: hidden;
+}
+
+.moveY-30{
+  transform: translateY(30px);
+}
+
+.rotateY-180{
+  transform-style: preserve-3d;
+  transform: rotateX(30deg) rotateY(70deg) rotateZ(50deg);
 }
 
 @media screen and (min-width: 570px) {
