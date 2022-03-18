@@ -1,7 +1,7 @@
 //script to animate the intro screen.
 
 
-export const animate = () => {
+export const animate = async () => {
 
   const container: HTMLDivElement = document.getElementById('intro-container') as HTMLDivElement;
   const introContainer = document.getElementById('intro-container');

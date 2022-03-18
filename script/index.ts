@@ -10,7 +10,7 @@ addCssClassToTouchDevices(document.getElementById('content') || null);
 const setUp = async () => {
 
   setUpNavBar(570);
-  animate();
+  await animate();
   await loadProjects();
   collapseDeckOnScroll(570);
 };

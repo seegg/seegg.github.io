@@ -423,7 +423,7 @@ ol{
   display: flex;
 }
 
-.tab-nav-bar{ margin-bottom: 20px; }
+.tab-nav-bar{ margin-bottom: 50px; }
 
 .tab-nav{
   font-family: 'Encode Sans Semi Expanded', sans-serif;
@@ -495,11 +495,15 @@ ol{
 }
 
 .nav-filler{
-  height: 32px;
+  height: 0px;
   width: 10px;
-  margin-bottom: 20px;
   visibility: hidden;
 }
+
+.nav-filler-expand{
+  height: 82px;
+}
+
 
 .moveY-30{
   transform: translateY(30px);
@@ -511,6 +515,8 @@ ol{
 }
 
 @media screen and (min-width: 570px) {
+
+  .tab-nav-bar{ margin-bottom: 20px; }
 
   .close-deck-height{height: 10px;}
 
