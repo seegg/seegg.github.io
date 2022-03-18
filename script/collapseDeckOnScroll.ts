@@ -19,6 +19,9 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
   const currentIndex = 0;
   const prevScrollY = window.scrollY;
   const prevTime = 0;
+  const counter = 0;
+  const started = false;
+  const startY = 0;
 
   document.addEventListener('scroll', () => {
     if (window.innerWidth >= 570) return;
@@ -36,10 +39,6 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
   new ResizeObserver(() => {
     heightThreshold = intro!.getBoundingClientRect().height + 10;
   }).observe(intro!);
-
-  projectContainer?.addEventListener('touchstart', () => {
-    console.log('hello');
-  })
 }
 
 const toggleNavBarFixedPosition = (state: 'fixed' | 'not-fixed') => {

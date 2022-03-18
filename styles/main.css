@@ -3,7 +3,9 @@
   --icon-size-w: 28px;
   --icon-size-h: 28px;
   --project-bg-colour: hsl(0, 20%, 30%);
+  --description-bg-colour: hsl(0, 20%, 20%);
   --min-content-height: 608px;
+  --card-border-radius: 5px;
 }
 
 html{
@@ -237,8 +239,11 @@ main{
   overflow-y: auto;
   padding-left: 5px;
   padding-right: 5px;
-  max-height: 120px;
+  height: 120px;
   margin-top: 5px;
+  border-bottom-right-radius: var(--card-border-radius);
+  border-bottom-left-radius: var(--card-border-radius);
+  background-color: var(--description-bg-colour);
   width: 100%;
   transition: background-color 0.25s ease-out;
 }
@@ -258,10 +263,12 @@ main{
 
 .project-img-container{
   display: flex;
-  border-radius: 5px;
+  border-radius: var(--card-border-radius);
   justify-content: center;
   align-items: center;
   background-color: black;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
   width: 280px;
   height: 260px;
 }
