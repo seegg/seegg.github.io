@@ -1,4 +1,4 @@
-import { animate } from "./animate";
+import { intro } from "./intro";
 import { loadProjects } from './load-projects';
 import { addCssClassToTouchDevices } from './util';
 import { setUpNavBar } from './nav';
@@ -10,7 +10,7 @@ addCssClassToTouchDevices(document.getElementById('content') || null);
 const setUp = async () => {
 
   setUpNavBar(570);
-  await animate();
+  await intro();
   await loadProjects();
   collapseDeckOnScroll(570);
 };

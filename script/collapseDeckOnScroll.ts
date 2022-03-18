@@ -67,7 +67,6 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
       scrolling = false;
       document.body.style.overflowY = 'auto';
     }
-    console.log(top);
 
   });
 
@@ -91,16 +90,4 @@ const toggleNavBarFixedPosition = (state: 'fixed' | 'not-fixed') => {
     navBarFiller?.classList.remove('nav-filler-expand');
   }
 
-}
-
-const e = () => {
-  new Promise((res, err) => {
-    try {
-      throw new Error('fuck you');
-      res('bob')
-    } catch (e) {
-      err('stuff');
-    }
-  }).then(result => console.log(result))
-    .catch(err => console.log(err.message));
 }
