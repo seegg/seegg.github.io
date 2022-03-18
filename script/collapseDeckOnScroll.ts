@@ -16,9 +16,9 @@ let heightThreshold = 220;
  */
 export const collapseDeckOnScroll = (maxWidth: number) => {
   const projectCards = Array.from(document.getElementsByClassName('project-card')) as HTMLElement[];
-  let currentIndex = 0;
+  const currentIndex = 0;
   const prevScrollY = window.scrollY;
-  let prevTime = 0;
+  const prevTime = 0;
 
   document.addEventListener('scroll', () => {
     if (window.innerWidth >= 570) return;
@@ -31,50 +31,15 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
       toggleNavBarFixedPosition('not-fixed');
     }
 
-    if (top <= -20) {
-      const currentTime = new Date().getTime();
-
-      if (currentTime - prevTime > 500) {
-        projectCards[currentIndex].classList.add(closeCard);
-        currentIndex++;
-        prevTime = currentTime;
-      }
-
-      document.body.style.overflowY = 'hidden';
-      window.scrollTo({
-        top: heightThreshold,
-        behavior: 'smooth'
-      });
-    }
-
-    if (top >= -10) {
-      document.body.style.overflowY = 'auto';
-    }
-
-    if (currentIndex > 0) {
-      if (top >= 20) {
-        const currentTime = new Date().getTime();
-
-        if (currentTime - prevTime > 500) {
-          projectCards[currentIndex - 1].classList.remove(closeCard);
-          currentIndex--;
-          prevTime = currentTime;
-        }
-        document.body.style.overflowY = 'hidden';
-        window.scrollTo({
-          top: heightThreshold,
-          behavior: 'smooth'
-        });
-      }
-    }
-
-    console.log(currentIndex);
-
   });
 
   new ResizeObserver(() => {
     heightThreshold = intro!.getBoundingClientRect().height + 10;
   }).observe(intro!);
+
+  projectContainer?.addEventListener('touchstart', () => {
+    console.log('hello');
+  })
 }
 
 const toggleNavBarFixedPosition = (state: 'fixed' | 'not-fixed') => {

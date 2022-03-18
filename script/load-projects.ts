@@ -134,7 +134,7 @@ const createProjectComponent = (project: Project, visibleContent: number): HTMLE
   //inner article for descriptions
   const innerArticle = createElementWithClasses('article', 'project-description');
 
-  innerArticle.innerHTML = `<a href="${project.url}"><h4 class="project-title">${project.name}</h4></a><p>${project.description}</p>`
+  innerArticle.innerHTML = `<h4 class="project-title"><a href="${project.url}"><span class="material-icons">link</span></a>${project.name}</h4><p>${project.description}</p>`
   secondArticle.appendChild(innerArticle);
   projectContainer.appendChild(secondArticle);
 
