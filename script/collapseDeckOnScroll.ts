@@ -18,11 +18,9 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
   const projectCards = Array.from(document.getElementsByClassName('project-card')) as HTMLElement[];
   let currentIndex = 0;
   const prevScrollY = window.scrollY;
-  const prevTime = 0;
+  let prevTime = 0;
   let scrolling = false;
-  const counter = 0;
-  const started = false;
-  const startY = 0;
+  let started = false;
   if (contentContainer.getBoundingClientRect().top <= 0) {
     toggleNavBarFixedPosition('fixed');
   }
@@ -35,44 +33,46 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
     if (top <= 0) {
       toggleNavBarFixedPosition('fixed');
 
-    } else {
+    } else if (endOfIndex || currentIndex <= 0) {
       toggleNavBarFixedPosition('not-fixed');
     }
 
     if (!scrolling) {
-      if (top <= -50 && !endOfIndex) {
-        projectCards[currentIndex].classList.add(closeCard);
-        currentIndex++;
-        document.body.style.overflowY = 'hidden';
-        window.scrollTo(
-          {
-            top: heightThreshold,
-            behavior: 'smooth'
-          }
-        )
+      const currentTime = new Date().getTime();
+      const ellapsedTime = currentTime - prevTime;
+      if (top <= -50 && !endOfIndex && started) {
+        if (ellapsedTime >= 500) {
+          projectCards[currentIndex].classList.add(closeCard);
+          currentIndex++;
+          prevTime = currentTime;
+        }
         scrolling = true;
       }
 
-      if (top >= -20 && currentIndex > 0) {
-        projectCards[currentIndex - 1].classList.remove(closeCard);
-        currentIndex--;
-        document.body.style.overflowY = 'hidden';
-        window.scrollTo(
-          {
-            top: heightThreshold,
-            behavior: 'smooth'
-          }
-        )
+      if (top >= -20 && currentIndex > 0 && started) {
+        if (ellapsedTime >= 500) {
+          projectCards[currentIndex - 1].classList.remove(closeCard);
+          currentIndex--;
+          prevTime = currentTime;
+        }
         scrolling = true;
+      }
+
+      if (scrolling) scrollYViewport(heightThreshold, 'smooth');
+      if (!started) {
+        started = true;
+        prevTime = new Date().getTime();
       }
     }
 
-    if (top >= -40 && top <= -30) {
+    if (top >= -40 && top <= -30 && currentIndex < projectCards.length - 1) {
       scrolling = false;
       document.body.style.overflowY = 'auto';
     }
 
-    if (currentIndex >= projectCards.length - 1) document.body.style.overflowY = 'auto';
+    if (currentIndex >= projectCards.length - 1) {
+      document.body.style.overflowY = 'auto';
+    }
 
   });
 
@@ -97,4 +97,17 @@ const toggleNavBarFixedPosition = (state: 'fixed' | 'not-fixed') => {
     navBarFiller?.classList.remove('nav-filler-expand');
   }
 
+}
+
+/**
+ * disable overflowY and then scroll to coordinate
+ **/
+const scrollYViewport = (yCoord: number, behavior: ScrollBehavior) => {
+  document.body.style.overflowY = 'hidden';
+  window.scrollTo(
+    {
+      top: yCoord,
+      behavior
+    }
+  )
 }
