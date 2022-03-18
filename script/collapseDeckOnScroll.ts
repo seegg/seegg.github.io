@@ -16,7 +16,7 @@ let heightThreshold = 220;
  */
 export const collapseDeckOnScroll = (maxWidth: number) => {
   const projectCards = Array.from(document.getElementsByClassName('project-card')) as HTMLElement[];
-  const currentIndex = 0;
+  let currentIndex = 0;
   const prevScrollY = window.scrollY;
   const prevTime = 0;
   let scrolling = false;
@@ -39,39 +39,46 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
       toggleNavBarFixedPosition('not-fixed');
     }
 
-    if (top <= -50 && !endOfIndex && !scrolling) {
-      document.body.style.overflowY = 'hidden';
-      window.scrollTo(
-        {
-          top: heightThreshold,
-          behavior: 'smooth'
-        }
-      )
+    if (!scrolling) {
+      if (top <= -50 && !endOfIndex) {
+        projectCards[currentIndex].classList.add(closeCard);
+        currentIndex++;
+        document.body.style.overflowY = 'hidden';
+        window.scrollTo(
+          {
+            top: heightThreshold,
+            behavior: 'smooth'
+          }
+        )
+        scrolling = true;
+      }
 
-      scrolling = true;
+      if (top >= -20 && currentIndex > 0) {
+        projectCards[currentIndex - 1].classList.remove(closeCard);
+        currentIndex--;
+        document.body.style.overflowY = 'hidden';
+        window.scrollTo(
+          {
+            top: heightThreshold,
+            behavior: 'smooth'
+          }
+        )
+        scrolling = true;
+      }
     }
-
-    if (top >= -20 && currentIndex > 0 && !scrolling) {
-      document.body.style.overflowY = 'hidden';
-      window.scrollTo(
-        {
-          top: heightThreshold,
-          behavior: 'smooth'
-        }
-      )
-      scrolling = true;
-    }
-
 
     if (top >= -40 && top <= -30) {
       scrolling = false;
       document.body.style.overflowY = 'auto';
     }
 
+    if (currentIndex >= projectCards.length - 1) document.body.style.overflowY = 'auto';
+
   });
 
   //change height threshold based on the height of the intro element.
   new ResizeObserver(() => {
+    console.log('stuff');
     heightThreshold = intro!.getBoundingClientRect().height + 35;
     if (contentContainer.getBoundingClientRect().top <= 0) {
       toggleNavBarFixedPosition('fixed');
