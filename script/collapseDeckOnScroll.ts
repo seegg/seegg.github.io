@@ -18,13 +18,12 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
   const projectCards = Array.from(document.getElementsByClassName('project-card')) as HTMLElement[];
   let currentIndex = 0;
   const prevScrollY = window.scrollY;
+  let prevTime = 0;
 
-  for (let i = 1; i < projectCards.length - 1; i++) {
-    projectCards[i].classList.add(closeCard);
-  }
-
-  document.addEventListener('scroll', (evt) => {
+  document.addEventListener('scroll', () => {
+    if (window.innerWidth >= 570) return;
     const top = contentContainer.getBoundingClientRect().top;
+    const endOfIndex = currentIndex >= projectCards.length - 1
     if (top <= 0) {
       toggleNavBarFixedPosition('fixed');
 
@@ -32,22 +31,49 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
       toggleNavBarFixedPosition('not-fixed');
     }
 
-  });
+    if (top <= -20) {
+      const currentTime = new Date().getTime();
 
-  projectContainer?.addEventListener('click', () => {
-    try {
-      projectCards[currentIndex].classList.add(closeCard);
-      projectCards[currentIndex + 1].classList.remove(closeCard);
-      currentIndex++;
-    } catch (err) {
-      console.log(err);
+      if (currentTime - prevTime > 500) {
+        projectCards[currentIndex].classList.add(closeCard);
+        currentIndex++;
+        prevTime = currentTime;
+      }
+
+      document.body.style.overflowY = 'hidden';
+      window.scrollTo({
+        top: heightThreshold,
+        behavior: 'smooth'
+      });
     }
 
-  })
+    if (top >= -10) {
+      document.body.style.overflowY = 'auto';
+    }
+
+    if (currentIndex > 0) {
+      if (top >= 20) {
+        const currentTime = new Date().getTime();
+
+        if (currentTime - prevTime > 500) {
+          projectCards[currentIndex - 1].classList.remove(closeCard);
+          currentIndex--;
+          prevTime = currentTime;
+        }
+        document.body.style.overflowY = 'hidden';
+        window.scrollTo({
+          top: heightThreshold,
+          behavior: 'smooth'
+        });
+      }
+    }
+
+    console.log(currentIndex);
+
+  });
 
   new ResizeObserver(() => {
-    heightThreshold = intro!.getBoundingClientRect().height - 10;
-    console.log(heightThreshold);
+    heightThreshold = intro!.getBoundingClientRect().height + 10;
   }).observe(intro!);
 }
 
@@ -60,4 +86,16 @@ const toggleNavBarFixedPosition = (state: 'fixed' | 'not-fixed') => {
     navBarFiller?.classList.add('hide');
   }
 
+}
+
+const e = () => {
+  new Promise((res, err) => {
+    try {
+      throw new Error('fuck you');
+      res('bob')
+    } catch (e) {
+      err('stuff');
+    }
+  }).then(result => console.log(result))
+    .catch(err => console.log(err.message));
 }

@@ -6,6 +6,10 @@
   --min-content-height: 608px;
 }
 
+html{
+  scroll-behavior: auto !important;
+}
+
 * , *:before, *:after{ 
   box-sizing:border-box; 
   -moz-box-sizing:border-box; 
@@ -31,6 +35,7 @@
   0%{opacity: 0;}
   100%{opacity: 1;}
 }
+
 
 @keyframes fade-out {
   0%{opacity: 1;}
@@ -70,7 +75,9 @@
 
 .anim-slide-in-right{ animation: 3s ease-out 0s 1 slide-in-right; }
 
-body{ background-color: black; }
+body{ 
+  background-color: black; 
+}
 
 a {
   text-decoration: inherit;
