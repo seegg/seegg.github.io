@@ -506,13 +506,20 @@ ol{
 }
 
 
-.moveY-30{
-  transform: translateY(30px);
+.moveY-40{
+  transform: translateY(40px);
 }
 
 .rotateY-180{
   transform-style: preserve-3d;
   transform: rotateX(30deg) rotateY(70deg) rotateZ(50deg);
+}
+
+@media screen and (max-width: 569px) {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
 }
 
 @media screen and (min-width: 570px) {

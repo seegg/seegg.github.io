@@ -7,7 +7,8 @@ const fixedNavBar = 'tab-nav-fixed';
 const closeCard = 'close-deck-height';
 const closeCardFull = 'close-deck-full-height';
 const hide = 'hide';
-const moveY = 'moveY-30';
+const moveY = 'moveY-40';
+const ellapseDTimeThreshold = 300;
 let heightThreshold = 220;
 
 /**
@@ -26,8 +27,9 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
   }
 
   document.addEventListener('scroll', () => {
+    console.log('scrolled');
     if (window.innerWidth >= 570) return;
-    const top = contentContainer.getBoundingClientRect().top;
+    const { top } = contentContainer.getBoundingClientRect();
 
     const endOfIndex = currentIndex >= projectCards.length - 1
     if (top <= 0) {
@@ -37,12 +39,13 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
       toggleNavBarFixedPosition('not-fixed');
     }
 
+    const currentTime = new Date().getTime();
+    const ellapsedTime = currentTime - prevTime;
     if (!scrolling) {
-      const currentTime = new Date().getTime();
-      const ellapsedTime = currentTime - prevTime;
       if (top <= -50 && !endOfIndex && started) {
-        if (ellapsedTime >= 500) {
+        if (ellapsedTime >= ellapseDTimeThreshold) {
           projectCards[currentIndex].classList.add(closeCard);
+          projectCards[currentIndex].querySelector('.nav-project')?.classList.add(moveY);
           currentIndex++;
           prevTime = currentTime;
         }
@@ -50,7 +53,9 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
       }
 
       if (top >= -20 && currentIndex > 0 && started) {
-        if (ellapsedTime >= 500) {
+        console.log('undecked', ellapsedTime);
+        if (ellapsedTime >= ellapseDTimeThreshold) {
+          console.log('undecked confirmed');
           projectCards[currentIndex - 1].classList.remove(closeCard);
           currentIndex--;
           prevTime = currentTime;
@@ -67,11 +72,20 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
 
     if (top >= -40 && top <= -30 && currentIndex < projectCards.length - 1) {
       scrolling = false;
-      document.body.style.overflowY = 'auto';
+      // document.body.style.overflowY = 'auto';
     }
 
     if (currentIndex >= projectCards.length - 1) {
-      document.body.style.overflowY = 'auto';
+      // document.body.style.overflowY = 'auto';
+      // if (ellapsedTime > 600) {
+      //   projectCards[currentIndex - 1].classList.remove(closeCard);
+      //   currentIndex--;
+      //   prevTime = currentTime;
+      //   setTimeout(() => {
+      //     scrollYViewport(heightThreshold, 'smooth');
+      //   }, 150);
+      //   scrolling = true;
+      // }
     }
 
   });
@@ -109,5 +123,8 @@ const scrollYViewport = (yCoord: number, behavior: ScrollBehavior) => {
       top: yCoord,
       behavior
     }
-  )
-}
+  );
+  setTimeout(() => {
+    document.body.style.overflowY = 'auto';
+  }, ellapseDTimeThreshold);
+} 
