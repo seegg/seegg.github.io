@@ -27,7 +27,6 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
   }
 
   document.addEventListener('scroll', () => {
-    console.log('scrolled');
     if (window.innerWidth >= 570) return;
     const { top } = contentContainer.getBoundingClientRect();
 
@@ -38,6 +37,7 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
     } else if (endOfIndex || currentIndex <= 0) {
       toggleNavBarFixedPosition('not-fixed');
     }
+
 
     const currentTime = new Date().getTime();
     const ellapsedTime = currentTime - prevTime;
@@ -72,32 +72,39 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
 
     if (top >= -40 && top <= -30 && currentIndex < projectCards.length - 1) {
       scrolling = false;
-      // document.body.style.overflowY = 'auto';
     }
 
     if (currentIndex >= projectCards.length - 1) {
-      // document.body.style.overflowY = 'auto';
-      // if (ellapsedTime > 600) {
-      //   projectCards[currentIndex - 1].classList.remove(closeCard);
-      //   currentIndex--;
-      //   prevTime = currentTime;
-      //   setTimeout(() => {
-      //     scrollYViewport(heightThreshold, 'smooth');
-      //   }, 150);
-      //   scrolling = true;
-      // }
+      //
     }
 
   });
 
-  //change height threshold based on the height of the intro element.
-  new ResizeObserver(() => {
-    console.log('stuff');
-    heightThreshold = intro!.getBoundingClientRect().height + 35;
-    if (contentContainer.getBoundingClientRect().top <= 0) {
+  //adjust heightThreshold and deck behaviour base on intro element dimensions.
+  const introResizeObserver = new ResizeObserver(entries => {
+    const { inlineSize, blockSize } = entries[0].contentBoxSize[0];
+    heightThreshold = blockSize + 35;
+    if (contentContainer.getBoundingClientRect().top < 0) {
       toggleNavBarFixedPosition('fixed');
+      if (!started) scrollYViewport(heightThreshold, 'smooth');
+    } else {
+      toggleNavBarFixedPosition('not-fixed');
     }
-  }).observe(intro!);
+
+    if (inlineSize >= 570) reset();
+  });
+
+  if (intro) introResizeObserver.observe(intro);
+
+  const reset = () => {
+    projectCards.forEach(card => {
+      card.classList.remove(closeCard, closeCardFull);
+      card.querySelector('.nav-project')?.classList.remove(moveY);
+    });
+    currentIndex = 0;
+    started = false;
+    scrolling = false;
+  }
 }
 
 const toggleNavBarFixedPosition = (state: 'fixed' | 'not-fixed') => {
