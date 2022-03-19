@@ -40,10 +40,12 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
 
 
     const currentTime = new Date().getTime();
-    const ellapsedTime = currentTime - prevTime;
+    let ellapsedTime = currentTime - prevTime;
     if (!scrolling) {
       if (top <= -50 && !endOfIndex && started) {
+        console.log('triggered -50');
         if (ellapsedTime >= ellapseDTimeThreshold) {
+          if (currentIndex === 7) console.log('what?.');
           projectCards[currentIndex].classList.add(closeCard);
           projectCards[currentIndex].querySelector('.nav-project')?.classList.add(moveY);
           currentIndex++;
@@ -53,9 +55,7 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
       }
 
       if (top >= -20 && currentIndex > 0 && started) {
-        console.log('undecked', ellapsedTime);
         if (ellapsedTime >= ellapseDTimeThreshold) {
-          console.log('undecked confirmed');
           projectCards[currentIndex - 1].classList.remove(closeCard);
           currentIndex--;
           prevTime = currentTime;
@@ -75,7 +75,17 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
     }
 
     if (currentIndex >= projectCards.length - 1) {
-      //
+      ellapsedTime = new Date().getTime() - prevTime;
+      if (ellapsedTime > 600) {
+        console.log('triggered', currentIndex);
+        projectCards[currentIndex - 1].classList.remove(closeCard);
+        currentIndex--;
+        prevTime = new Date().getTime() + 100;
+        setTimeout(() => {
+          scrollYViewport(heightThreshold, 'smooth');
+          scrolling = false;
+        }, 100);
+      }
     }
 
   });

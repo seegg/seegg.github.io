@@ -481,6 +481,8 @@ ol{
 
 .close-deck-height{
   height: 10px;
+  z-index: -20;
+  pointer-events: none;
 }
 
 .close-deck-full-height{
@@ -508,6 +510,7 @@ ol{
 
 .moveY-40{
   transform: translateY(40px);
+  z-index: -30;
 }
 
 .rotateY-180{
