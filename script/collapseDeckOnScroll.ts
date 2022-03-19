@@ -18,12 +18,13 @@ let heightThreshold = 220;
 export const collapseDeckOnScroll = (maxWidth: number) => {
   const projectCards = Array.from(document.getElementsByClassName('project-card')) as HTMLElement[];
   let currentIndex = 0;
-  const prevScrollY = window.scrollY;
   let prevTime = 0;
   let scrolling = false;
   let started = false;
+  let prevScollY = window.scrollY;
   if (contentContainer.getBoundingClientRect().top <= 0) {
     toggleNavBarFixedPosition('fixed');
+    projectCards[0].querySelectorAll('.nav-icon').forEach(icon => icon.classList.add('nav-icon-partial'));
   }
 
   document.addEventListener('scroll', () => {
@@ -33,6 +34,7 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
     const endOfIndex = currentIndex >= projectCards.length - 1
     if (top <= 0) {
       toggleNavBarFixedPosition('fixed');
+      projectCards[currentIndex].querySelectorAll('.nav-icon').forEach(icon => icon.classList.add('nav-icon-partial'));
 
     } else if (endOfIndex || currentIndex <= 0) {
       toggleNavBarFixedPosition('not-fixed');
@@ -48,6 +50,7 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
           if (currentIndex === 7) console.log('what?.');
           projectCards[currentIndex].classList.add(closeCard);
           projectCards[currentIndex].querySelector('.nav-project')?.classList.add(moveY);
+          projectCards[currentIndex].querySelectorAll('.nav-icon').forEach(icon => icon.classList.remove('nav-icon-partial'));
           currentIndex++;
           prevTime = currentTime;
         }
@@ -57,6 +60,8 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
       if (top >= -20 && currentIndex > 0 && started) {
         if (ellapsedTime >= ellapseDTimeThreshold) {
           projectCards[currentIndex - 1].classList.remove(closeCard);
+          projectCards[currentIndex - 1].querySelector('.nav-project')?.classList.remove(moveY);
+          projectCards[currentIndex].querySelectorAll('.nav-icon').forEach(icon => icon.classList.remove('nav-icon-partial'));
           currentIndex--;
           prevTime = currentTime;
         }
@@ -66,7 +71,7 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
       if (scrolling) scrollYViewport(heightThreshold, 'smooth');
       if (!started) {
         started = true;
-        prevTime = new Date().getTime();
+        prevTime = new Date().getTime() + 500;
       }
     }
 
@@ -76,9 +81,9 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
 
     if (currentIndex >= projectCards.length - 1) {
       ellapsedTime = new Date().getTime() - prevTime;
-      if (ellapsedTime > 600) {
-        console.log('triggered', currentIndex);
+      if (ellapsedTime > 600 && window.scrollY - prevScollY < 0) {
         projectCards[currentIndex - 1].classList.remove(closeCard);
+        projectCards[currentIndex - 1].querySelector('.nav-project')?.classList.remove(moveY);
         currentIndex--;
         prevTime = new Date().getTime() + 100;
         setTimeout(() => {
@@ -86,6 +91,7 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
           scrolling = false;
         }, 100);
       }
+      prevScollY = window.scrollY;
     }
 
   });
