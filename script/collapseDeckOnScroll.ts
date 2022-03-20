@@ -11,7 +11,7 @@ const backgroundCard = 'background-card';
 const hide = 'hide';
 const moveY = 'moveY-40';
 const ellapseDTimeThreshold = 300;
-let heightThreshold = 220;
+let heightThreshold = 400;
 
 /**
  * 
@@ -24,10 +24,9 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
   let scrolling = false;
   let started = false;
   let prevScollY = window.scrollY;
-  if (contentContainer.getBoundingClientRect().top <= 0) {
-    toggleNavBarFixedPosition('fixed');
-  }
 
+  if (intro) heightThreshold = intro.getBoundingClientRect().height + 35;
+  if (contentContainer.getBoundingClientRect().top <= 0) toggleNavBarFixedPosition('fixed');
   if (maxWidth <= 570) projectCards[0].querySelectorAll('.nav-icon').forEach(icon => icon.classList.add(navIconSelected));
 
   document.addEventListener('scroll', () => {
@@ -35,6 +34,7 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
     const { top } = contentContainer.getBoundingClientRect();
 
     const endOfIndex = currentIndex >= projectCards.length - 1
+    //fixed the nav bar to the top of the screen if it leaves the viewport
     if (top <= 0) {
       toggleNavBarFixedPosition('fixed');
 
@@ -42,43 +42,34 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
       toggleNavBarFixedPosition('not-fixed');
     }
 
-
+    //minimum wait time before cards can be stashed/drawed again.
     const currentTime = new Date().getTime();
     let ellapsedTime = currentTime - prevTime;
     if (!scrolling) {
-      //collapse card
+      //stash card
+      //make height of current card smaller, couple with css transistion to make a
+      //'stashing' card effect.
       if (top <= -50 && !endOfIndex && started) {
         if (ellapsedTime >= ellapseDTimeThreshold) {
           stashCard(projectCards[currentIndex + 1], projectCards[currentIndex]);
           currentIndex++;
           prevTime = currentTime;
 
+          //wait until css height transistion is finish before hiding previous background card.
+          //making sure the wait time is less than the time scrolling is re-enabable again.
+          const waitTime = 300;
           setTimeout(() => {
-            if (currentIndex >= 2) {
-              projectCards[currentIndex - 2].querySelector('.project')?.classList.add(backgroundCard);
-            }
-
-            if (currentIndex >= 3) {
-              projectCards[currentIndex - 3].classList.add(hide);
-            }
-          }, 300);
-
-
+            toggleBackgroundCard(projectCards, currentIndex, 'add');
+          }, waitTime <= ellapseDTimeThreshold ? waitTime : ellapseDTimeThreshold);
         }
         scrolling = true;
       }
-      //expand card
+      //draw card
+      //expand the previous card back to original hard, pushing current card 'downward' on the layout
+      //no need to wait to toggle background card because the current card is being 'taken away'.
       if (top >= -20 && currentIndex > 0 && started) {
         if (ellapsedTime >= ellapseDTimeThreshold) {
-
-          if (currentIndex >= 3) {
-            projectCards[currentIndex - 3].classList.remove(hide);
-          }
-
-          if (currentIndex >= 2) {
-            projectCards[currentIndex - 2].querySelector('.project')?.classList.remove(backgroundCard);
-          }
-
+          toggleBackgroundCard(projectCards, currentIndex, 'remove');
           drawCard(projectCards[currentIndex - 1], projectCards[currentIndex]);
           currentIndex--;
           prevTime = currentTime;
@@ -94,30 +85,27 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
       }
     }
 
+
     if (top >= -40 && top <= -30 && currentIndex < projectCards.length - 1) {
       scrolling = false;
     }
 
+    //handle the behaviour of the last card.
     if (currentIndex >= projectCards.length - 1) {
+      //wait until viewport has finish resizing before deciding what to do.
       ellapsedTime = new Date().getTime() - prevTime;
       if (ellapsedTime > 600 && window.scrollY - prevScollY < 0) {
-        // projectCards[currentIndex - 1].classList.remove(closeCard);
-        // projectCards[currentIndex - 1].querySelector('.nav-project')?.classList.remove(moveY);
-        toggleCardHeightStatus(projectCards[currentIndex - 1], 'expand');
-        if (currentIndex >= 3) {
-          projectCards[currentIndex - 3].classList.remove(hide);
-        }
-
-        if (currentIndex >= 2) {
-          projectCards[currentIndex - 2].querySelector('.project')?.classList.remove(backgroundCard);
-        }
+        drawCard(projectCards[currentIndex - 1], projectCards[currentIndex]);
+        toggleBackgroundCard(projectCards, currentIndex, 'remove');
         currentIndex--;
         prevTime = new Date().getTime() + 100;
+        //wait until the card has expanded before scrolling.
         setTimeout(() => {
           scrollYViewport(heightThreshold, 'smooth');
           scrolling = false;
         }, 100);
       }
+      //keep track of y scroll position to determine of scrolling up or down.
       prevScollY = window.scrollY;
     }
 
@@ -143,6 +131,7 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
       card.classList.remove(closeCard, closeCardFull);
       card.querySelector('.nav-project')?.classList.remove(moveY);
     });
+    projectCards[currentIndex].querySelector('.nav-icon')?.classList.remove(navIconSelected);
     currentIndex = 0;
     started = false;
     scrolling = false;
@@ -161,7 +150,7 @@ const toggleNavBarFixedPosition = (state: 'fixed' | 'not-fixed') => {
 };
 
 /**
- * disable overflowY and then scroll to coordinate
+ * disable overflowY and then scroll to destination
  **/
 const scrollYViewport = (yCoord: number, behavior: ScrollBehavior) => {
   document.body.style.overflowY = 'hidden';
@@ -211,10 +200,37 @@ const toggleCardHeightStatus = (card: HTMLElement, state: 'collapse' | 'expand',
     if (action === undefined) throw new Error('state can only be either collapse or expand');
     card.classList[action](closeCard);
     card.querySelector(nav)?.classList[action](moveY);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error(err.message);
+    } else {
+      console.error(err);
+    }
+  }
+}
+
+
+/**
+ * Toggles which card gets rendered as the background card.
+ * @param cards the project cards
+ * @param currentIndex index of current card
+ * @param action add or remove css classes
+ * @param cardSelector css classname of the inner card, default '.project'
+ */
+const toggleBackgroundCard = (cards: HTMLElement[], currentIndex: number, action: 'add' | 'remove', cardSelector = '.project') => {
+  try {
+    if (currentIndex < 2) return;
+    if (currentIndex >= 2) {
+      cards[currentIndex - 2].querySelector(cardSelector)?.classList[action](backgroundCard);
+    }
+    if (currentIndex >= 3) {
+      cards[currentIndex - 3].classList[action](hide);
+    }
   } catch (err) {
     console.error(err);
   }
 }
+
 
 /**
  * 
@@ -222,10 +238,20 @@ const toggleCardHeightStatus = (card: HTMLElement, state: 'collapse' | 'expand',
  * @param currentCard current card where icons are highlighted
  */
 const switchSelectedNavIcons = (targetCard: HTMLElement, currentCard: HTMLElement, iconSelector = '.nav-icon') => {
-  currentCard.querySelectorAll(iconSelector).forEach(icon => {
-    icon.classList.remove(navIconSelected);
-  });
-  targetCard.querySelectorAll(iconSelector).forEach(icon => {
-    icon.classList.add(navIconSelected);
-  });
+  // currentCard.querySelectorAll(iconSelector).forEach(icon => {
+  //   icon.classList.remove(navIconSelected);
+  // });
+  // targetCard.querySelectorAll(iconSelector).forEach(icon => {
+  //   icon.classList.add(navIconSelected);
+  // });
+
+  toggleSelectedNavIcons(currentCard, false);
+  toggleSelectedNavIcons(targetCard, true);
+}
+
+const toggleSelectedNavIcons = (card: HTMLElement, selected: boolean, iconSelector = '.nav-icon', cssSelected = navIconSelected) => {
+  const action = selected ? 'add' : 'remove';
+  card.querySelectorAll(iconSelector).forEach(icon => {
+    icon.classList[action](cssSelected);
+  })
 }
