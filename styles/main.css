@@ -2,7 +2,7 @@
   font-family: 'Encode Sans Semi Expanded', sans-serif;
   --icon-size-w: 28px;
   --icon-size-h: 28px;
-  --stacked-decked-bg-colour: hsl(0, 20%, 10%);
+  --stacked-decked-bg-colour: hsl(0, 20%, 15%);
   --project-bg-colour: hsl(0, 20%, 30%);
   --description-bg-colour: hsl(0, 20%, 20%);
   --min-content-height: 608px;
@@ -522,7 +522,7 @@ ol{
   transform: rotateX(30deg) rotateY(70deg) rotateZ(50deg);
 }
 
-.project-darken{
+.background-card{
   background-color: var(--stacked-decked-bg-colour);
 }
 

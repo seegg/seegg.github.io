@@ -7,7 +7,7 @@ const closeCard = 'close-deck-height';
 const closeCardFull = 'close-deck-full-height';
 const navIconSelected = 'nav-icon-selected';
 const navSelector = '.nav-project';
-const backgroundCard = 'project-darken';
+const backgroundCard = 'background-card';
 const hide = 'hide';
 const moveY = 'moveY-40';
 const ellapseDTimeThreshold = 300;
@@ -57,16 +57,26 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
             projectCards[currentIndex - 2].querySelector('.project')?.classList.add(backgroundCard);
           }
 
+          if (currentIndex >= 3) {
+            projectCards[currentIndex - 3].classList.add(hide);
+          }
+
         }
         scrolling = true;
       }
 
       if (top >= -20 && currentIndex > 0 && started) {
         if (ellapsedTime >= ellapseDTimeThreshold) {
+
+          if (currentIndex >= 3) {
+            projectCards[currentIndex - 3].classList.remove(hide);
+          }
+
           if (currentIndex >= 2) {
             console.log('lightened');
             projectCards[currentIndex - 2].querySelector('.project')?.classList.remove(backgroundCard);
           }
+
           drawCard(projectCards[currentIndex - 1], projectCards[currentIndex]);
           currentIndex--;
           prevTime = currentTime;
