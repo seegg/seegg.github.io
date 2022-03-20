@@ -6,6 +6,8 @@ const fixedNavBar = 'tab-nav-fixed';
 const closeCard = 'close-deck-height';
 const closeCardFull = 'close-deck-full-height';
 const navIconSelected = 'nav-icon-selected';
+const navSelector = '.nav-project';
+const backgroundCard = 'project-darken';
 const hide = 'hide';
 const moveY = 'moveY-40';
 const ellapseDTimeThreshold = 300;
@@ -46,22 +48,26 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
     if (!scrolling) {
       if (top <= -50 && !endOfIndex && started) {
         if (ellapsedTime >= ellapseDTimeThreshold) {
-          projectCards[currentIndex].classList.add(closeCard);
-          projectCards[currentIndex].querySelector('.nav-project')?.classList.add(moveY);
-          projectCards[currentIndex].querySelectorAll('.nav-icon').forEach(icon => icon.classList.remove(navIconSelected));
-          projectCards[currentIndex + 1].querySelectorAll('.nav-icon').forEach(icon => icon.classList.add(navIconSelected));
+          stashCard(projectCards[currentIndex + 1], projectCards[currentIndex]);
           currentIndex++;
           prevTime = currentTime;
+
+          if (currentIndex >= 2) {
+            console.log('darkeend');
+            projectCards[currentIndex - 2].querySelector('.project')?.classList.add(backgroundCard);
+          }
+
         }
         scrolling = true;
       }
 
       if (top >= -20 && currentIndex > 0 && started) {
         if (ellapsedTime >= ellapseDTimeThreshold) {
-          projectCards[currentIndex - 1].classList.remove(closeCard);
-          projectCards[currentIndex - 1].querySelector('.nav-project')?.classList.remove(moveY);
-          projectCards[currentIndex].querySelectorAll('.nav-icon').forEach(icon => icon.classList.remove(navIconSelected));
-          projectCards[currentIndex - 1].querySelectorAll('.nav-icon').forEach(icon => icon.classList.add(navIconSelected));
+          if (currentIndex >= 2) {
+            console.log('lightened');
+            projectCards[currentIndex - 2].querySelector('.project')?.classList.remove(backgroundCard);
+          }
+          drawCard(projectCards[currentIndex - 1], projectCards[currentIndex]);
           currentIndex--;
           prevTime = currentTime;
         }
@@ -71,6 +77,7 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
       if (scrolling) scrollYViewport(heightThreshold, 'smooth');
       if (!started) {
         started = true;
+        //add 500ms extra to prevTime so multiple cards don't collapse at first scroll.
         prevTime = new Date().getTime() + 500;
       }
     }
@@ -147,4 +154,58 @@ const scrollYViewport = (yCoord: number, behavior: ScrollBehavior) => {
   setTimeout(() => {
     document.body.style.overflowY = 'auto';
   }, ellapseDTimeThreshold);
-}; 
+};
+
+/**
+ * Add css class to current selected project card to make its height smaller
+ * and make the next card on the layout cover on top of it.
+ * @param next card to be selected
+ * @param current card to be collapse and stash away.
+ */
+const stashCard = (next: HTMLElement, current: HTMLElement) => {
+  toggleCardHeightStatus(current, 'collapse');
+  switchSelectedNavIcons(next, current);
+}
+
+/**
+ * Remove css class from project card that makes its height smaller and return
+ * it to full height.
+ * @param prev 
+ * @param current 
+ */
+const drawCard = (prev: HTMLElement, current: HTMLElement) => {
+  toggleCardHeightStatus(prev, 'expand');
+  switchSelectedNavIcons(prev, current);
+}
+
+
+/**
+ * Toggle the height of project card by adding and removing css classes.
+ * @param card project card
+ * @param state state of card's height
+ * @param nav css selector for card navigation
+ */
+const toggleCardHeightStatus = (card: HTMLElement, state: 'collapse' | 'expand', nav = navSelector) => {
+  try {
+    const action = state === 'collapse' ? 'add' : state === 'expand' ? 'remove' : undefined;
+    if (action === undefined) throw new Error('state can only be either collapse or expand');
+    card.classList[action](closeCard);
+    card.querySelector(nav)?.classList[action](moveY);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+/**
+ * 
+ * @param targetCard card of nav icons to be highlighted
+ * @param currentCard current card where icons are highlighted
+ */
+const switchSelectedNavIcons = (targetCard: HTMLElement, currentCard: HTMLElement, iconSelector = '.nav-icon') => {
+  currentCard.querySelectorAll(iconSelector).forEach(icon => {
+    icon.classList.remove(navIconSelected);
+  });
+  targetCard.querySelectorAll(iconSelector).forEach(icon => {
+    icon.classList.add(navIconSelected);
+  });
+}

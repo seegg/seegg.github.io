@@ -2,11 +2,13 @@
   font-family: 'Encode Sans Semi Expanded', sans-serif;
   --icon-size-w: 28px;
   --icon-size-h: 28px;
+  --stacked-decked-bg-colour: hsl(0, 20%, 10%);
   --project-bg-colour: hsl(0, 20%, 30%);
   --description-bg-colour: hsl(0, 20%, 20%);
   --min-content-height: 608px;
   --card-border-radius: 5px;
-  --card-height: 536px;
+  --card-height: 450px;
+  --card-bot-margin: 100px;
 }
 
 * , *:before, *:after{ 
@@ -133,7 +135,6 @@ main{
 .contacts{
   display: flex;
   justify-content: center;
-  width: 100%;
 }
 
 .content{
@@ -168,6 +169,7 @@ main{
 
 .nav-project{
   display: flex;
+  column-gap: 10px;
   justify-content: end;
   margin: 10px;
   margin-bottom: 2px;
@@ -185,6 +187,7 @@ main{
   flex-direction: column;
   transition: all 0.5s;
   transform-style: preserve-3d;
+  margin-bottom: var(--card-bot-margin);
 }
 
 .full-card-size{
@@ -209,12 +212,6 @@ main{
   box-shadow: -2px 0px 2px 2px rgba(0, 0, 0, 0.5);
   transition: transform 0.2s ease-in, box-shadow 0.2s ease-in;
   z-index: 2;
-}
-
-#content .project-select{
-  /* box-shadow: -15px 15px 2px 0px rgba(0, 0, 0, 0.5); */
-  /* transform: translate(5px, -20px); */
-  outline: 3px solid white;
 }
 
 .project-img{
@@ -278,7 +275,7 @@ main{
 
 .nav-icon{
   border-radius: 50px;
-  margin-right: 5px;
+  /* margin-right: 5px; */
   width: var(--icon-size-w);
   height:var(--icon-size-h);
   opacity: 1;
@@ -291,7 +288,7 @@ main{
   opacity: 1;
   border: 1px solid black;
   outline: 2px solid white;
-  margin-right: 10px;
+  /* margin-right: 10px; */
 }
 
 /* Place holder items below */
@@ -449,7 +446,6 @@ ol{
   transition: all 0.25s;
   user-select: none;
   font-weight: bold;
-  margin-left: 5px;
 }
 
 .tab-nav::after{
@@ -483,8 +479,8 @@ ol{
   transition: width 0.25s;
 }
 
-.tab-items li:nth-child(1){
-  margin-left: 0;
+.tab-items{
+  column-gap: 5px;
 }
 
 
@@ -492,6 +488,7 @@ ol{
   height: 10px;
   z-index: -20;
   pointer-events: none;
+  margin-bottom: 0;
 }
 
 .close-deck-full-height{
@@ -501,9 +498,7 @@ ol{
 .tab-nav-fixed{
   position: fixed;
   z-index: 20;
-  /* left: -50%; */
   top: 10px;
-  /* transform: translateX(50%); */
 }
 
 .nav-filler{
@@ -527,9 +522,13 @@ ol{
   transform: rotateX(30deg) rotateY(70deg) rotateZ(50deg);
 }
 
+.project-darken{
+  background-color: var(--stacked-decked-bg-colour);
+}
+
 @media screen and (max-width: 569px) {
-  ::-webkit-scrollbar {
-    display: none;
+  .projects{
+    justify-content: center;
   }
 
 }
@@ -543,6 +542,8 @@ ol{
   .anim-open-deck:not(.intro-only-once){ animation: open-deck 1s ease-in-out; }
 
   .anim-close-deck{ animation: close-deck 1s ease-in-out; }
+
+  .content{min-height: 610px;}
 
   .project-card{ 
     width: 160px; 
@@ -574,7 +575,7 @@ ol{
     opacity: 1;
     border: 1px solid black;
     outline: 2px solid white;
-    margin-right: 10px;
+    /* margin-right: 10px; */
   }
 
   .nav-icon-partial:hover {
