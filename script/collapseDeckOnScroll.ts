@@ -1,11 +1,11 @@
 const contentContainer = document.getElementById('content') as HTMLDivElement;
-const projectContainer = document.getElementById('projects');
 const intro = document.getElementById('intro-container');
 const navBar = document.getElementById('tab-nav-bar');
 const navBarFiller = document.getElementById('nav-filler');
 const fixedNavBar = 'tab-nav-fixed';
 const closeCard = 'close-deck-height';
 const closeCardFull = 'close-deck-full-height';
+const navIconSelected = 'nav-icon-selected';
 const hide = 'hide';
 const moveY = 'moveY-40';
 const ellapseDTimeThreshold = 300;
@@ -15,7 +15,7 @@ let heightThreshold = 220;
  * 
  * @param maxWidth max screen viewport width size before this stops taking effect.
  */
-export const collapseDeckOnScroll = (maxWidth: number) => {
+export const collapseDeckOnScroll = (maxWidth = 570) => {
   const projectCards = Array.from(document.getElementsByClassName('project-card')) as HTMLElement[];
   let currentIndex = 0;
   let prevTime = 0;
@@ -24,17 +24,17 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
   let prevScollY = window.scrollY;
   if (contentContainer.getBoundingClientRect().top <= 0) {
     toggleNavBarFixedPosition('fixed');
-    projectCards[0].querySelectorAll('.nav-icon').forEach(icon => icon.classList.add('nav-icon-partial'));
   }
 
+  if (maxWidth <= 570) projectCards[0].querySelectorAll('.nav-icon').forEach(icon => icon.classList.add(navIconSelected));
+
   document.addEventListener('scroll', () => {
-    if (window.innerWidth >= 570) return;
+    if (window.innerWidth >= maxWidth) return;
     const { top } = contentContainer.getBoundingClientRect();
 
     const endOfIndex = currentIndex >= projectCards.length - 1
     if (top <= 0) {
       toggleNavBarFixedPosition('fixed');
-      projectCards[currentIndex].querySelectorAll('.nav-icon').forEach(icon => icon.classList.add('nav-icon-partial'));
 
     } else if (endOfIndex || currentIndex <= 0) {
       toggleNavBarFixedPosition('not-fixed');
@@ -45,12 +45,11 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
     let ellapsedTime = currentTime - prevTime;
     if (!scrolling) {
       if (top <= -50 && !endOfIndex && started) {
-        console.log('triggered -50');
         if (ellapsedTime >= ellapseDTimeThreshold) {
-          if (currentIndex === 7) console.log('what?.');
           projectCards[currentIndex].classList.add(closeCard);
           projectCards[currentIndex].querySelector('.nav-project')?.classList.add(moveY);
-          projectCards[currentIndex].querySelectorAll('.nav-icon').forEach(icon => icon.classList.remove('nav-icon-partial'));
+          projectCards[currentIndex].querySelectorAll('.nav-icon').forEach(icon => icon.classList.remove(navIconSelected));
+          projectCards[currentIndex + 1].querySelectorAll('.nav-icon').forEach(icon => icon.classList.add(navIconSelected));
           currentIndex++;
           prevTime = currentTime;
         }
@@ -61,7 +60,8 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
         if (ellapsedTime >= ellapseDTimeThreshold) {
           projectCards[currentIndex - 1].classList.remove(closeCard);
           projectCards[currentIndex - 1].querySelector('.nav-project')?.classList.remove(moveY);
-          projectCards[currentIndex].querySelectorAll('.nav-icon').forEach(icon => icon.classList.remove('nav-icon-partial'));
+          projectCards[currentIndex].querySelectorAll('.nav-icon').forEach(icon => icon.classList.remove(navIconSelected));
+          projectCards[currentIndex - 1].querySelectorAll('.nav-icon').forEach(icon => icon.classList.add(navIconSelected));
           currentIndex--;
           prevTime = currentTime;
         }
@@ -107,9 +107,8 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
       toggleNavBarFixedPosition('not-fixed');
     }
 
-    if (inlineSize >= 570) reset();
+    if (inlineSize >= maxWidth) reset();
   });
-
   if (intro) introResizeObserver.observe(intro);
 
   const reset = () => {
@@ -120,21 +119,19 @@ export const collapseDeckOnScroll = (maxWidth: number) => {
     currentIndex = 0;
     started = false;
     scrolling = false;
-  }
-}
+  };
+};
 
 const toggleNavBarFixedPosition = (state: 'fixed' | 'not-fixed') => {
   if (state === 'fixed') {
     navBar?.classList.add(fixedNavBar);
-    // navBarFiller?.classList.remove('hide');
     navBarFiller?.classList.add('nav-filler-expand');
   } else if (state === 'not-fixed') {
     navBar?.classList.remove(fixedNavBar);
-    // navBarFiller?.classList.add('hide');
     navBarFiller?.classList.remove('nav-filler-expand');
   }
 
-}
+};
 
 /**
  * disable overflowY and then scroll to coordinate
@@ -150,4 +147,4 @@ const scrollYViewport = (yCoord: number, behavior: ScrollBehavior) => {
   setTimeout(() => {
     document.body.style.overflowY = 'auto';
   }, ellapseDTimeThreshold);
-} 
+}; 
