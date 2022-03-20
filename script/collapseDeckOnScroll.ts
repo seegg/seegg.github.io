@@ -46,25 +46,28 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
     const currentTime = new Date().getTime();
     let ellapsedTime = currentTime - prevTime;
     if (!scrolling) {
+      //collapse card
       if (top <= -50 && !endOfIndex && started) {
         if (ellapsedTime >= ellapseDTimeThreshold) {
           stashCard(projectCards[currentIndex + 1], projectCards[currentIndex]);
           currentIndex++;
           prevTime = currentTime;
 
-          if (currentIndex >= 2) {
-            console.log('darkeend');
-            projectCards[currentIndex - 2].querySelector('.project')?.classList.add(backgroundCard);
-          }
+          setTimeout(() => {
+            if (currentIndex >= 2) {
+              projectCards[currentIndex - 2].querySelector('.project')?.classList.add(backgroundCard);
+            }
 
-          if (currentIndex >= 3) {
-            projectCards[currentIndex - 3].classList.add(hide);
-          }
+            if (currentIndex >= 3) {
+              projectCards[currentIndex - 3].classList.add(hide);
+            }
+          }, 300);
+
 
         }
         scrolling = true;
       }
-
+      //expand card
       if (top >= -20 && currentIndex > 0 && started) {
         if (ellapsedTime >= ellapseDTimeThreshold) {
 
@@ -73,7 +76,6 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
           }
 
           if (currentIndex >= 2) {
-            console.log('lightened');
             projectCards[currentIndex - 2].querySelector('.project')?.classList.remove(backgroundCard);
           }
 
@@ -99,8 +101,16 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
     if (currentIndex >= projectCards.length - 1) {
       ellapsedTime = new Date().getTime() - prevTime;
       if (ellapsedTime > 600 && window.scrollY - prevScollY < 0) {
-        projectCards[currentIndex - 1].classList.remove(closeCard);
-        projectCards[currentIndex - 1].querySelector('.nav-project')?.classList.remove(moveY);
+        // projectCards[currentIndex - 1].classList.remove(closeCard);
+        // projectCards[currentIndex - 1].querySelector('.nav-project')?.classList.remove(moveY);
+        toggleCardHeightStatus(projectCards[currentIndex - 1], 'expand');
+        if (currentIndex >= 3) {
+          projectCards[currentIndex - 3].classList.remove(hide);
+        }
+
+        if (currentIndex >= 2) {
+          projectCards[currentIndex - 2].querySelector('.project')?.classList.remove(backgroundCard);
+        }
         currentIndex--;
         prevTime = new Date().getTime() + 100;
         setTimeout(() => {
