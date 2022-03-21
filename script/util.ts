@@ -70,3 +70,14 @@ export const sleep = async (duration: number) => {
   });
   return timeOutID as number;
 }
+
+/**
+ * check if number is within a certain range.
+ * @param num number to be checked
+ * @param lower lower bound number
+ * @param upper upper bound number
+ * @returns 
+ */
+export const between = (num: number, lower: number, upper: number) => {
+  return num >= lower && num <= upper;
+}
