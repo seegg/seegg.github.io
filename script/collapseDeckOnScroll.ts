@@ -1,4 +1,5 @@
 const contentContainer = document.getElementById('content') as HTMLDivElement;
+const projectsContainer = document.getElementById('projects') as HTMLDivElement;
 const intro = document.getElementById('intro-container');
 const navBar = document.getElementById('tab-nav-bar');
 const navBarFiller = document.getElementById('nav-filler');
@@ -10,15 +11,17 @@ const navSelector = '.nav-project';
 const backgroundCard = 'background-card';
 const hide = 'hide';
 const moveY = 'moveY-40';
-const ellapseDTimeThreshold = 300;
+const ellapseDTimeThreshold = 400;
 let heightThreshold = 400;
 
 /**
  * 
  * @param maxWidth max screen viewport width size before this stops taking effect.
  */
-export const collapseDeckOnScroll = (maxWidth = 570) => {
-  const projectCards = Array.from(document.getElementsByClassName('project-card')) as HTMLElement[];
+export const collapseDeckOnScroll = (maxWidth = 470) => {
+  console.log(projectsContainer);
+  const projectCards = Array.from(projectsContainer.querySelectorAll('.project-card')) as HTMLElement[];
+  const scrollingPossible = true;
   let currentIndex = 0;
   let prevTime = 0;
   let scrolling = false;
@@ -27,20 +30,22 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
 
   if (intro) heightThreshold = intro.getBoundingClientRect().height + 35;
   if (contentContainer.getBoundingClientRect().top <= 0) toggleNavBarFixedPosition('fixed');
-  if (maxWidth <= 570) projectCards[0].querySelectorAll('.nav-icon').forEach(icon => icon.classList.add(navIconSelected));
+  // if (maxWidth <= 570) setSelectedNavIcons(projectCards[0], true);
 
   document.addEventListener('scroll', () => {
-    if (window.innerWidth >= maxWidth) return;
     const { top } = contentContainer.getBoundingClientRect();
 
     const endOfIndex = currentIndex >= projectCards.length - 1
     //fixed the nav bar to the top of the screen if it leaves the viewport
     if (top <= 0) {
       toggleNavBarFixedPosition('fixed');
-
-    } else if (endOfIndex || currentIndex <= 0) {
-      toggleNavBarFixedPosition('not-fixed');
+    } else {
+      if (endOfIndex || currentIndex <= 0 || top >= 100) {
+        toggleNavBarFixedPosition('not-fixed');
+      }
     }
+
+    if (window.innerWidth >= maxWidth) return;
 
     //minimum wait time before cards can be stashed/drawed again.
     const currentTime = new Date().getTime();
@@ -78,14 +83,15 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
       }
 
       if (scrolling) scrollYViewport(heightThreshold, 'smooth');
-      if (!started) {
+      if (!started && top <= 0) {
         started = true;
+        setSelectedNavIcons(projectCards[currentIndex], true);
         //add 500ms extra to prevTime so multiple cards don't collapse at first scroll.
         prevTime = new Date().getTime() + 500;
       }
     }
 
-
+    //enable drawing/stashing cards again if scroll into range.
     if (top >= -40 && top <= -30 && currentIndex < projectCards.length - 1) {
       scrolling = false;
     }
@@ -126,12 +132,42 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
   });
   if (intro) introResizeObserver.observe(intro);
 
+  //click fall back incase scroll is not available due to screen size.
+  projectsContainer.addEventListener('click', () => {
+    if (new Date().getTime() - prevTime > ellapseDTimeThreshold) {
+      if (currentIndex <= 0) return;
+      drawCard(projectCards[currentIndex - 1], projectCards[currentIndex]);
+      toggleBackgroundCard(projectCards, currentIndex, 'remove');
+
+      prevTime = new Date().getTime();
+      if (currentIndex >= projectCards.length - 1) {
+        //wait until the card has expanded before scrolling.
+        scrolling = true;
+        setTimeout(() => {
+          scrollYViewport(heightThreshold, 'smooth');
+        }, 400);
+      }
+      // scrolling = false;
+      //wait until the card has expanded before scrolling.
+      // setTimeout(() => {
+      // scrollYViewport(heightThreshold, 'smooth');
+      // }, 400);
+      currentIndex--;
+    }
+  });
+
+  //reset the state of the cards to original state.
   const reset = () => {
+    //remove any css classes that alter the card
     projectCards.forEach(card => {
-      card.classList.remove(closeCard, closeCardFull);
+      card.classList.remove(closeCard, closeCardFull, backgroundCard);
       card.querySelector('.nav-project')?.classList.remove(moveY);
     });
-    projectCards[currentIndex].querySelector('.nav-icon')?.classList.remove(navIconSelected);
+    //remove the selected icons
+    projectCards[currentIndex].querySelectorAll('.nav-icon')?.forEach(card => {
+      card.classList.remove(navIconSelected);
+    })
+    //reset values to original;
     currentIndex = 0;
     started = false;
     scrolling = false;
@@ -174,7 +210,7 @@ const scrollYViewport = (yCoord: number, behavior: ScrollBehavior) => {
 const stashCard = (next: HTMLElement, current: HTMLElement) => {
   toggleCardHeightStatus(current, 'collapse');
   switchSelectedNavIcons(next, current);
-}
+};
 
 /**
  * Remove css class from project card that makes its height smaller and return
@@ -185,7 +221,7 @@ const stashCard = (next: HTMLElement, current: HTMLElement) => {
 const drawCard = (prev: HTMLElement, current: HTMLElement) => {
   toggleCardHeightStatus(prev, 'expand');
   switchSelectedNavIcons(prev, current);
-}
+};
 
 
 /**
@@ -207,7 +243,7 @@ const toggleCardHeightStatus = (card: HTMLElement, state: 'collapse' | 'expand',
       console.error(err);
     }
   }
-}
+};
 
 
 /**
@@ -229,7 +265,7 @@ const toggleBackgroundCard = (cards: HTMLElement[], currentIndex: number, action
   } catch (err) {
     console.error(err);
   }
-}
+};
 
 
 /**
@@ -237,21 +273,15 @@ const toggleBackgroundCard = (cards: HTMLElement[], currentIndex: number, action
  * @param targetCard card of nav icons to be highlighted
  * @param currentCard current card where icons are highlighted
  */
-const switchSelectedNavIcons = (targetCard: HTMLElement, currentCard: HTMLElement, iconSelector = '.nav-icon') => {
-  // currentCard.querySelectorAll(iconSelector).forEach(icon => {
-  //   icon.classList.remove(navIconSelected);
-  // });
-  // targetCard.querySelectorAll(iconSelector).forEach(icon => {
-  //   icon.classList.add(navIconSelected);
-  // });
+const switchSelectedNavIcons = (targetCard: HTMLElement, currentCard: HTMLElement) => {
 
-  toggleSelectedNavIcons(currentCard, false);
-  toggleSelectedNavIcons(targetCard, true);
-}
+  setSelectedNavIcons(currentCard, false);
+  setSelectedNavIcons(targetCard, true);
+};
 
-const toggleSelectedNavIcons = (card: HTMLElement, selected: boolean, iconSelector = '.nav-icon', cssSelected = navIconSelected) => {
+const setSelectedNavIcons = (card: HTMLElement, selected: boolean, iconSelector = '.nav-icon', cssSelected = navIconSelected) => {
   const action = selected ? 'add' : 'remove';
   card.querySelectorAll(iconSelector).forEach(icon => {
     icon.classList[action](cssSelected);
   })
-}
+};

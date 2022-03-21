@@ -49,10 +49,10 @@
     },
     {
       "name": "Personal Page",
-      "title": "Personal page",
+      "title": "Personal Porfolio",
       "repo": "https://github.com/seegg/seegg.github.io",
       "url": "https://seegg.github.io/",
-      "description": "This web page, responsive, mobile first"
+      "description": "This web page, responsive, mobile first."
     },
     {
       "name": "JS Date Picker",
