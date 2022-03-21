@@ -171,15 +171,20 @@ const animateMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, c
  * set the width of the content container as a multiple of the width of the project card.
  * as long as it's less than the size of the outer container.
  */
-const setprojectsContainerWidth = (cardNumber: number, fullCardWidth: number, partialCardWidth: number, maxWidth: number, minWidth = 310) => {
+const setprojectsContainerWidth =
+  (cardNumber: number, fullCardWidth: number, partialCardWidth: number, maxWidth: number, minWidth = 310) => {
 
-  const parentWidth = contentContainer?.clientWidth;
-  if (parentWidth !== undefined && projectsContainer) {
-    const maxCards = Math.floor((parentWidth - fullCardWidth) / 160);
-    const width = Math.min(Math.max(minWidth, Math.min(maxCards, cardNumber) * partialCardWidth + (fullCardWidth - partialCardWidth)), maxWidth);
-    projectsContainer.style.width = width + 10 + 'px';
-  }
-};
+    const parentWidth = contentContainer?.clientWidth;
+    if (parentWidth !== undefined && projectsContainer) {
+      const maxCards = Math.floor((parentWidth - fullCardWidth) / 160);
+      const calculatedWidth = Math.min(maxCards, cardNumber) * partialCardWidth + (fullCardWidth - partialCardWidth);
+      const width = Math.min(Math.max(minWidth, calculatedWidth), maxWidth);
+      // if (parentWidth >= 570) {
+      projectsContainer.style.width = width + 10 + 'px';
+      // }
+      console.log(width, parentWidth)
+    }
+  };
 
 /**
  * Create the image component for the project card.

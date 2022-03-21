@@ -6,14 +6,13 @@ const intro = document.getElementById('intro-container');
 const navBar = document.getElementById('tab-nav-bar');
 const navBarFiller = document.getElementById('nav-filler');
 const fixedNavBar = 'tab-nav-fixed';
-const closeCard = 'close-deck-height';
-const closeCardFull = 'close-deck-full-height';
+const closeCard = 'close-deck-partial';
 const navIconSelected = 'nav-icon-selected';
 const navSelector = '.nav-project';
 const backgroundCard = 'background-card';
-const hide = 'hide';
+const hide = 'close-deck-full';
 const moveY = 'moveY-40';
-const ellapseDTimeThreshold = 300;
+const ellapseDTimeThreshold = 300; fixedNavBar
 let heightThreshold = 400;
 
 /**
@@ -91,7 +90,7 @@ export const collapseDeckOnScroll = (maxWidth = 470) => {
         started = true;
         setSelectedNavIcons(projectCards[currentIndex], true);
         //add 500ms extra to prevTime so multiple cards don't collapse at first scroll.
-        prevTime = new Date().getTime() + 500;
+        prevTime = new Date().getTime();
       }
     }
 
@@ -173,7 +172,7 @@ export const collapseDeckOnScroll = (maxWidth = 470) => {
   const reset = () => {
     //remove any css classes that alter the card
     projectCards.forEach(card => {
-      card.classList.remove(closeCard, closeCardFull, backgroundCard);
+      card.classList.remove(closeCard, backgroundCard, hide);
       card.querySelector('.nav-project')?.classList.remove(moveY);
     });
     //remove the selected icons
