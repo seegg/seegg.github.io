@@ -179,10 +179,7 @@ const setprojectsContainerWidth =
       const maxCards = Math.floor((parentWidth - fullCardWidth) / 160);
       const calculatedWidth = Math.min(maxCards, cardNumber) * partialCardWidth + (fullCardWidth - partialCardWidth);
       const width = Math.min(Math.max(minWidth, calculatedWidth), maxWidth);
-      // if (parentWidth >= 570) {
       projectsContainer.style.width = width + 10 + 'px';
-      // }
-      console.log(width, parentWidth)
     }
   };
 
