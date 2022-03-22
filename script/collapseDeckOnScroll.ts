@@ -1,4 +1,5 @@
 import { between } from "./util";
+import { addNavCallback } from "./nav";
 
 const contentContainer = document.getElementById('content') as HTMLDivElement;
 const projectsContainer = document.getElementById('projects') as HTMLDivElement;
@@ -19,7 +20,7 @@ let heightThreshold = 400;
  * 
  * @param maxWidth max screen viewport width size before this stops taking effect.
  */
-export const collapseDeckOnScroll = (maxWidth = 470) => {
+export const collapseDeckOnScroll = (maxWidth = 570) => {
   const projectCards = Array.from(projectsContainer.querySelectorAll('.project-card')) as HTMLElement[];
   const lowerBound = -50; //stash card when top of container scroll pass this point.
   const upperBound = -20; //draw card when top of container scroll over this point.
@@ -118,6 +119,19 @@ export const collapseDeckOnScroll = (maxWidth = 470) => {
     }
 
   });
+
+  //add callback for navigating to and from projects tab.
+  //navigating from projects tab
+  addNavCallback((tabs, from, to) => {
+    //only take effect if screen width is >= maxwidth
+    if (window.innerWidth >= maxWidth || tabs[from].id !== 'nav-projects') return;
+  }, 'before');
+
+  //navigating to projects tab
+  addNavCallback((tabs, from, to) => {
+    console.log(tabs[to].id !== 'nav-projects');
+    if (window.innerWidth >= maxWidth || tabs[to].id !== 'nav-projects') return;
+  }, 'after')
 
   //adjust heightThreshold and deck behaviour base on intro element dimensions.
   const introResizeObserver = new ResizeObserver(entries => {
