@@ -1,8 +1,12 @@
 import { sleep } from "./util";
 import { NavigationHook } from "./types";
 
-export const navBar = Array.from(document.getElementsByClassName('tab-nav')) as HTMLElement[];
-export const tabs = Array.from(document.getElementsByClassName('tab')) as HTMLElement[];
+const navTabs = Array.from(document.getElementsByClassName('tab-nav')) as HTMLElement[];
+const contentTabs = Array.from(document.getElementsByClassName('tab')) as HTMLElement[];
+
+const navBar = document.getElementById('tab-nav-bar');
+const navBarFiller = document.getElementById('nav-filler');
+const fixedNavBar = 'tab-nav-fixed';
 
 //css classes
 const cssSelected = 'selected';
@@ -19,23 +23,23 @@ const afternavCallbacks: NavigationHook[] = [];
 const latestInputIndex: { current: number | null } = { current: null };
 
 
-export const setUpNavBar = async (widthThreshold = screenWidthThreshold) => {
+export const setUpnavTabs = async (widthThreshold = screenWidthThreshold) => {
 
   //navigation bar at the top
-  navBar.forEach(async (tab, index) => {
+  navTabs.forEach(async (tab, index) => {
     tab.addEventListener('click', async () => {
       //clicking on currently selected tab
       if (tab.classList.contains(cssSelected)) return;
       latestInputIndex.current = index;
       //save a reference to the current selected tab before it's changed.
-      const currentSelectedTab = navBar.findIndex(tab => tab.classList.contains(cssSelected));
+      const currentSelectedTab = navTabs.findIndex(tab => tab.classList.contains(cssSelected));
 
       //callbacks to be called at the start of navigation.
-      beforeNavCallbacks.forEach(cb => cb(navBar, currentSelectedTab, index));
+      beforeNavCallbacks.forEach(cb => cb(navTabs, currentSelectedTab, index));
 
       tab.classList.add(cssSelected);
 
-      navBar.forEach((otherTabs, index2) => {
+      navTabs.forEach((otherTabs, index2) => {
         if (index2 !== index) {
           otherTabs.classList.remove(cssSelected);
         }
@@ -46,7 +50,7 @@ export const setUpNavBar = async (widthThreshold = screenWidthThreshold) => {
       // rendered.
       if (window.innerWidth >= widthThreshold) {
         let deckClosing = false;
-        if (navBar[currentSelectedTab].id === 'nav-projects') {
+        if (navTabs[currentSelectedTab].id === 'nav-projects') {
           deckClosing = true;
           await closeDeck();
         }
@@ -62,8 +66,8 @@ export const setUpNavBar = async (widthThreshold = screenWidthThreshold) => {
 
       }
       //if everything matches up, render the selected tab.
-      await toggleContent(index, tabs);
-      afternavCallbacks.forEach(cb => cb(navBar, currentSelectedTab, index));
+      await toggleContent(index, contentTabs);
+      afternavCallbacks.forEach(cb => cb(navTabs, currentSelectedTab, index));
 
     })
   });
@@ -90,26 +94,39 @@ export const setUpNavBar = async (widthThreshold = screenWidthThreshold) => {
 /**
  * close deck transistion
  */
-const closeDeck = async () => {
-  tabs[0].classList.add(cssFadeOut);
-  Array.from(tabs[0].children).forEach(child => {
+const closeDeck = async (duration = 500) => {
+  contentTabs[0].classList.add(cssFadeOut);
+  Array.from(contentTabs[0].children).forEach(child => {
     child.classList.remove(cssOpenDeck);
     child.classList.add(cssCloseDeck);
   });
-  console.log('here as well');
-  await sleep(500);
+  await sleep(duration);
 }
 
 /**
  * open deck transition
  */
 const openDeck = () => {
-  tabs[0].classList.remove(cssFadeOut);
-  Array.from(tabs[0].children).forEach(child => {
+  contentTabs[0].classList.remove(cssFadeOut);
+  Array.from(contentTabs[0].children).forEach(child => {
     child.classList.add(cssOpenDeck);
     child.classList.remove(cssCloseDeck);
   });
 }
+
+/**
+ * toggle the fixed state of the navigation bar
+ * @param state 'fixed' or 'not-fixed'
+ */
+export const toggleNavBarFixedPosition = (state: 'fixed' | 'not-fixed') => {
+  if (state === 'fixed') {
+    navBar?.classList.add(fixedNavBar);
+    navBarFiller?.classList.add('nav-filler-expand');
+  } else if (state === 'not-fixed') {
+    navBar?.classList.remove(fixedNavBar);
+    navBarFiller?.classList.remove('nav-filler-expand');
+  }
+};
 
 /**
  * add a callback to be called during navigation between tabs.

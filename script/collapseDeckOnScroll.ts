@@ -1,20 +1,19 @@
 import { between } from "./util";
 import { addNavCallback } from "./nav";
 import { scrollYViewport } from "./util";
+import { toggleNavBarFixedPosition } from "./nav";
 
 const contentContainer = document.getElementById('content') as HTMLDivElement;
 const projectsContainer = document.getElementById('projects') as HTMLDivElement;
 const intro = document.getElementById('intro-container');
 const navBar = document.getElementById('tab-nav-bar');
-const navBarFiller = document.getElementById('nav-filler');
-const fixedNavBar = 'tab-nav-fixed';
 const closeCard = 'close-deck-partial';
 const navIconSelected = 'nav-icon-selected';
 const navSelector = '.nav-project';
 const backgroundCard = 'background-card';
 const hide = 'close-deck-full';
 const moveY = 'moveY-40';
-const ellapseDTimeThreshold = 300; fixedNavBar
+const ellapseDTimeThreshold = 300;
 let heightThreshold = 400;
 
 /**
@@ -204,17 +203,6 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
     started = false;
     scrolling = false;
   };
-};
-
-const toggleNavBarFixedPosition = (state: 'fixed' | 'not-fixed') => {
-  if (state === 'fixed') {
-    navBar?.classList.add(fixedNavBar);
-    navBarFiller?.classList.add('nav-filler-expand');
-  } else if (state === 'not-fixed') {
-    navBar?.classList.remove(fixedNavBar);
-    navBarFiller?.classList.remove('nav-filler-expand');
-  }
-
 };
 
 /**

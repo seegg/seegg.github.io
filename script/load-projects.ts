@@ -1,6 +1,4 @@
 import { getProjects } from "./data";
-import { Project } from "./types";
-import { createElementWithClasses, createNavItem } from "./util";
 import { createProjectCard, createProjectPlaceholder } from "./project-card/card"
 
 
