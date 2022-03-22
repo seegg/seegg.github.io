@@ -20,7 +20,6 @@ let heightThreshold = 400;
  * @param maxWidth max screen viewport width size before this stops taking effect.
  */
 export const collapseDeckOnScroll = (maxWidth = 470) => {
-  console.log(projectsContainer);
   const projectCards = Array.from(projectsContainer.querySelectorAll('.project-card')) as HTMLElement[];
   const lowerBound = -50; //stash card when top of container scroll pass this point.
   const upperBound = -20; //draw card when top of container scroll over this point.
@@ -136,7 +135,6 @@ export const collapseDeckOnScroll = (maxWidth = 470) => {
 
   //remove selected css class from nav icons when intro element is 25% or more visible.
   const introIntersectObserver = new IntersectionObserver(entries => {
-    console.log(entries[0]);
     if (entries[0].isIntersecting && currentIndex < projectCards.length - 1) {
       setSelectedNavIcons(projectCards[currentIndex], false);
       started = false;

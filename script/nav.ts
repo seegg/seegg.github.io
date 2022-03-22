@@ -1,7 +1,8 @@
 import { sleep } from "./util";
+import { NavigationHook } from "./types";
 
-const navBar = Array.from(document.getElementsByClassName('tab-nav')) as HTMLElement[];
-const tabs = Array.from(document.getElementsByClassName('tab')) as HTMLElement[];
+export const navBar = Array.from(document.getElementsByClassName('tab-nav')) as HTMLElement[];
+export const tabs = Array.from(document.getElementsByClassName('tab')) as HTMLElement[];
 
 //css classes
 const cssSelected = 'selected';
@@ -10,10 +11,12 @@ const cssFadeIn = 'anim-fadein';
 const cssFadeOut = 'anim-fadeout-deck';
 const cssCloseDeck = 'anim-close-deck';
 const cssOpenDeck = 'anim-open-deck';
-const screenWidthThreshold = 450;
+const screenWidthThreshold = 570;
+const beforeNavCallbacks: NavigationHook = {};
+const afternavCallbacks: NavigationHook = {};
 
 //save the value as object property to make sure it's up to date and not just a snapshot.
-const currentIndex: { current: number | null } = { current: null };
+const latestInputIndex: { current: number | null } = { current: null };
 
 
 export const setUpNavBar = async (widthThreshold = screenWidthThreshold) => {
@@ -21,12 +24,11 @@ export const setUpNavBar = async (widthThreshold = screenWidthThreshold) => {
   //navigation bar at the top
   navBar.forEach(async (tab, index) => {
     tab.addEventListener('click', async () => {
-      //ignore clicks to the same tab.
+      //clicking on currently selected tab
       if (tab.classList.contains(cssSelected)) return;
-
-      currentIndex.current = index;
+      latestInputIndex.current = index;
       //save a reference to the current selected tab before it's changed.
-      const currentSelectIsProject = navBar[0].classList.contains(cssSelected);
+      const currentSelectedTab = navBar.findIndex(tab => tab.classList.contains(cssSelected));
 
       tab.classList.add(cssSelected);
 
@@ -37,11 +39,11 @@ export const setUpNavBar = async (widthThreshold = screenWidthThreshold) => {
       })
 
       // open and close project cards animation. only if screen width is above threshold.
-      // decide what to do base on if index equals currentIndex to make sure corrent content is
+      // decide what to do base on if index equals latestInputIndex to make sure corrent content is
       // rendered.
       if (window.innerWidth >= widthThreshold) {
         let deckClosing = false;
-        if (currentSelectIsProject) {
+        if (navBar[currentSelectedTab].id === 'nav-projects') {
           deckClosing = true;
           await closeDeck();
         }
@@ -51,17 +53,13 @@ export const setUpNavBar = async (widthThreshold = screenWidthThreshold) => {
         }
 
         //changing away from project tab and then back quickly.
-        if (deckClosing && currentIndex.current === 0) return;
+        if (deckClosing && latestInputIndex.current === 0) return;
         //clicking multiple different tabs during  deck closing transition.
-        if (index !== currentIndex.current) return;
+        if (index !== latestInputIndex.current) return;
 
-        // await toggleContent(index, tabs);
-
-      } else {
-        // await toggleContent(index, tabs);
       }
+      //if everything matches up, render the selected tab.
       await toggleContent(index, tabs);
-
 
     })
   });
@@ -94,9 +92,8 @@ const closeDeck = async () => {
     child.classList.remove(cssOpenDeck);
     child.classList.add(cssCloseDeck);
   });
+  console.log('here as well');
   await sleep(500);
-
-
 }
 
 /**

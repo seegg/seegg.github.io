@@ -5,3 +5,6 @@ export interface Project {
   image: string,
   description: string
 }
+export interface NavigationHook {
+  [key: string]: (fromTab: number, toTab: number, tabs: HTMLElement[]) => void
+}
