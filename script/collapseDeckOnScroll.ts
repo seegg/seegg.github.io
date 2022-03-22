@@ -135,7 +135,10 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
   addNavCallback((tabs, from, to) => {
     if (window.innerWidth >= maxWidth || tabs[to].id !== projectNavID) return;
     isInProjectsTab = true;
-    scrollToThreshold();
+    //scroll to neutral position if container is pass viewport or there is cards stacked up.
+    if (contentContainer.getBoundingClientRect().top < 0 || currentIndex > 0) {
+      scrollToThreshold();
+    }
   }, 'after')
 
   //adjust heightThreshold and deck behaviour base on intro element dimensions.

@@ -23,7 +23,7 @@ const afternavCallbacks: NavigationHook[] = [];
 const latestInputIndex: { current: number | null } = { current: null };
 
 
-export const setUpnavTabs = async (widthThreshold = screenWidthThreshold) => {
+export const setUpNavBar = async (widthThreshold = screenWidthThreshold) => {
 
   //navigation bar at the top
   navTabs.forEach(async (tab, index) => {
