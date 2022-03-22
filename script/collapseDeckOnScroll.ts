@@ -227,14 +227,15 @@ const stashCard = (next: HTMLElement, current: HTMLElement) => {
 };
 
 /**
+ * draw a card from the deck
  * Remove css class from project card that makes its height smaller and return
  * it to full height.
- * @param prev 
- * @param current 
+ * @param next card to be drawn
+ * @param current current card
  */
-const drawCard = (prev: HTMLElement, current: HTMLElement) => {
-  toggleCardHeightStatus(prev, 'expand');
-  switchSelectedNavIcons(prev, current);
+const drawCard = (next: HTMLElement, current: HTMLElement) => {
+  toggleCardHeightStatus(next, 'expand');
+  switchSelectedNavIcons(next, current);
 };
 
 
