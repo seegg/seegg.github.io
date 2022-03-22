@@ -1,6 +1,8 @@
 import { getProjects } from "./data";
 import { Project } from "./types";
 import { createElementWithClasses, createNavItem } from "./util";
+import { createProjectCard } from "./project-card/card"
+
 
 const projectsContainer = document.getElementById('projects');
 const contentContainer = document.getElementById('content');
@@ -17,12 +19,13 @@ const imagePath = "https://raw.githubusercontent.com/seegg/seegg.github.io/main/
  * load all the projects for display.
  */
 export const loadProjects = async () => {
-  if (projectsContainer) {
+  if (projectsContainer && contentContainer) {
     //project card dimensions.
     const fullCardWidth = 250; //expanded card size
     const partialCardWidth = 160; //overlapping card size
     const maxWidth = 1690; //max container width
     const minWidth = 310; //min container width, acutal size of each project card.
+    const visibleHeightThreshold = 300; //visible height for the main element
 
     //Calculate initial size of project container.
     const projects = getProjects();
@@ -34,27 +37,18 @@ export const loadProjects = async () => {
         setprojectsContainerWidth(projects.length, fullCardWidth, partialCardWidth, maxWidth, minWidth);
       });
 
-    //add intro only listener, if projects are not visible. don't play deck open animation
-    //until a certain threshold is meet.
-    const visibleProjectHeight = projectsContainer ?
-      window.innerHeight - projectsContainer.getBoundingClientRect().top : 0;
+    //add intro listener, if projects are not visible. don't play deck open animation
+    const visibleProjectHeight = window.innerHeight - projectsContainer.getBoundingClientRect().top;
 
-    const visibleHeightThreshold = 300;
     if (visibleProjectHeight < visibleHeightThreshold) {
       document.addEventListener('scroll', function introDeckAnimation() {
-        const currentVisibleProjectHeight = projectsContainer ?
-          window.innerHeight - projectsContainer.getBoundingClientRect().top : 0;
 
+        const currentVisibleProjectHeight = window.innerHeight - projectsContainer.getBoundingClientRect().top;
         if (currentVisibleProjectHeight >= visibleHeightThreshold) {
-          //once visible height on the projects is bigger than threshold
-          //remove intro only css classes and remove this listener.
           (Array.from(projectsContainer.children) as HTMLElement[]).forEach(project => {
-            project.classList.remove(cssIntroOnce);
-            const navBar = project.getElementsByClassName('nav-project')[0];
-            navBar.classList.remove(cssInvisible);
-            navBar.classList.add(cssFadeInLong);
+            toggleIntroDeckAnimation(project);
           });
-          //remove listener
+          //remove this listener
           document.removeEventListener('scroll', introDeckAnimation);
         }
       });
@@ -71,7 +65,11 @@ export const loadProjects = async () => {
       await new Promise<HTMLDivElement>(resolve => {
         resolve(
           ((): HTMLDivElement => {
-            const projectCard = createProjectComponent(project, visibleProjectHeight);
+            //const projectCard = createProjectComponent(project, visibleProjectHeight);
+            const projectCard = createProjectCard(project, contentContainer, imagePath);
+            if (visibleProjectHeight < visibleHeightThreshold) {
+              toggleIntroDeckAnimation(projectCard);
+            }
             return projectCard as HTMLDivElement;
           })()
         )
@@ -80,72 +78,85 @@ export const loadProjects = async () => {
         (card as HTMLDivElement).classList.add('anim-fadein');
       }).catch(err => console.error(err))
     });
+  } else {
+    throw new Error('Some error');
   }
 
 };
+
+/**
+ * Helper function to toggle the css classes responsible for the initial 
+ * card opening animation.
+ */
+const toggleIntroDeckAnimation = (project: HTMLElement) => {
+  project.classList.toggle(cssIntroOnce);
+  const nav = project.querySelector('.nav-project');
+  nav?.classList.toggle(cssInvisible);
+  nav?.classList.toggle(cssFadeInLong);
+}
 
 /**
  * Create the product card to display a project.
  * @param project 
  * @returns 
  */
-const createProjectComponent = (project: Project, visibleContent: number): HTMLElement => {
-  //project container 
-  const projectContainer = createElementWithClasses('section', 'project-card', 'anim-open-deck');
-  projectContainer.tabIndex = -1;
+// export const createProjectComponent = (project: Project, visibleContent: number): HTMLElement => {
+//   //project container 
+//   const projectContainer = createElementWithClasses('section', 'project-card', 'anim-open-deck');
+//   projectContainer.tabIndex = -1;
 
-  //link to repo with github logo
-  const repoLink = createElementWithClasses('nav', 'nav-project', cssFadeInLong);
-  const gitHubLink = createNavItem(project.repo || '#', imagePath + "GitHub-Mark-Light-32px.png", 'nav-icon');
-  repoLink.appendChild(gitHubLink);
-  //external link for project, if any.
-  const link = createNavItem(project.url || '#', '../images/link.png', 'nav-icon');
-  repoLink.prepend(link);
-  projectContainer.appendChild(repoLink);
+//   //link to repo with github logo
+//   const repoLink = createElementWithClasses('nav', 'nav-project', cssFadeInLong);
+//   const gitHubLink = createNavItem(project.repo || '#', imagePath + "GitHub-Mark-Light-32px.png", 'nav-icon');
+//   repoLink.appendChild(gitHubLink);
+//   //external link for project, if any.
+//   const link = createNavItem(project.url || '#', '../images/link.png', 'nav-icon');
+//   repoLink.prepend(link);
+//   projectContainer.appendChild(repoLink);
 
-  //container for the project image and project details
-  const secondArticle = createElementWithClasses('article', 'project');
+//   //container for the project image and project details
+//   const secondArticle = createElementWithClasses('article', 'project');
 
-  //animate the log and article body when mousing over it.
-  secondArticle.onpointerenter = () => {
-    projectContainer.focus();
-    animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
-  };
-  projectContainer.onpointerleave = () => {
-    if (contentContainer?.classList.contains('touch-device')) return;
-    animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
-  };
-  projectContainer.onpointercancel = () => {
-    animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
-  };
-  projectContainer.onblur = () => {
-    animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
-  }
-  projectContainer.onfocus = () => {
-    if (!contentContainer?.classList.contains('touch-device')) return;
-    animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
-  };
+//   //animate the log and article body when mousing over it.
+//   secondArticle.onpointerenter = () => {
+//     projectContainer.focus();
+//     animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
+//   };
+//   projectContainer.onpointerleave = () => {
+//     if (contentContainer?.classList.contains('touch-device')) return;
+//     animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
+//   };
+//   projectContainer.onpointercancel = () => {
+//     animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
+//   };
+//   projectContainer.onblur = () => {
+//     animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
+//   }
+//   projectContainer.onfocus = () => {
+//     if (!contentContainer?.classList.contains('touch-device')) return;
+//     animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
+//   };
 
-  const projectImg = project.image ? imagePath + project.image : null;
-  // image for the project
-  const imgWrapper: HTMLDivElement = createProjectImage(projectImg);
-  secondArticle.appendChild(imgWrapper);
+//   const projectImg = project.image ? imagePath + project.image : null;
+//   // image for the project
+//   const imgWrapper: HTMLDivElement = createProjectImage(projectImg);
+//   secondArticle.appendChild(imgWrapper);
 
-  //inner article for descriptions
-  const innerArticle = createElementWithClasses('article', 'project-description');
+//   //inner article for descriptions
+//   const innerArticle = createElementWithClasses('article', 'project-description');
 
-  innerArticle.innerHTML = `<h4 class="project-title"><a href="${project.url}"><span class="material-icons">link</span></a>${project.name}</h4><p>${project.description}</p>`
-  secondArticle.appendChild(innerArticle);
-  projectContainer.appendChild(secondArticle);
+//   innerArticle.innerHTML = `<h4 class="project-title"><a href="${project.url}"><span class="material-icons">link</span></a>${project.name}</h4><p>${project.description}</p>`
+//   secondArticle.appendChild(innerArticle);
+//   projectContainer.appendChild(secondArticle);
 
-  if (visibleContent < 300) {
-    projectContainer.classList.add(cssIntroOnce);
-    repoLink.classList.add(cssInvisible);
-    repoLink.classList.remove(cssFadeInLong)
-  }
+//   if (visibleContent < 300) {
+//     projectContainer.classList.add(cssIntroOnce);
+//     repoLink.classList.add(cssInvisible);
+//     repoLink.classList.remove(cssFadeInLong)
+//   }
 
-  return projectContainer;
-};
+//   return projectContainer;
+// };
 
 /**
  * wrapper for animating the enter and leave effects for the card.
@@ -188,7 +199,7 @@ const setprojectsContainerWidth =
  * @param imgSrc
  * @returns 
  */
-const createProjectImage = (imgSrc: string | null) => {
+export const createProjectImage = (imgSrc: string | null) => {
   //start with a placeholder element. replace the placeholder if an image is available.
   const placeHolder: HTMLDivElement = createImgPlaceHolder();
   if (imgSrc) {
@@ -210,7 +221,7 @@ const createProjectImage = (imgSrc: string | null) => {
 /**
  * create a placeholder card
  */
-const createProjectPlaceholder = () => {
+export const createProjectPlaceholder = () => {
   const placeholder = createElementWithClasses('div', 'placeholder-container');
 
   const nav = createElementWithClasses('div', 'placeholder-nav');
