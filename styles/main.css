@@ -188,11 +188,6 @@ main{
   margin-bottom: var(--card-bot-margin);
 }
 
-.full-card-size{
-  position: relative;
-  width: 310px;
-}
-
 .project{
   position: relative;
   margin-top: 0;

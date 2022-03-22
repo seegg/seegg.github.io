@@ -156,8 +156,10 @@ export const collapseDeckOnScroll = (maxWidth = 470) => {
       toggleBackgroundCard(projectCards, currentIndex, 'remove');
 
       prevTime = new Date().getTime();
+      //special handling for the last card.
       if (currentIndex >= projectCards.length - 1) {
-        //wait until the card has expanded before scrolling.
+        //wait until the container height has increased before scrolling.
+        //extra wait time between cards to not trigger multiple cards at once.
         prevTime += 300;
         scrolling = true;
         setTimeout(() => {
@@ -265,19 +267,20 @@ const toggleCardHeightStatus = (card: HTMLElement, state: 'collapse' | 'expand',
  * @param action add or remove css classes
  * @param cardSelector css classname of the inner card, default '.project'
  */
-const toggleBackgroundCard = (cards: HTMLElement[], currentIndex: number, action: 'add' | 'remove', cardSelector = '.project') => {
-  try {
-    if (currentIndex < 2) return;
-    if (currentIndex >= 2) {
-      cards[currentIndex - 2].querySelector(cardSelector)?.classList[action](backgroundCard);
+const toggleBackgroundCard =
+  (cards: HTMLElement[], currentIndex: number, action: 'add' | 'remove', cardSelector = '.project') => {
+    try {
+      if (currentIndex < 2) return;
+      if (currentIndex >= 2) {
+        cards[currentIndex - 2].querySelector(cardSelector)?.classList[action](backgroundCard);
+      }
+      if (currentIndex >= 3) {
+        cards[currentIndex - 3].classList[action](hide);
+      }
+    } catch (err) {
+      console.error(err);
     }
-    if (currentIndex >= 3) {
-      cards[currentIndex - 3].classList[action](hide);
-    }
-  } catch (err) {
-    console.error(err);
-  }
-};
+  };
 
 
 /**
@@ -291,9 +294,10 @@ const switchSelectedNavIcons = (targetCard: HTMLElement, currentCard: HTMLElemen
   setSelectedNavIcons(targetCard, true);
 };
 
-const setSelectedNavIcons = (card: HTMLElement, selected: boolean, iconSelector = '.nav-icon', cssSelected = navIconSelected) => {
-  const action = selected ? 'add' : 'remove';
-  card.querySelectorAll(iconSelector).forEach(icon => {
-    icon.classList[action](cssSelected);
-  })
-};
+const setSelectedNavIcons =
+  (card: HTMLElement, selected: boolean, iconSelector = '.nav-icon', cssSelected = navIconSelected) => {
+    const action = selected ? 'add' : 'remove';
+    card.querySelectorAll(iconSelector).forEach(icon => {
+      icon.classList[action](cssSelected);
+    })
+  };
