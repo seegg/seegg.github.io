@@ -1,5 +1,6 @@
 import { between } from "./util";
 import { addNavCallback } from "./nav";
+import { scrollYViewport } from "./util";
 
 const contentContainer = document.getElementById('content') as HTMLDivElement;
 const projectsContainer = document.getElementById('projects') as HTMLDivElement;
@@ -30,6 +31,7 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
   let scrolling = false;
   let started = false;
   let prevScollY = window.scrollY;
+  let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === 'nav-projects' : true;
 
   if (intro) heightThreshold = intro.getBoundingClientRect().height - midPoint;
   if (contentContainer.getBoundingClientRect().top <= 0) toggleNavBarFixedPosition('fixed');
@@ -43,12 +45,12 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
     if (top <= 0) {
       toggleNavBarFixedPosition('fixed');
     } else {
-      if (endOfIndex || currentIndex <= 0 || top >= 100) {
+      if (endOfIndex || currentIndex <= 0 || top >= 100 || !isInProjectsTab) {
         toggleNavBarFixedPosition('not-fixed');
       }
     }
 
-    if (window.innerWidth >= maxWidth) return;
+    if (window.innerWidth >= maxWidth || !isInProjectsTab) return;
 
     //minimum wait time before cards can be stashed/drawed again.
     const currentTime = new Date().getTime();
@@ -85,7 +87,7 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
         scrolling = true;
       }
 
-      if (scrolling) scrollYViewport(heightThreshold, 'smooth');
+      if (scrolling) scrollToThreshold();
       if (!started && top <= 0) {
         started = true;
         setSelectedNavIcons(projectCards[currentIndex], true);
@@ -110,7 +112,7 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
         prevTime = new Date().getTime() + 100;
         //wait until the card has expanded before scrolling.
         setTimeout(() => {
-          scrollYViewport(heightThreshold, 'smooth');
+          scrollToThreshold();
           scrolling = false;
         }, 100);
       }
@@ -122,15 +124,19 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
 
   //add callback for navigating to and from projects tab.
   //navigating from projects tab
-  addNavCallback((tabs, from, to) => {
+  const projectNavID = 'nav-projects';
+  addNavCallback((tabs, from) => {
     //only take effect if screen width is >= maxwidth
-    if (window.innerWidth >= maxWidth || tabs[from].id !== 'nav-projects') return;
+    if (window.innerWidth >= maxWidth || tabs[from].id !== projectNavID) return;
+    started = false;
+    isInProjectsTab = false;
   }, 'before');
 
   //navigating to projects tab
   addNavCallback((tabs, from, to) => {
-    console.log(tabs[to].id !== 'nav-projects');
-    if (window.innerWidth >= maxWidth || tabs[to].id !== 'nav-projects') return;
+    if (window.innerWidth >= maxWidth || tabs[to].id !== projectNavID) return;
+    isInProjectsTab = true;
+    scrollToThreshold();
   }, 'after')
 
   //adjust heightThreshold and deck behaviour base on intro element dimensions.
@@ -139,7 +145,7 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
     heightThreshold = blockSize - midPoint;
     if (contentContainer.getBoundingClientRect().top < 0) {
       toggleNavBarFixedPosition('fixed');
-      if (!started) scrollYViewport(heightThreshold, 'smooth');
+      if (!started) scrollToThreshold();
     } else {
       toggleNavBarFixedPosition('not-fixed');
     }
@@ -175,7 +181,7 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
         prevTime += 300;
         scrolling = true;
         setTimeout(() => {
-          scrollYViewport(heightThreshold, 'smooth');
+          scrollToThreshold();
         }, 400);
       }
       currentIndex--;
@@ -212,20 +218,11 @@ const toggleNavBarFixedPosition = (state: 'fixed' | 'not-fixed') => {
 };
 
 /**
- * disable overflowY and then scroll to destination
- **/
-const scrollYViewport = (yCoord: number, behavior: ScrollBehavior) => {
-  document.body.style.overflowY = 'hidden';
-  window.scrollTo(
-    {
-      top: yCoord,
-      behavior
-    }
-  );
-  setTimeout(() => {
-    document.body.style.overflowY = 'auto';
-  }, ellapseDTimeThreshold);
-};
+ * wrapper for scrollYViewport for scrolling to position corresponding to heightThreshold
+ */
+const scrollToThreshold = () => {
+  scrollYViewport(heightThreshold, 'smooth', ellapseDTimeThreshold);
+}
 
 /**
  * Add css class to current selected project card to make its height smaller
@@ -258,6 +255,7 @@ const drawCard = (prev: HTMLElement, current: HTMLElement) => {
  */
 const toggleCardHeightStatus = (card: HTMLElement, state: 'collapse' | 'expand', nav = navSelector) => {
   try {
+    //decide wether to add or remove css classes.
     const action = state === 'collapse' ? 'add' : state === 'expand' ? 'remove' : undefined;
     if (action === undefined) throw new Error('state can only be either collapse or expand');
     card.classList[action](closeCard);

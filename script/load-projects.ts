@@ -208,8 +208,7 @@ const createProjectImage = (imgSrc: string | null) => {
 };
 
 /**
- * create a placeholder for the project until it loads.
- * @returns 
+ * create a placeholder card
  */
 const createProjectPlaceholder = () => {
   const placeholder = createElementWithClasses('div', 'placeholder-container');

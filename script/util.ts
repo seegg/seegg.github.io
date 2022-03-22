@@ -81,3 +81,20 @@ export const sleep = async (duration: number) => {
 export const between = (num: number, lower: number, upper: number) => {
   return num >= lower && num <= upper;
 }
+
+/**
+ * disable overflowY and then scroll to destination
+ * re-enable after certain specified duration
+ **/
+export const scrollYViewport = (yCoord: number, behavior: ScrollBehavior, disableScrollDuration: number) => {
+  document.body.style.overflowY = 'hidden';
+  window.scrollTo(
+    {
+      top: yCoord,
+      behavior
+    }
+  );
+  setTimeout(() => {
+    document.body.style.overflowY = 'auto';
+  }, disableScrollDuration);
+};
