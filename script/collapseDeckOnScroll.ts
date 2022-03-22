@@ -118,7 +118,6 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
       //keep track of y scroll position to determine of scrolling up or down.
       prevScollY = window.scrollY;
     }
-
   });
 
   //add callback for navigating to and from projects tab.
@@ -238,7 +237,6 @@ const drawCard = (next: HTMLElement, current: HTMLElement) => {
   switchSelectedNavIcons(next, current);
 };
 
-
 /**
  * Toggle the height of project card by adding and removing css classes.
  * @param card project card
@@ -260,7 +258,6 @@ const toggleCardHeightStatus = (card: HTMLElement, state: 'collapse' | 'expand',
     }
   }
 };
-
 
 /**
  * Toggles which card gets rendered as the background card.
@@ -284,14 +281,12 @@ const toggleBackgroundCard =
     }
   };
 
-
 /**
  * 
  * @param targetCard card of nav icons to be highlighted
  * @param currentCard current card where icons are highlighted
  */
 const switchSelectedNavIcons = (targetCard: HTMLElement, currentCard: HTMLElement) => {
-
   setSelectedNavIcons(currentCard, false);
   setSelectedNavIcons(targetCard, true);
 };
