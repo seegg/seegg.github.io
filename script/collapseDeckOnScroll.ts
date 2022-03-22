@@ -127,13 +127,12 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
     //only take effect if screen width is >= maxwidth
     if (window.innerWidth >= maxWidth || tabs[from].id !== projectNavID) return;
     started = false;
-    isInProjectsTab = false;
   }, 'before');
 
   //navigating to projects tab
   addNavCallback((tabs, from, to) => {
-    if (window.innerWidth >= maxWidth || tabs[to].id !== projectNavID) return;
-    isInProjectsTab = true;
+    isInProjectsTab = tabs[to].id === projectNavID;
+    if (window.innerWidth >= maxWidth || !isInProjectsTab) return;
     //scroll to neutral position if container is pass viewport or there is cards stacked up.
     if (contentContainer.getBoundingClientRect().top < 0 || currentIndex > 0) {
       scrollToThreshold();
