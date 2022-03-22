@@ -1,5 +1,6 @@
 import { getProjects } from "./data";
-import { createProjectCard, createProjectPlaceholder } from "./project-card/card"
+// import { createProjectCard, createProjectPlaceholder } from "./project-card/card"
+import { createProjectCard, createProjectPlaceholder } from "./project-card";
 
 
 const projectsContainer = document.getElementById('projects');
