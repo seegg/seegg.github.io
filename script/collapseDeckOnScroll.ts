@@ -33,12 +33,14 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
   let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === 'nav-projects' : true;
 
   if (intro) heightThreshold = intro.getBoundingClientRect().height - midPoint;
-  if (contentContainer.getBoundingClientRect().top <= 0) toggleNavBarFixedPosition('fixed');
-  // if (maxWidth <= 570) setSelectedNavIcons(projectCards[0], true);
+
+  if (contentContainer.getBoundingClientRect().top <= 0) {
+    toggleNavBarFixedPosition('fixed');
+    scrollToThreshold();
+  }
 
   document.addEventListener('scroll', () => {
     const { top } = contentContainer.getBoundingClientRect();
-
     const endOfIndex = currentIndex >= projectCards.length - 1
     //fixed the nav bar to the top of the screen if it leaves the viewport
     if (top <= 0) {
@@ -150,7 +152,10 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
       toggleNavBarFixedPosition('not-fixed');
     }
 
-    if (inlineSize >= maxWidth) reset();
+    if (inlineSize >= maxWidth) {
+      console.log(inlineSize, maxWidth, 'reset');
+      reset();
+    }
   });
 
   //remove selected css class from nav icons when intro element is 25% or more visible.
@@ -192,7 +197,8 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
   const reset = () => {
     //remove any css classes that alter the card
     projectCards.forEach(card => {
-      card.classList.remove(closeCard, backgroundCard, hide);
+      card.classList.remove(closeCard, hide);
+      card.querySelector('.project')?.classList.remove(backgroundCard);
       card.querySelector('.nav-project')?.classList.remove(moveY);
     });
     //remove the selected icons
