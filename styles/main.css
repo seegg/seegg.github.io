@@ -96,6 +96,10 @@ main{
   overflow-y: hidden;
 }
 
+.fixed{
+  position: fixed;
+}
+
 .attach-to-top {
   top: 0;
 }

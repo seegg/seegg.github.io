@@ -5,6 +5,7 @@ const navTabs = Array.from(document.getElementsByClassName('tab-nav')) as HTMLEl
 const contentTabs = Array.from(document.getElementsByClassName('tab')) as HTMLElement[];
 
 const navBar = document.getElementById('tab-nav-bar');
+const navBarParentElement = navBar?.parentElement as HTMLElement;
 const navBarFiller = document.getElementById('nav-filler');
 const fixedNavBar = 'tab-nav-fixed';
 
@@ -25,6 +26,15 @@ const latestInputIndex: { current: number | null } = { current: null };
 let isNavBarFixed = false;
 
 export const setUpNavBar = async (widthThreshold = screenWidthThreshold) => {
+
+  document.addEventListener('scroll', () => {
+    const { top } = navBarParentElement.getBoundingClientRect();
+    if (top <= 0) {
+      toggleNavBarFixedPosition('fixed');
+    } else {
+      toggleNavBarFixedPosition('not-fixed');
+    }
+  })
 
   //navigation bar at the top
   navTabs.forEach(async (tab, index) => {

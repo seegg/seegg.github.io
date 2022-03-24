@@ -1,8 +1,8 @@
 import { addNavCallback } from "./nav";
-import { toggleNavBarFixedPosition } from "./nav";
 
 const contentContainer = document.getElementById('content') as HTMLDivElement;
 const projectsContainer = document.getElementById('projects') as HTMLDivElement;
+const projectDisplay = document.querySelector('.project-display') as HTMLDivElement;
 const intro = document.getElementById('intro-container');
 const navBar = document.getElementById('tab-nav-bar');
 const closeCard = 'close-deck-partial';
@@ -29,11 +29,10 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
   }
   document.addEventListener('scroll', () => {
     if (!contentScrollContainer) return;
-    const { top, bottom } = contentScrollContainer.getBoundingClientRect();
-    if (top <= 0) {
-      toggleNavBarFixedPosition('fixed');
-    } else {
-      toggleNavBarFixedPosition('not-fixed');
+
+    if (isInProjectsTab && window.innerWidth < maxWidth) {
+      const { top: scrollTop, bottom: scrollBottom } = contentScrollContainer.getBoundingClientRect();
+      console.log(scrollTop);
     }
   })
 
@@ -189,3 +188,7 @@ const setSelectedNavIcons =
 const setElementHeight = (elem: HTMLElement, height: number) => {
   elem.style.height = height + 'px';
 }
+
+// const toggleProjectDisplayFixedPosition = (state: 'fixed' | 'not-fixed') => {
+
+// }
