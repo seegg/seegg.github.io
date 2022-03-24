@@ -1,6 +1,4 @@
-import { between } from "./util";
 import { addNavCallback } from "./nav";
-import { scrollYViewport } from "./util";
 import { toggleNavBarFixedPosition } from "./nav";
 
 const contentContainer = document.getElementById('content') as HTMLDivElement;
@@ -13,8 +11,6 @@ const navSelector = '.nav-project';
 const backgroundCard = 'background-card';
 const hide = 'close-deck-full';
 const moveY = 'moveY-40';
-const ellapseDTimeThreshold = 300;
-let heightThreshold = 400;
 
 /**
  * 
@@ -22,17 +18,10 @@ let heightThreshold = 400;
  */
 export const collapseDeckOnScroll = (maxWidth = 570) => {
   const projectCards = Array.from(projectsContainer.querySelectorAll('.project-card')) as HTMLElement[];
-  const lowerBound = -50; //stash card when top of container scroll pass this point.
-  const upperBound = -20; //draw card when top of container scroll over this point.
-  const midPoint = -35; //for convenience.
   const cardScrollThreshold = 100; //distance to scroll to trigger cards.
   let currentIndex = 0;
-  const prevTime = 0;
-  const scrolling = false;
   let started = false;
   let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === 'nav-projects' : true;
-
-  if (intro) heightThreshold = intro.getBoundingClientRect().height - midPoint;
 
   const contentScrollContainer = document.querySelector('.projects-scroll') as HTMLElement;
   if (window.innerWidth < maxWidth) {
@@ -41,7 +30,11 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
   document.addEventListener('scroll', () => {
     if (!contentScrollContainer) return;
     const { top, bottom } = contentScrollContainer.getBoundingClientRect();
-    console.log(top, bottom);
+    if (top <= 0) {
+      toggleNavBarFixedPosition('fixed');
+    } else {
+      toggleNavBarFixedPosition('not-fixed');
+    }
   })
 
 
@@ -104,13 +97,6 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
     contentScrollContainer.style.removeProperty('height');
   };
 };
-
-/**
- * wrapper for scrollYViewport for scrolling to position corresponding to heightThreshold
- */
-const scrollToThreshold = () => {
-  scrollYViewport(heightThreshold, 'smooth', ellapseDTimeThreshold);
-}
 
 /**
  * Add css class to current selected project card to make its height smaller

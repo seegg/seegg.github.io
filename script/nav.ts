@@ -22,6 +22,7 @@ const afternavCallbacks: NavigationHook[] = [];
 //save the value as object property to make sure it's up to date and not just a snapshot.
 const latestInputIndex: { current: number | null } = { current: null };
 
+let isNavBarFixed = false;
 
 export const setUpNavBar = async (widthThreshold = screenWidthThreshold) => {
 
@@ -119,12 +120,14 @@ const openDeck = () => {
  * @param state 'fixed' or 'not-fixed'
  */
 export const toggleNavBarFixedPosition = (state: 'fixed' | 'not-fixed') => {
-  if (state === 'fixed') {
+  if (state === 'fixed' && !isNavBarFixed) {
     navBar?.classList.add(fixedNavBar);
     navBarFiller?.classList.add('nav-filler-expand');
-  } else if (state === 'not-fixed') {
+    isNavBarFixed = true;
+  } else if (state === 'not-fixed' && isNavBarFixed) {
     navBar?.classList.remove(fixedNavBar);
     navBarFiller?.classList.remove('nav-filler-expand');
+    isNavBarFixed = false;
   }
 };
 
