@@ -1,4 +1,5 @@
 import { addNavCallback } from "./nav";
+import { sleep } from "./util";
 
 const contentContainer = document.getElementById('content') as HTMLDivElement;
 const projectsContainer = document.getElementById('projects') as HTMLDivElement;
@@ -29,7 +30,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
   if (window.innerWidth < maxWidth) {
     setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
   }
-  document.addEventListener('scroll', () => {
+  document.addEventListener('scroll', async () => {
     if (!contentScrollContainer) return;
     if (isInProjectsTab && window.innerWidth < maxWidth) {
       const { top: scrollContainerTop, bottom: scrollContainerBottom } = contentScrollContainer.getBoundingClientRect();
@@ -47,9 +48,11 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
         console.log(heightOverlap);
 
         if (scrollPos > currentIndex) {
-          console.log('trigger stash');
           for (let i = currentIndex; i < scrollPos; i++) {
             stashCard(projectCards[i + 1], projectCards[i]);
+            await sleep(300);
+            toggleBackgroundCard(projectCards, i, 'add');
+            console.log(i);
           }
           currentIndex = scrollPos;
           // projectCards[currentIndex].style.height = cardHeight - heightOverlap + 'px';
@@ -57,11 +60,12 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
           console.log('trigger draw');
           for (let i = currentIndex; i > scrollPos; i--) {
             drawCard(projectCards[i - 1], projectCards[i]);
+            toggleBackgroundCard(projectCards, i - 1, 'remove');
           }
           window.scrollBy(
             {
               top: -(heightOverlap),
-              behavior: 'smooth'
+              behavior: 'auto'
             }
 
           )
@@ -208,12 +212,13 @@ const toggleCardHeightStatus = (card: HTMLElement, state: 'collapse' | 'expand',
 const toggleBackgroundCard =
   (cards: HTMLElement[], currentIndex: number, action: 'add' | 'remove', cardSelector = '.project') => {
     try {
-      if (currentIndex < 2) return;
-      if (currentIndex >= 2) {
-        cards[currentIndex - 2].querySelector(cardSelector)?.classList[action](backgroundCard);
+      console.log('is this working?');
+      if (currentIndex < 1) return;
+      if (currentIndex >= 1) {
+        cards[currentIndex - 1].querySelector(cardSelector)?.classList[action](backgroundCard);
       }
-      if (currentIndex >= 3) {
-        cards[currentIndex - 3].classList[action](hide);
+      if (currentIndex >= 2) {
+        cards[currentIndex - 2].classList[action](hide);
       }
     } catch (err) {
       console.error(err);
