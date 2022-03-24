@@ -25,102 +25,25 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
   const lowerBound = -50; //stash card when top of container scroll pass this point.
   const upperBound = -20; //draw card when top of container scroll over this point.
   const midPoint = -35; //for convenience.
+  const cardScrollThreshold = 100; //distance to scroll to trigger cards.
   let currentIndex = 0;
-  let prevTime = 0;
-  let scrolling = false;
+  const prevTime = 0;
+  const scrolling = false;
   let started = false;
-  let prevScollY = window.scrollY;
   let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === 'nav-projects' : true;
 
   if (intro) heightThreshold = intro.getBoundingClientRect().height - midPoint;
 
-  if (contentContainer.getBoundingClientRect().top <= 0) {
-    toggleNavBarFixedPosition('fixed');
-    scrollToThreshold();
+  const contentScrollContainer = document.querySelector('.projects-scroll') as HTMLElement;
+  if (window.innerWidth < maxWidth) {
+    setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
   }
-
   document.addEventListener('scroll', () => {
-    const { top } = contentContainer.getBoundingClientRect();
-    const endOfIndex = currentIndex >= projectCards.length - 1
-    //fixed the nav bar to the top of the screen if it leaves the viewport
-    if (top <= 0) {
-      toggleNavBarFixedPosition('fixed');
-    } else {
-      if (endOfIndex || currentIndex <= 0 || top >= 100 || !isInProjectsTab) {
-        toggleNavBarFixedPosition('not-fixed');
-      }
-    }
+    if (!contentScrollContainer) return;
+    const { top, bottom } = contentScrollContainer.getBoundingClientRect();
+    console.log(top, bottom);
+  })
 
-    if (window.innerWidth >= maxWidth || !isInProjectsTab) return;
-
-    //minimum wait time before cards can be stashed/drawed again.
-    const currentTime = new Date().getTime();
-    let ellapsedTime = currentTime - prevTime;
-    if (!scrolling) {
-      //stash card
-      //make height of current card smaller, couple with css transistion to make a
-      //'stashing' card effect.
-      if (top <= lowerBound && !endOfIndex && started) {
-        if (ellapsedTime >= ellapseDTimeThreshold) {
-          stashCard(projectCards[currentIndex + 1], projectCards[currentIndex]);
-          currentIndex++;
-          prevTime = currentTime;
-
-          //wait until css height transistion is finish before hiding previous background card.
-          //making sure the wait time is less than the time scrolling is re-enabable again.
-          const waitTime = 300;
-          setTimeout(() => {
-            toggleBackgroundCard(projectCards, currentIndex, 'add');
-          }, waitTime <= ellapseDTimeThreshold ? waitTime : ellapseDTimeThreshold);
-        }
-        scrolling = true;
-      }
-      //draw card
-      //expand the previous card back to original hard, pushing current card 'downward' on the layout
-      //no need to wait to toggle background card because the current card is being 'taken away'.
-      if (top >= upperBound && currentIndex > 0 && started) {
-        if (ellapsedTime >= ellapseDTimeThreshold) {
-          toggleBackgroundCard(projectCards, currentIndex, 'remove');
-          drawCard(projectCards[currentIndex - 1], projectCards[currentIndex]);
-          currentIndex--;
-          prevTime = currentTime;
-        }
-        scrolling = true;
-      }
-
-      if (scrolling) scrollToThreshold();
-      if (!started && top <= 0) {
-        started = true;
-        setSelectedNavIcons(projectCards[currentIndex], true);
-        //add 500ms extra to prevTime so multiple cards don't collapse at first scroll.
-        prevTime = new Date().getTime();
-      }
-    }
-
-    //enable drawing/stashing cards again if scroll into range.
-    if (between(top, midPoint - 5, midPoint + 5) && currentIndex < projectCards.length - 1) {
-      scrolling = false;
-    }
-
-    //handle the behaviour of the last card.
-    if (currentIndex >= projectCards.length - 1) {
-      //wait until viewport has finish resizing before deciding what to do.
-      ellapsedTime = new Date().getTime() - prevTime;
-      if (ellapsedTime > 600 && window.scrollY - prevScollY < 0) {
-        drawCard(projectCards[currentIndex - 1], projectCards[currentIndex]);
-        toggleBackgroundCard(projectCards, currentIndex, 'remove');
-        currentIndex--;
-        prevTime = new Date().getTime() + 100;
-        //wait until the card has expanded before scrolling.
-        setTimeout(() => {
-          scrollToThreshold();
-          scrolling = false;
-        }, 100);
-      }
-      //keep track of y scroll position to determine of scrolling up or down.
-      prevScollY = window.scrollY;
-    }
-  });
 
   //add callback for navigating to and from projects tab.
   //navigating from projects tab
@@ -128,6 +51,7 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
   addNavCallback((tabs, from) => {
     //only take effect if screen width is >= maxwidth
     if (window.innerWidth >= maxWidth || tabs[from].id !== projectNavID) return;
+    contentScrollContainer.style.removeProperty('height');
     started = false;
   }, 'before');
 
@@ -135,26 +59,18 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
   addNavCallback((tabs, from, to) => {
     isInProjectsTab = tabs[to].id === projectNavID;
     if (window.innerWidth >= maxWidth || !isInProjectsTab) return;
-    //scroll to neutral position if container is pass viewport or there is cards stacked up.
-    if (contentContainer.getBoundingClientRect().top < 0 || currentIndex > 0) {
-      scrollToThreshold();
-    }
+    setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
   }, 'after')
 
-  //adjust heightThreshold and deck behaviour base on intro element dimensions.
+  //resize observer adjust heightThreshold and deck behaviour base on intro element dimensions.
   const introResizeObserver = new ResizeObserver(entries => {
-    const { inlineSize, blockSize } = entries[0].contentBoxSize[0];
-    heightThreshold = blockSize - midPoint;
-    if (contentContainer.getBoundingClientRect().top < 0) {
-      toggleNavBarFixedPosition('fixed');
-      if (!started) scrollToThreshold();
-    } else {
-      toggleNavBarFixedPosition('not-fixed');
-    }
+    const { inlineSize } = entries[0].contentBoxSize[0];
 
     if (inlineSize >= maxWidth) {
       console.log(inlineSize, maxWidth, 'reset');
       reset();
+    } else {
+      setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
     }
   });
 
@@ -171,28 +87,6 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
     introIntersectObserver.observe(intro);
   }
 
-  //click fall back incase scroll is not available due to screen size.
-  projectsContainer.addEventListener('click', () => {
-    if (currentIndex <= 0 || window.innerWidth >= maxWidth) return;
-    if (new Date().getTime() - prevTime > ellapseDTimeThreshold) {
-      drawCard(projectCards[currentIndex - 1], projectCards[currentIndex]);
-      toggleBackgroundCard(projectCards, currentIndex, 'remove');
-
-      prevTime = new Date().getTime();
-      //special handling for the last card.
-      if (currentIndex >= projectCards.length - 1) {
-        //wait until the container height has increased before scrolling.
-        //extra wait time between cards to not trigger multiple cards at once.
-        prevTime += 300;
-        scrolling = true;
-        setTimeout(() => {
-          scrollToThreshold();
-        }, 400);
-      }
-      currentIndex--;
-    }
-  });
-
   //reset the state of the cards.
   const reset = () => {
     //remove any css classes that alter the card
@@ -207,8 +101,7 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
     })
     //reset values to original;
     currentIndex = 0;
-    started = false;
-    scrolling = false;
+    contentScrollContainer.style.removeProperty('height');
   };
 };
 
@@ -303,3 +196,10 @@ const setSelectedNavIcons =
       icon.classList[action](cssSelected);
     })
   };
+
+/**
+ * helper wrapper for setting element's height.
+ */
+const setElementHeight = (elem: HTMLElement, height: number) => {
+  elem.style.height = height + 'px';
+}

@@ -20,62 +20,6 @@
   padding: 0;
 }
 
-
-/* slind in animatin with a slight 'bounce' at the end */
-@keyframes slide-in-right{
-  0%{transform:  translateX(100%) scale(1, 1);}
-  25%{transform: translateX(50%) scale(2, 2);}
-  35%{transform: translateX(40%) scale(2, 2);}
-  65%{transform: translateX(30%) scale(2, 2);}
-  70%{transform: translateX(20%) scale(1.5, 1.5);} 
-  80%{transform: translateX(-10%) scale(1.2, 1.2);}
-  100%{transform:  translateX(0) scale(1, 1);}
-}
-
-@keyframes fade-in {
-  0%{opacity: 0;}
-  100%{opacity: 1;}
-}
-
-
-@keyframes fade-out {
-  0%{opacity: 1;}
-  100%{opacity: 0;}
-}
-
-@keyframes blink {
-  0%{opacity: 0;}
-  50%{opacity: 0.5;}
-  100%{opacity: 0;}
-}
-
-@keyframes open-deck {
-  0%{width: 10px;}
-  50%{width: 10px}
-  100%{width: 160px;}
-}
-
-@keyframes close-deck {
-  0%{width: 160px;}
-  60%{width: 10px;}
-  100%{width: 10px}
-}
-
-@keyframes fade-in-inherit {
-  0%{opacity: 0;}
-  100%{opacity: inherit;}
-}
-
-.anim-fadein{ animation: 0.25s ease-in-out 0s 1 fade-in; }
-
-.anim-fadein-long{ animation: 1.5s ease-in 0s 1 fade-in; }
-
-.anim-fadeout{ animation: 0.5s ease-out 0s 1 fade-out; }
-
-.anim-fadeout-deck{ animation: 0.6s ease-out 0s 1 fade-out; }
-
-.anim-slide-in-right{ animation: 3s ease-out 0s 1 slide-in-right; }
-
 body{ 
   background-color: black; 
 }
@@ -132,6 +76,34 @@ main{
   overflow-x: hidden;
 }
 
+.scroll-wrapper{
+  height: 100%;
+  width: 100%;
+}
+
+.projects-scroll{
+  position: relative;
+  width: 100%;
+}
+
+.projects-display{
+  position: absolute;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: hidden;
+}
+
+.attach-to-top {
+  top: 0;
+}
+
+.attach-to-bot {
+  bottom: 0;
+}
+
 .contacts{
   display: flex;
   justify-content: center;
@@ -160,6 +132,7 @@ main{
   display: flex;
   flex-wrap: wrap;
   transition: all 0.25s ease-in-out;
+  flex-shrink: 0;
 }
 
 .contacts{
@@ -550,6 +523,24 @@ ol{
   .anim-close-deck{ animation: close-deck 1s ease-in-out; }
 
   .content{min-height: 610px;}
+
+  .scroll-wrapper{
+    height: initial;
+    width: initial;
+  }
+  
+  .projects-scroll{
+    position: initial;
+    width: initial;
+  }
+
+  .projects-display{
+    position: initial;
+    height: initial;
+    width: inherit;
+    display: initial;
+    overflow-y: initial;
+  }
 
   .project-card{ 
     width: 160px; 

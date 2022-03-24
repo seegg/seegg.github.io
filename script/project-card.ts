@@ -7,7 +7,7 @@ import { Project } from "./types";
  * @returns 
  */
 export const createProjectCard =
-  (project: Project, contentContainer: HTMLElement, imagePath: string): HTMLElement => {
+  (project: Project, contentContainer: HTMLElement, imagePath: string, focusWidth = 570): HTMLElement => {
     //project container 
     const projectContainer = createElementWithClasses('section', 'project-card', 'anim-open-deck');
     projectContainer.tabIndex = -1;
@@ -26,7 +26,7 @@ export const createProjectCard =
 
     //animate the log and article body when mousing over it.
     secondArticle.onpointerenter = () => {
-      projectContainer.focus();
+      if (window.innerWidth >= focusWidth) projectContainer.focus();
       animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
     };
     projectContainer.onpointerleave = () => {
@@ -55,12 +55,6 @@ export const createProjectCard =
     innerArticle.innerHTML = `<h4 class="project-title"><a href="${project.url}"><span class="material-icons">link</span></a>${project.name}</h4><p>${project.description}</p>`
     secondArticle.appendChild(innerArticle);
     projectContainer.appendChild(secondArticle);
-
-    // if (visibleContent < 300) {
-    //   projectContainer.classList.add(cssIntroOnce);
-    //   repoLink.classList.add(cssInvisible);
-    //   repoLink.classList.remove('anim-fadein-long')
-    // }
 
     return projectContainer;
   };

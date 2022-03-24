@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .wrapper {
+      height: 100%;
+      width: 100%;
+      background-color: darkgray;
+    }
+
+    .header {
+      height: 400px;
+      width: 100%;
+      background-color: black;
+    }
+
+    .content-wrapper {
+      position: relative;
+      width: 100%;
+      height: 2000px;
+    }
+
+    .content {
+      position: absolute;
+      height: 100vh;
+      width: 100%;
+      /* background-color: rgb(49, 49, 49); */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-y: hidden;
+    }
+
+    .attach-to-top {
+      top: 0;
+    }
+
+    .attach-to-bot {
+      bottom: 0;
+    }
+
+    .inner-content {
+      flex-shrink: 0;
+      height: 2000px;
+      width: 70%;
+      background-color: aquamarine;
+    }
+
+    .fixed {
+      position: fixed;
+      top: 0;
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <div class="header"></div>
+    <div class="content-wrapper">
+      <div class="content attach-to-top attach-to-bot">
+        <div class="inner-content"></div>
+      </div>
+    </div>
+    <div class="header"></div>
+  </div>
+
+  <script>
+    const contentWrapper = document.querySelector('.content-wrapper');
+    const contentWindow = document.querySelector('.content');
+    const content = document.querySelector('.inner-content');
+    let contentHeight = contentWindow.getBoundingClientRect().height;
+    contentWrapper.style.height = contentHeight + 700 + 'px';
+    let fromTop = true;
+
+    console.log(document.querySelector('.inner-content').getBoundingClientRect().height);
+
+    document.addEventListener('resize', () => {
+      contentHeight = contentWindow.getBoundingClientRect().height;
+      contentWrapper.style.height = contentHeight + 700 + 'px';
+    })
+
+    document.addEventListener('scroll', () => {
+      const { top, bottom } = contentWrapper.getBoundingClientRect();
+      const botDist = window.innerHeight - bottom;
+      if (top < 0 && botDist < 0) {
+        contentWindow.classList.add('fixed');
+        if (fromTop) {
+
+        } else {
+
+        }
+
+      } else {
+        if (botDist >= 0) {
+          contentWindow.classList.remove('attach-to-top');
+          fromTop = false;
+        } else {
+          contentWindow.classList.add('attach-to-top');
+          fromTop = true;
+        }
+        contentWindow.classList.remove('fixed');
+      }
+
+      console.log(fromTop);
+    })
+  </script>
+</body>
+
+</html>
