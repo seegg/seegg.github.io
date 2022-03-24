@@ -2,7 +2,7 @@ import { addNavCallback } from "./nav";
 
 const contentContainer = document.getElementById('content') as HTMLDivElement;
 const projectsContainer = document.getElementById('projects') as HTMLDivElement;
-const projectDisplay = document.querySelector('.project-display') as HTMLDivElement;
+const projectDisplay = document.querySelector('.projects-display') as HTMLDivElement;
 const intro = document.getElementById('intro-container');
 const navBar = document.getElementById('tab-nav-bar');
 const closeCard = 'close-deck-partial';
@@ -22,6 +22,8 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
   let currentIndex = 0;
   let started = false;
   let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === 'nav-projects' : true;
+  let isDisplayFixed = false;
+  let isFromTop = true;
 
   const contentScrollContainer = document.querySelector('.projects-scroll') as HTMLElement;
   if (window.innerWidth < maxWidth) {
@@ -29,10 +31,34 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
   }
   document.addEventListener('scroll', () => {
     if (!contentScrollContainer) return;
-
     if (isInProjectsTab && window.innerWidth < maxWidth) {
-      const { top: scrollTop, bottom: scrollBottom } = contentScrollContainer.getBoundingClientRect();
-      console.log(scrollTop);
+      const { top: scrollContainerTop, bottom: scrollContainerBottom } = contentScrollContainer.getBoundingClientRect();
+      const botDist = window.innerHeight - scrollContainerBottom;
+      if (scrollContainerTop < 0 && botDist < 0) {
+        if (!isDisplayFixed) {
+          toggleProjectDisplayFixedPosition('fixed');
+          isDisplayFixed = true;
+        }
+      } else {
+        if (isDisplayFixed) {
+          console.log(scrollContainerTop);
+          toggleProjectDisplayFixedPosition('not-fixed');
+          isDisplayFixed = false;
+          if (botDist >= 0) {
+            projectDisplay.classList.remove('attach-to-top');
+            isFromTop = false;
+
+            // for (let i = 0; i < projectCards.length - 1; i++) {
+            //   stashCard(projectCards[i + 1], projectCards[i]);
+            //   toggleBackgroundCard(projectCards, i, 'add');
+            // }
+
+          } else {
+            projectDisplay.classList.add('attach-to-top');
+            isFromTop = true;
+          }
+        }
+      }
     }
   })
 
@@ -189,6 +215,10 @@ const setElementHeight = (elem: HTMLElement, height: number) => {
   elem.style.height = height + 'px';
 }
 
-// const toggleProjectDisplayFixedPosition = (state: 'fixed' | 'not-fixed') => {
-
-// }
+const toggleProjectDisplayFixedPosition = (state: 'fixed' | 'not-fixed') => {
+  if (state === 'fixed') {
+    projectDisplay.classList.add('fixed');
+  } else {
+    projectDisplay.classList.remove('fixed');
+  }
+}

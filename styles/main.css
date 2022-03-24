@@ -22,6 +22,8 @@
 
 body{ 
   background-color: black; 
+  margin: 0;
+  padding: 0;
 }
 
 a {
@@ -82,11 +84,13 @@ main{
 }
 
 .projects-scroll{
+  box-sizing: border-box;
   position: relative;
   width: 100%;
 }
 
 .projects-display{
+  box-sizing: border-box;
   position: absolute;
   height: 100vh;
   width: 100%;
@@ -114,8 +118,8 @@ main{
 }
 
 .content{
+  padding-top: 10px;
   opacity: 0;
-  padding: 10px;
   min-width: 340px;
   width: 100%;
   min-height: var(--min-content-height);
@@ -399,7 +403,9 @@ ol{
   display: flex;
 }
 
-.tab-nav-bar{ margin-bottom: 50px; }
+.mt-50{
+  padding-top: 50px;
+}
 
 .tab-nav{
   font-family: 'Encode Sans Semi Expanded', sans-serif;
@@ -471,13 +477,13 @@ ol{
 }
 
 .nav-filler{
-  height: 0px;
+  height: 32px;
   width: 10px;
   visibility: hidden;
 }
 
 .nav-filler-expand{
-  height: 82px;
+  height: 64px;
 }
 
 .moveY-40{

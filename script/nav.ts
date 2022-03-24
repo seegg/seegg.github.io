@@ -105,11 +105,12 @@ export const setUpNavBar = async (widthThreshold = screenWidthThreshold) => {
 /**
  * close deck transistion
  */
-const closeDeck = async (duration = 500) => {
-  contentTabs[0].classList.add(cssFadeOut);
-  Array.from(contentTabs[0].children).forEach(child => {
-    child.classList.remove(cssOpenDeck);
-    child.classList.add(cssCloseDeck);
+const closeDeck = async (container = contentTabs[0], duration = 500) => {
+  container.classList.add(cssFadeOut);
+  const deck = Array.from(container.querySelectorAll('.project-card')) as HTMLElement[];
+  deck?.forEach(card => {
+    card.classList.remove(cssOpenDeck);
+    card.classList.add(cssCloseDeck);
   });
   await sleep(duration);
 }
@@ -117,11 +118,12 @@ const closeDeck = async (duration = 500) => {
 /**
  * open deck transition
  */
-const openDeck = () => {
-  contentTabs[0].classList.remove(cssFadeOut);
-  Array.from(contentTabs[0].children).forEach(child => {
-    child.classList.add(cssOpenDeck);
-    child.classList.remove(cssCloseDeck);
+const openDeck = (container = contentTabs[0]) => {
+  container.classList.remove(cssFadeOut);
+  const deck = Array.from(container.querySelectorAll('.project-card')) as HTMLElement[];
+  deck.forEach(card => {
+    card.classList.add(cssOpenDeck);
+    card.classList.remove(cssCloseDeck);
   });
 }
 
