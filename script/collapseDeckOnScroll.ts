@@ -60,14 +60,14 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
           }
           window.scrollBy(
             {
-              top: -(scrollTopDist % cardScrollThreshold),
+              top: -(heightOverlap),
               behavior: 'smooth'
             }
 
           )
           currentIndex = scrollPos;
         } else {
-          if (heightOverlap > 0 && !disableHeightRatio) projectCards[currentIndex].style.height = cardHeight - heightOverlap + 'px';
+          if (heightOverlap > 0) projectCards[currentIndex].style.height = cardHeight - heightOverlap * heightRatio + 'px';
         }
       } else {
         if (isDisplayFixed) {
