@@ -16,15 +16,15 @@ const moveY = 'moveY-40';
  * 
  * @param maxWidth max screen viewport width size before this stops taking effect.
  */
-export const collapseDeckOnScroll = (maxWidth = 570) => {
+export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
   const projectCards = Array.from(projectsContainer.querySelectorAll('.project-card')) as HTMLElement[];
-  const cardScrollThreshold = 100; //distance to scroll to trigger cards.
+  const cardScrollThreshold = 300; //distance to scroll in px to trigger cards.
   let currentIndex = 0;
-  let started = false;
   let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === 'nav-projects' : true;
   let isDisplayFixed = false;
-  let isFromTop = true;
-
+  const disableHeightRatio = false;
+  // const isFromTop = true;
+  const heightRatio = cardHeight / cardScrollThreshold;
   const contentScrollContainer = document.querySelector('.projects-scroll') as HTMLElement;
   if (window.innerWidth < maxWidth) {
     setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
@@ -39,6 +39,36 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
           toggleProjectDisplayFixedPosition('fixed');
           isDisplayFixed = true;
         }
+        const scrollTopDist = Math.abs(scrollContainerTop);
+        let scrollPos = Math.floor(scrollTopDist / cardScrollThreshold);
+        scrollPos = Math.min(projectCards.length - 1, scrollPos);
+
+        const heightOverlap = Math.max(scrollTopDist % cardScrollThreshold - 200, 0);
+        console.log(heightOverlap);
+
+        if (scrollPos > currentIndex) {
+          console.log('trigger stash');
+          for (let i = currentIndex; i < scrollPos; i++) {
+            stashCard(projectCards[i + 1], projectCards[i]);
+          }
+          currentIndex = scrollPos;
+          // projectCards[currentIndex].style.height = cardHeight - heightOverlap + 'px';
+        } else if (scrollPos < currentIndex) {
+          console.log('trigger draw');
+          for (let i = currentIndex; i > scrollPos; i--) {
+            drawCard(projectCards[i - 1], projectCards[i]);
+          }
+          window.scrollBy(
+            {
+              top: -(scrollTopDist % cardScrollThreshold),
+              behavior: 'smooth'
+            }
+
+          )
+          currentIndex = scrollPos;
+        } else {
+          if (heightOverlap > 0 && !disableHeightRatio) projectCards[currentIndex].style.height = cardHeight - heightOverlap + 'px';
+        }
       } else {
         if (isDisplayFixed) {
           console.log(scrollContainerTop);
@@ -46,16 +76,14 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
           isDisplayFixed = false;
           if (botDist >= 0) {
             projectDisplay.classList.remove('attach-to-top');
-            isFromTop = false;
-
-            // for (let i = 0; i < projectCards.length - 1; i++) {
-            //   stashCard(projectCards[i + 1], projectCards[i]);
-            //   toggleBackgroundCard(projectCards, i, 'add');
-            // }
+            // isFromTop = false;
 
           } else {
+            for (let i = currentIndex; i > 0; i--) {
+              drawCard(projectCards[i - 1], projectCards[i]);
+            }
             projectDisplay.classList.add('attach-to-top');
-            isFromTop = true;
+            // isFromTop = true;
           }
         }
       }
@@ -70,7 +98,6 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
     //only take effect if screen width is >= maxwidth
     if (window.innerWidth >= maxWidth || tabs[from].id !== projectNavID) return;
     contentScrollContainer.style.removeProperty('height');
-    started = false;
   }, 'before');
 
   //navigating to projects tab
@@ -96,7 +123,6 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
   const introIntersectObserver = new IntersectionObserver(entries => {
     if (entries[0].isIntersecting && currentIndex < projectCards.length - 1) {
       setSelectedNavIcons(projectCards[currentIndex], false);
-      started = false;
     }
   }, { rootMargin: '0px', threshold: 0.25 })
 
@@ -130,6 +156,8 @@ export const collapseDeckOnScroll = (maxWidth = 570) => {
  * @param current card to be collapse and stash away.
  */
 const stashCard = (next: HTMLElement, current: HTMLElement) => {
+  current.style.removeProperty('height');
+  next.style.removeProperty('height');
   toggleCardHeightStatus(current, 'collapse');
   switchSelectedNavIcons(next, current);
 };
@@ -142,6 +170,8 @@ const stashCard = (next: HTMLElement, current: HTMLElement) => {
  * @param current current card
  */
 const drawCard = (next: HTMLElement, current: HTMLElement) => {
+  current.style.removeProperty('height');
+  next.style.removeProperty('height');
   toggleCardHeightStatus(next, 'expand');
   switchSelectedNavIcons(next, current);
 };
