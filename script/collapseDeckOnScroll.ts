@@ -18,6 +18,7 @@ const moveY = 'moveY-40';
  * @param maxWidth max screen viewport width size before this stops taking effect.
  */
 export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
+  window.scrollTo(0, 0);
   const projectCards = Array.from(projectsContainer.querySelectorAll('.project-card')) as HTMLElement[];
   const cardScrollThreshold = 300; //distance to scroll in px to trigger cards.
   let currentIndex = 0;
