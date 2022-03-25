@@ -6,6 +6,7 @@ const projectsContainer = document.getElementById('projects') as HTMLDivElement;
 const projectDisplay = document.querySelector('.projects-display') as HTMLDivElement;
 const intro = document.getElementById('intro-container');
 const navBar = document.getElementById('tab-nav-bar');
+const noCssTransition = '.disable-transition';
 const closeCard = 'close-deck-partial';
 const navIconSelected = 'nav-icon-selected';
 const navSelector = '.nav-project';
@@ -24,8 +25,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
   let currentIndex = 0;
   let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === 'nav-projects' : true;
   let isDisplayFixed = false;
-  const disableHeightRatio = false;
-  // const isFromTop = true;
+  let isFromTop = true;
   const heightRatio = cardHeight / cardScrollThreshold;
   const contentScrollContainer = document.querySelector('.projects-scroll') as HTMLElement;
   if (window.innerWidth < maxWidth) {
@@ -46,29 +46,37 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
         scrollPos = Math.min(projectCards.length - 1, scrollPos);
 
         const heightOverlap = Math.max(scrollTopDist % cardScrollThreshold - 200, 0);
-        console.log(heightOverlap);
 
         if (scrollPos > currentIndex) {
+          if (scrollPos - currentIndex > 2) {
+            for (let i = currentIndex; i < scrollPos - 2; i++) {
+              projectCards[i].classList.add(noCssTransition);
+              stashCard(projectCards[i + 1], projectCards[i]);
+              toggleBackgroundCard(projectCards, i, 'add');
+              projectCards[i].offsetHeight;
+              projectCards[i].classList.remove(noCssTransition);
+            }
+            currentIndex = scrollPos - 2;
+          }
+
           for (let i = currentIndex; i < scrollPos; i++) {
             stashCard(projectCards[i + 1], projectCards[i]);
             await sleep(300);
             toggleBackgroundCard(projectCards, i, 'add');
-            console.log(i);
           }
           currentIndex = scrollPos;
           // projectCards[currentIndex].style.height = cardHeight - heightOverlap + 'px';
         } else if (scrollPos < currentIndex) {
-          console.log('trigger draw');
           for (let i = currentIndex; i > scrollPos; i--) {
             drawCard(projectCards[i - 1], projectCards[i]);
             toggleBackgroundCard(projectCards, i - 1, 'remove');
+            await sleep(50);
           }
           window.scrollBy(
             {
               top: -(heightOverlap),
               behavior: 'auto'
             }
-
           )
           currentIndex = scrollPos;
         } else {
@@ -76,20 +84,39 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
         }
       } else {
         if (isDisplayFixed) {
-          console.log(scrollContainerTop);
           toggleProjectDisplayFixedPosition('not-fixed');
           isDisplayFixed = false;
-          if (botDist >= 0) {
-            projectDisplay.classList.remove('attach-to-top');
-            // isFromTop = false;
+        }
 
-          } else {
-            for (let i = currentIndex; i > 0; i--) {
-              drawCard(projectCards[i - 1], projectCards[i]);
-            }
-            projectDisplay.classList.add('attach-to-top');
-            // isFromTop = true;
+        if (botDist >= 0) {
+          for (let i = currentIndex; i < projectCards.length - 3; i++) {
+            projectCards[i].classList.add(noCssTransition);
+            stashCard(projectCards[i + 1], projectCards[i]);
+            toggleBackgroundCard(projectCards, i, 'add');
+            projectCards[i].offsetHeight;
+            projectCards[i].classList.remove(noCssTransition);
           }
+          currentIndex = projectCards.length - 3;
+
+          if (isFromTop) {
+            projectDisplay.classList.remove('attach-to-top');
+            isFromTop = false;
+          }
+
+          for (let i = currentIndex; i < projectCards.length - 1; i++) {
+            stashCard(projectCards[i + 1], projectCards[i]);
+            await sleep(300);
+            toggleBackgroundCard(projectCards, i, 'add');
+          }
+          currentIndex = projectCards.length - 1;
+
+        } else {
+          for (let i = currentIndex; i > 0; i--) {
+            drawCard(projectCards[i - 1], projectCards[i]);
+          }
+          currentIndex = 0;
+          console.log(botDist);
+          projectDisplay.classList.add('attach-to-top');
         }
       }
     }
@@ -117,7 +144,6 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
     const { inlineSize } = entries[0].contentBoxSize[0];
 
     if (inlineSize >= maxWidth) {
-      console.log(inlineSize, maxWidth, 'reset');
       reset();
     } else {
       setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
@@ -213,7 +239,6 @@ const toggleCardHeightStatus = (card: HTMLElement, state: 'collapse' | 'expand',
 const toggleBackgroundCard =
   (cards: HTMLElement[], currentIndex: number, action: 'add' | 'remove', cardSelector = '.project') => {
     try {
-      console.log('is this working?');
       if (currentIndex < 1) return;
       if (currentIndex >= 1) {
         cards[currentIndex - 1].querySelector(cardSelector)?.classList[action](backgroundCard);
