@@ -25,17 +25,21 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
   let currentIndex = 0;
   let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === 'nav-projects' : true;
   let isDisplayFixed = false;
-  let isFromTop = true;
+  const isFromTop = true;
   const heightRatio = cardHeight / cardScrollThreshold;
   const contentScrollContainer = document.querySelector('.projects-scroll') as HTMLElement;
   if (window.innerWidth < maxWidth) {
     setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
   }
+
   document.addEventListener('scroll', async () => {
     if (!contentScrollContainer) return;
     if (isInProjectsTab && window.innerWidth < maxWidth) {
       const { top: scrollContainerTop, bottom: scrollContainerBottom } = contentScrollContainer.getBoundingClientRect();
       const botDist = window.innerHeight - scrollContainerBottom;
+
+      console.log('bot dist:', botDist);
+
       if (scrollContainerTop < 0 && botDist < 0) {
         if (!isDisplayFixed) {
           toggleProjectDisplayFixedPosition('fixed');
@@ -61,7 +65,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
 
           for (let i = currentIndex; i < scrollPos; i++) {
             stashCard(projectCards[i + 1], projectCards[i]);
-            await sleep(300);
+            await sleep(500);
             toggleBackgroundCard(projectCards, i, 'add');
           }
           currentIndex = scrollPos;
@@ -98,14 +102,11 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
           }
           currentIndex = projectCards.length - 3;
 
-          if (isFromTop) {
-            projectDisplay.classList.remove('attach-to-top');
-            isFromTop = false;
-          }
+          projectDisplay.classList.remove('attach-to-top');
 
           for (let i = currentIndex; i < projectCards.length - 1; i++) {
             stashCard(projectCards[i + 1], projectCards[i]);
-            await sleep(300);
+            // await sleep(300);
             toggleBackgroundCard(projectCards, i, 'add');
           }
           currentIndex = projectCards.length - 1;
@@ -115,8 +116,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
             drawCard(projectCards[i - 1], projectCards[i]);
           }
           currentIndex = 0;
-          console.log(botDist);
-          projectDisplay.classList.add('attach-to-top');
+          if (botDist < 0) projectDisplay.classList.add('attach-to-top');
         }
       }
     }

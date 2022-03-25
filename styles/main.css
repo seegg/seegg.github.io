@@ -366,8 +366,8 @@ footer{
   display: flex;
   justify-content: center;
   color: white;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 footer .contact{
@@ -605,4 +605,8 @@ ol{
   -o-transition: none !important;
   transition: none !important;
   animation: none !important;
+}
+
+footer{
+  background-color: aquamarine;
 }
