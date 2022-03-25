@@ -22,7 +22,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
   window.scrollTo(0, 0);
   const projectCards = Array.from(projectsContainer.querySelectorAll('.project-card')) as HTMLElement[];
   const cardScrollThreshold = 300; //distance to scroll in px to trigger cards.
-  let currentIndex = 0;
+  const currentIndex = { value: 0 };
   let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === 'nav-projects' : true;
   let isDisplayFixed = false;
   const isFromTop = true;
@@ -32,13 +32,13 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
     setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
   }
 
+  const queue: number[] = [];
+
   document.addEventListener('scroll', async () => {
     if (!contentScrollContainer) return;
     if (isInProjectsTab && window.innerWidth < maxWidth) {
       const { top: scrollContainerTop, bottom: scrollContainerBottom } = contentScrollContainer.getBoundingClientRect();
       const botDist = window.innerHeight - scrollContainerBottom;
-
-      console.log('bot dist:', botDist);
 
       if (scrollContainerTop < 0 && botDist < 0) {
         if (!isDisplayFixed) {
@@ -51,27 +51,36 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
 
         const heightOverlap = Math.max(scrollTopDist % cardScrollThreshold - 200, 0);
 
-        if (scrollPos > currentIndex) {
-          if (scrollPos - currentIndex > 2) {
-            for (let i = currentIndex; i < scrollPos - 2; i++) {
+        if (scrollPos > currentIndex.value) {
+          // document.body.style.overflowY = 'hidden';
+          if (scrollPos - currentIndex.value > 2) {
+            for (let i = currentIndex.value; i < scrollPos - 2; i++) {
               projectCards[i].classList.add(noCssTransition);
               stashCard(projectCards[i + 1], projectCards[i]);
               toggleBackgroundCard(projectCards, i, 'add');
               projectCards[i].offsetHeight;
               projectCards[i].classList.remove(noCssTransition);
             }
-            currentIndex = scrollPos - 2;
+            currentIndex.value = scrollPos - 2;
           }
 
-          for (let i = currentIndex; i < scrollPos; i++) {
+          //assign index value a temp variable and then update currentIndex to the scrollPos value
+          //to prevent doubling up on calls to stashCard because scroll event is fired so often.
+          const temp = currentIndex.value;
+          currentIndex.value = scrollPos;
+          for (let i = temp; i < scrollPos; i++) {
+            queue.push(i);
             stashCard(projectCards[i + 1], projectCards[i]);
-            await sleep(500);
+            await sleep(300);
             toggleBackgroundCard(projectCards, i, 'add');
+            // currentIndex.value = i;
+            // if (temp !== currentIndex.value) console.log(temp, currentIndex.value);
           }
-          currentIndex = scrollPos;
-          // projectCards[currentIndex].style.height = cardHeight - heightOverlap + 'px';
-        } else if (scrollPos < currentIndex) {
-          for (let i = currentIndex; i > scrollPos; i--) {
+          // currentIndex.value = scrollPos;
+          // document.body.style.overflowY = 'auto';
+
+        } else if (scrollPos < currentIndex.value) {
+          for (let i = currentIndex.value; i > scrollPos; i--) {
             drawCard(projectCards[i - 1], projectCards[i]);
             toggleBackgroundCard(projectCards, i - 1, 'remove');
             await sleep(50);
@@ -82,9 +91,9 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
               behavior: 'auto'
             }
           )
-          currentIndex = scrollPos;
+          currentIndex.value = scrollPos;
         } else {
-          if (heightOverlap > 0) projectCards[currentIndex].style.height = cardHeight - heightOverlap * heightRatio + 'px';
+          if (heightOverlap > 0) projectCards[currentIndex.value].style.height = cardHeight - heightOverlap * heightRatio + 'px';
         }
       } else {
         if (isDisplayFixed) {
@@ -93,29 +102,31 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
         }
 
         if (botDist >= 0) {
-          for (let i = currentIndex; i < projectCards.length - 3; i++) {
+          console.table(queue);
+          for (let i = currentIndex.value; i < projectCards.length - 2; i++) {
             projectCards[i].classList.add(noCssTransition);
             stashCard(projectCards[i + 1], projectCards[i]);
             toggleBackgroundCard(projectCards, i, 'add');
             projectCards[i].offsetHeight;
             projectCards[i].classList.remove(noCssTransition);
           }
-          currentIndex = projectCards.length - 3;
+          currentIndex.value = projectCards.length - 2;
 
           projectDisplay.classList.remove('attach-to-top');
 
-          for (let i = currentIndex; i < projectCards.length - 1; i++) {
+          for (let i = currentIndex.value; i < projectCards.length - 1; i++) {
             stashCard(projectCards[i + 1], projectCards[i]);
-            // await sleep(300);
+            await sleep(300);
             toggleBackgroundCard(projectCards, i, 'add');
           }
-          currentIndex = projectCards.length - 1;
+          currentIndex.value = projectCards.length - 1;
 
         } else {
-          for (let i = currentIndex; i > 0; i--) {
+          for (let i = currentIndex.value; i > 0; i--) {
             drawCard(projectCards[i - 1], projectCards[i]);
+            toggleBackgroundCard(projectCards, i - 1, 'remove');
           }
-          currentIndex = 0;
+          currentIndex.value = 0;
           if (botDist < 0) projectDisplay.classList.add('attach-to-top');
         }
       }
@@ -152,8 +163,8 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
 
   //remove selected css class from nav icons when intro element is 25% or more visible.
   const introIntersectObserver = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting && currentIndex < projectCards.length - 1) {
-      setSelectedNavIcons(projectCards[currentIndex], false);
+    if (entries[0].isIntersecting && currentIndex.value < projectCards.length - 1) {
+      setSelectedNavIcons(projectCards[currentIndex.value], false);
     }
   }, { rootMargin: '0px', threshold: 0.25 })
 
@@ -171,11 +182,11 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
       card.querySelector('.nav-project')?.classList.remove(moveY);
     });
     //remove the selected icons
-    projectCards[currentIndex].querySelectorAll('.nav-icon')?.forEach(card => {
+    projectCards[currentIndex.value].querySelectorAll('.nav-icon')?.forEach(card => {
       card.classList.remove(navIconSelected);
     })
     //reset values to original;
-    currentIndex = 0;
+    currentIndex.value = 0;
     contentScrollContainer.style.removeProperty('height');
   };
 };
