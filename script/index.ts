@@ -13,6 +13,7 @@ const setUp = async () => {
   await intro();
   await loadProjects();
   collapseDeckOnScroll(570);
+
 };
 
 setUp();

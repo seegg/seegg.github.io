@@ -123,6 +123,130 @@
       "url": "https://seegg.github.io/date-picker",
       "image": "date-picker.png",
       "description": "A date picker widget created using vanilla JS that can easily be added to any webpage."
+    },
+    {
+      "name": "Safe Houses",
+      "title": "Safe Houses",
+      "repo": "https://github.com/seegg/safe-houses",
+      "url": "https://tuohunga.herokuapp.com/",
+      "image": "home.png",
+      "description": "Nodejs web application for managing safe house informations. Built using react and express.it uses multi tier user roles for access control."
+    },
+    {
+      "name": "animate trace border",
+      "title": "Trace Border",
+      "repo": "https://github.com/seegg/trace-border-animation",
+      "url": "https://seegg.github.io/trace-border-animation/demo",
+      "image": "img1.png",
+      "description": "React wrapper component to animate tracing a border around wrapped contents."
+    },
+    {
+      "name": "Tournament brackets",
+      "title": "Tournament brackets",
+      "repo": "https://github.com/seegg/tournament-bracket",
+      "url": "https://seegg.github.io/tournament-bracket",
+      "image": "bracket.png",
+      "description": "A single elimination style bracket generator made using react."
+    },
+    {
+      "name": "Bounce",
+      "title": "Bounce",
+      "repo": "https://github.com/seegg/bounce",
+      "url": "https://seegg.github.io/bounce",
+      "image": "bounce.png",
+      "description": "Bounce balls in a canvas with inellastic collision. upload or link images to decorate the balls."
+    },
+    {
+      "name": "Budget Tracker API",
+      "title": "Budget Tracker API",
+      "repo": "https://github.com/seegg/budget-tracker",
+      "url": "https://github.com/seegg/budget-tracker",
+      "description": "REST API for Budget Tracker app"
+    },
+    {
+      "name": "Calculator",
+      "title": "Calculator",
+      "repo": "https://github.com/seegg/calculator",
+      "url": "https://seegg.github.io/calculator",
+      "image": "calculator.png",
+      "description": "Simple calculator app for learning JS and CSS."
+    },
+    {
+      "name": "Personal Page",
+      "title": "Personal Porfolio",
+      "repo": "https://github.com/seegg/seegg.github.io",
+      "url": "https://seegg.github.io/",
+      "description": "This web page, responsive, mobile first."
+    },
+    {
+      "name": "JS Date Picker",
+      "title": "JS Date Picker",
+      "repo": "https://github.com/seegg/date-picker",
+      "url": "https://seegg.github.io/date-picker",
+      "image": "date-picker.png",
+      "description": "A date picker widget created using vanilla JS that can easily be added to any webpage."
+    },
+    {
+      "name": "Safe Houses",
+      "title": "Safe Houses",
+      "repo": "https://github.com/seegg/safe-houses",
+      "url": "https://tuohunga.herokuapp.com/",
+      "image": "home.png",
+      "description": "Nodejs web application for managing safe house informations. Built using react and express.it uses multi tier user roles for access control."
+    },
+    {
+      "name": "animate trace border",
+      "title": "Trace Border",
+      "repo": "https://github.com/seegg/trace-border-animation",
+      "url": "https://seegg.github.io/trace-border-animation/demo",
+      "image": "img1.png",
+      "description": "React wrapper component to animate tracing a border around wrapped contents."
+    },
+    {
+      "name": "Tournament brackets",
+      "title": "Tournament brackets",
+      "repo": "https://github.com/seegg/tournament-bracket",
+      "url": "https://seegg.github.io/tournament-bracket",
+      "image": "bracket.png",
+      "description": "A single elimination style bracket generator made using react."
+    },
+    {
+      "name": "Bounce",
+      "title": "Bounce",
+      "repo": "https://github.com/seegg/bounce",
+      "url": "https://seegg.github.io/bounce",
+      "image": "bounce.png",
+      "description": "Bounce balls in a canvas with inellastic collision. upload or link images to decorate the balls."
+    },
+    {
+      "name": "Budget Tracker API",
+      "title": "Budget Tracker API",
+      "repo": "https://github.com/seegg/budget-tracker",
+      "url": "https://github.com/seegg/budget-tracker",
+      "description": "REST API for Budget Tracker app"
+    },
+    {
+      "name": "Calculator",
+      "title": "Calculator",
+      "repo": "https://github.com/seegg/calculator",
+      "url": "https://seegg.github.io/calculator",
+      "image": "calculator.png",
+      "description": "Simple calculator app for learning JS and CSS."
+    },
+    {
+      "name": "Personal Page",
+      "title": "Personal Porfolio",
+      "repo": "https://github.com/seegg/seegg.github.io",
+      "url": "https://seegg.github.io/",
+      "description": "This web page, responsive, mobile first."
+    },
+    {
+      "name": "JS Date Picker",
+      "title": "JS Date Picker",
+      "repo": "https://github.com/seegg/date-picker",
+      "url": "https://seegg.github.io/date-picker",
+      "image": "date-picker.png",
+      "description": "A date picker widget created using vanilla JS that can easily be added to any webpage."
     }
   ]
 }

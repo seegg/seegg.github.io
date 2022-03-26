@@ -467,7 +467,8 @@ ol{
 }
 
 .close-deck-full{
-  display: none;
+  /* display: none; */
+  height: 0px;
 }
 
 .tab-nav-fixed{

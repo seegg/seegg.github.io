@@ -1,7 +1,8 @@
 import { addNavCallback } from "./nav";
 import { sleep } from "./util";
+import { SyncAutoQueue } from "./queue";
 
-const contentContainer = document.getElementById('content') as HTMLDivElement;
+// const contentContainer = document.getElementById('content') as HTMLDivElement;
 const projectsContainer = document.getElementById('projects') as HTMLDivElement;
 const projectDisplay = document.querySelector('.projects-display') as HTMLDivElement;
 const intro = document.getElementById('intro-container');
@@ -27,7 +28,9 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
   let isDisplayFixed = false;
   const isFromTop = true;
   const heightRatio = cardHeight / cardScrollThreshold;
+  const autoQueue = new SyncAutoQueue<() => Promise<void>>();
   const contentScrollContainer = document.querySelector('.projects-scroll') as HTMLElement;
+  const loopCount = { value: 0 };
   if (window.innerWidth < maxWidth) {
     setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
   }
@@ -52,8 +55,10 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
         const heightOverlap = Math.max(scrollTopDist % cardScrollThreshold - 200, 0);
 
         if (scrollPos > currentIndex.value) {
-          // document.body.style.overflowY = 'hidden';
+          //when the number of cards to handle gets pass a a number, precalculate the states of all the cards
+          //except the last 2 so not too much time is spent playing the stash card animation.
           if (scrollPos - currentIndex.value > 2) {
+            console.log('trigger big scroll');
             for (let i = currentIndex.value; i < scrollPos - 2; i++) {
               projectCards[i].classList.add(noCssTransition);
               stashCard(projectCards[i + 1], projectCards[i]);
@@ -64,26 +69,29 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
             currentIndex.value = scrollPos - 2;
           }
 
-          //assign index value a temp variable and then update currentIndex to the scrollPos value
-          //to prevent doubling up on calls to stashCard because scroll event is fired so often.
+          //because scroll events is fired so often, assign currentIndex to temp variable
+          //and then update immediately instead of waiting for loop to finish avoid 
+          //doubling up on calls.
           const temp = currentIndex.value;
           currentIndex.value = scrollPos;
-          for (let i = temp; i < scrollPos; i++) {
-            queue.push(i);
-            stashCard(projectCards[i + 1], projectCards[i]);
-            await sleep(300);
-            toggleBackgroundCard(projectCards, i, 'add');
-            // currentIndex.value = i;
-            // if (temp !== currentIndex.value) console.log(temp, currentIndex.value);
+          // let key: (value: unknown) => void;
+
+          const someFunc = async (duration = 100) => {
+            for (let i = temp; i < scrollPos; i++) {
+              queue.push(i);
+              stashCard(projectCards[i + 1], projectCards[i]);
+              await sleep(duration);
+              toggleBackgroundCard(projectCards, i, 'add');
+            }
           }
-          // currentIndex.value = scrollPos;
-          // document.body.style.overflowY = 'auto';
+          autoQueue.add(someFunc);
 
         } else if (scrollPos < currentIndex.value) {
+          autoQueue.empty();
           for (let i = currentIndex.value; i > scrollPos; i--) {
             drawCard(projectCards[i - 1], projectCards[i]);
             toggleBackgroundCard(projectCards, i - 1, 'remove');
-            await sleep(50);
+            // await sleep(50);
           }
           window.scrollBy(
             {
@@ -102,7 +110,8 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
         }
 
         if (botDist >= 0) {
-          console.table(queue);
+          // console.table(queue);
+          //handle any left over cards.
           for (let i = currentIndex.value; i < projectCards.length - 2; i++) {
             projectCards[i].classList.add(noCssTransition);
             stashCard(projectCards[i + 1], projectCards[i]);
@@ -116,7 +125,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
 
           for (let i = currentIndex.value; i < projectCards.length - 1; i++) {
             stashCard(projectCards[i + 1], projectCards[i]);
-            await sleep(300);
+            await sleep(1000);
             toggleBackgroundCard(projectCards, i, 'add');
           }
           currentIndex.value = projectCards.length - 1;
