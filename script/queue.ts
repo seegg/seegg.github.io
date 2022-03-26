@@ -1,9 +1,8 @@
 
-//A simple que to make sure items are process one at a time.
+//A simple queue to make sure items are process one at a time sequentially.
 export class SyncAutoQueue<T> {
   queue: T[] = [];
   lockAquired = false;
-  count = 0;
   /**
    * A queue to automatically handle items as it gets add.
    * only start the next item after the current item has been completed.
@@ -16,16 +15,16 @@ export class SyncAutoQueue<T> {
   }
 
   async poll() {
+    //only dequque and call the item if the lock is free.
     if (this.lockAquired) return;
+    //aquire the lock and then call the item at the front of the queue.
     this.lockAquired = true;
     try {
       const currentItem = this.queue.shift();
-      console.log('started', this.count);
       if (typeof currentItem === 'function') {
         await currentItem();
       }
-      console.log('ended', this.count);
-      this.count++;
+      //release the lock and poll the next item.
       this.lockAquired = false;
       this.next();
     } catch (e) {

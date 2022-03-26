@@ -41,6 +41,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
 
       if (scrollContainerTop < 0 && botDist < 0) {
         if (!isDisplayFixed) {
+          setSelectedNavIcons(projectCards[0], true);
           toggleProjectDisplayFixedPosition('fixed');
           isDisplayFixed = true;
         }
@@ -101,33 +102,23 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
         if (botDist >= 0) {
           //handle any leftover cards after reaching end of scroll area.
           setCardStatesInRange(projectCards, currentIndex.value, projectCards.length - 2);
-
           currentIndex.value = projectCards.length - 2;
-
           projectDisplay.classList.remove('attach-to-top');
-
-          // for (let i = currentIndex.value; i < projectCards.length - 1; i++) {
-          //   stashCard(projectCards[i + 1], projectCards[i]);
-          //   await sleep(100);
-          //   toggleBackgroundCard(projectCards, i, 'add');
-          // }
-
-          autoQueue.add(
-            async () => {
-              await stashCardsInRange(projectCards, currentIndex.value, projectCards.length - 1, 100);
-            }
-          );
-
-
+          //add reemaning cards to queue.
+          autoQueue.add(async () => {
+            await stashCardsInRange(projectCards, currentIndex.value, projectCards.length - 1, 100);
+          });
           currentIndex.value = projectCards.length - 1;
 
         } else {
           //handle any leftover cards after reaching start of scroll area.
-          for (let i = currentIndex.value; i > 0; i--) {
-            drawCard(projectCards[i - 1], projectCards[i]);
-            toggleBackgroundCard(projectCards, i - 1, 'remove');
-            await sleep(50);
-          }
+          autoQueue.add(async () => {
+            for (let i = currentIndex.value; i > 0; i--) {
+              drawCard(projectCards[i - 1], projectCards[i]);
+              toggleBackgroundCard(projectCards, i - 1, 'remove');
+              await sleep(50);
+            }
+          });
           currentIndex.value = 0;
           if (botDist < 0) projectDisplay.classList.add('attach-to-top');
         }
@@ -281,10 +272,10 @@ const setCardStatesInRange = (deck: HTMLElement[], start: number, end: number) =
 
 /**
  * stash the selected range of cards, from start to end, not inclusive.  
- * @param deck 
- * @param start 
- * @param end 
- * @param waitPerCard 
+ * @param deck the project cards
+ * @param start index of start range
+ * @param end index of end range
+ * @param waitPerCard ms to wait for each before processing next card, allowing animation to play.
  */
 const stashCardsInRange = async (deck: HTMLElement[], start: number, end: number, waitPerCard: number) => {
   for (let i = start; i < end; i++) {
@@ -295,7 +286,6 @@ const stashCardsInRange = async (deck: HTMLElement[], start: number, end: number
 };
 
 /**
- * 
  * @param targetCard card of nav icons to be highlighted
  * @param currentCard current card where icons are highlighted
  */
