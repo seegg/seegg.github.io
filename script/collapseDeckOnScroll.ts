@@ -26,16 +26,12 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
   const currentIndex = { value: 0 };
   let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === 'nav-projects' : true;
   let isDisplayFixed = false;
-  const isFromTop = true;
   const heightRatio = cardHeight / cardScrollThreshold;
-  const autoQueue = new SyncAutoQueue<() => Promise<void>>();
+  const autoQueue = new SyncAutoQueue<(duration: number) => Promise<void>>();
   const contentScrollContainer = document.querySelector('.projects-scroll') as HTMLElement;
-  const loopCount = { value: 0 };
   if (window.innerWidth < maxWidth) {
     setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
   }
-
-  const queue: number[] = [];
 
   document.addEventListener('scroll', async () => {
     if (!contentScrollContainer) return;
@@ -52,20 +48,15 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
         let scrollPos = Math.floor(scrollTopDist / cardScrollThreshold);
         scrollPos = Math.min(projectCards.length - 1, scrollPos);
 
+        //use the determine how much the card can move before triggering a stash call.
         const heightOverlap = Math.max(scrollTopDist % cardScrollThreshold - 200, 0);
 
+        //scrolling down.
         if (scrollPos > currentIndex.value) {
           //when the number of cards to handle gets pass a a number, precalculate the states of all the cards
           //except the last 2 so not too much time is spent playing the stash card animation.
           if (scrollPos - currentIndex.value > 2) {
-            console.log('trigger big scroll');
-            for (let i = currentIndex.value; i < scrollPos - 2; i++) {
-              projectCards[i].classList.add(noCssTransition);
-              stashCard(projectCards[i + 1], projectCards[i]);
-              toggleBackgroundCard(projectCards, i, 'add');
-              projectCards[i].offsetHeight;
-              projectCards[i].classList.remove(noCssTransition);
-            }
+            setCardStatesInRange(projectCards, currentIndex.value, scrollPos - 2);
             currentIndex.value = scrollPos - 2;
           }
 
@@ -74,66 +65,58 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
           //doubling up on calls.
           const temp = currentIndex.value;
           currentIndex.value = scrollPos;
-          // let key: (value: unknown) => void;
 
-          const someFunc = async (duration = 100) => {
-            for (let i = temp; i < scrollPos; i++) {
-              queue.push(i);
-              stashCard(projectCards[i + 1], projectCards[i]);
-              await sleep(duration);
-              toggleBackgroundCard(projectCards, i, 'add');
-            }
-          }
-          autoQueue.add(someFunc);
+          //Add this to the queue to be process squentially so the function on the next scroll
+          //event doesn't run before this finish executing.
+          autoQueue.add(async (duration = 200) => {
+            await stashCardsInRange(projectCards, temp, scrollPos, duration);
+          });
 
+          //scrolling up.
         } else if (scrollPos < currentIndex.value) {
-          autoQueue.empty();
+          // autoQueue.empty();
           for (let i = currentIndex.value; i > scrollPos; i--) {
             drawCard(projectCards[i - 1], projectCards[i]);
+            await sleep(100);
             toggleBackgroundCard(projectCards, i - 1, 'remove');
-            // await sleep(50);
           }
-          window.scrollBy(
-            {
-              top: -(heightOverlap),
-              behavior: 'auto'
-            }
-          )
           currentIndex.value = scrollPos;
+
         } else {
-          if (heightOverlap > 0) projectCards[currentIndex.value].style.height = cardHeight - heightOverlap * heightRatio + 'px';
+          //adjust size of current card to make UI feel more responsive.
+          if (heightOverlap > 0) {
+            projectCards[currentIndex.value].style.height = cardHeight - heightOverlap * heightRatio + 'px';
+          }
         }
       } else {
         if (isDisplayFixed) {
-          toggleProjectDisplayFixedPosition('not-fixed');
-          isDisplayFixed = false;
+          if (scrollContainerTop >= 0) {
+            toggleProjectDisplayFixedPosition('not-fixed');
+            isDisplayFixed = false;
+          }
         }
 
         if (botDist >= 0) {
-          // console.table(queue);
-          //handle any left over cards.
-          for (let i = currentIndex.value; i < projectCards.length - 2; i++) {
-            projectCards[i].classList.add(noCssTransition);
-            stashCard(projectCards[i + 1], projectCards[i]);
-            toggleBackgroundCard(projectCards, i, 'add');
-            projectCards[i].offsetHeight;
-            projectCards[i].classList.remove(noCssTransition);
-          }
+          //handle any leftover cards after reaching end of scroll area.
+          setCardStatesInRange(projectCards, currentIndex.value, projectCards.length - 2);
+
           currentIndex.value = projectCards.length - 2;
 
           projectDisplay.classList.remove('attach-to-top');
 
           for (let i = currentIndex.value; i < projectCards.length - 1; i++) {
             stashCard(projectCards[i + 1], projectCards[i]);
-            await sleep(1000);
+            await sleep(100);
             toggleBackgroundCard(projectCards, i, 'add');
           }
           currentIndex.value = projectCards.length - 1;
 
         } else {
+          //handle any leftover cards after reaching start of scroll area.
           for (let i = currentIndex.value; i > 0; i--) {
             drawCard(projectCards[i - 1], projectCards[i]);
             toggleBackgroundCard(projectCards, i - 1, 'remove');
+            await sleep(50);
           }
           currentIndex.value = 0;
           if (botDist < 0) projectDisplay.classList.add('attach-to-top');
@@ -272,6 +255,36 @@ const toggleBackgroundCard =
   };
 
 /**
+ * Calculate and set the states for cards from start upto but not inculding end.
+ * @param start 
+ * @param end 
+ */
+const setCardStatesInRange = (deck: HTMLElement[], start: number, end: number) => {
+  for (let i = start; i < end; i++) {
+    deck[i].classList.add(noCssTransition);
+    stashCard(deck[i + 1], deck[i]);
+    toggleBackgroundCard(deck, i, 'add');
+    deck[i].offsetHeight;
+    deck[i].classList.remove(noCssTransition);
+  }
+}
+
+/**
+ * stash the selected range of cards, from start to end, not inclusive.  
+ * @param deck 
+ * @param start 
+ * @param end 
+ * @param waitPerCard 
+ */
+const stashCardsInRange = async (deck: HTMLElement[], start: number, end: number, waitPerCard: number) => {
+  for (let i = start; i < end; i++) {
+    stashCard(deck[i + 1], deck[i]);
+    await sleep(waitPerCard);
+    toggleBackgroundCard(deck, i, 'add');
+  }
+};
+
+/**
  * 
  * @param targetCard card of nav icons to be highlighted
  * @param currentCard current card where icons are highlighted
@@ -294,7 +307,7 @@ const setSelectedNavIcons =
  */
 const setElementHeight = (elem: HTMLElement, height: number) => {
   elem.style.height = height + 'px';
-}
+};
 
 const toggleProjectDisplayFixedPosition = (state: 'fixed' | 'not-fixed') => {
   if (state === 'fixed') {
@@ -302,4 +315,4 @@ const toggleProjectDisplayFixedPosition = (state: 'fixed' | 'not-fixed') => {
   } else {
     projectDisplay.classList.remove('fixed');
   }
-}
+};

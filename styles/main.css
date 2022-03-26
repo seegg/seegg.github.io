@@ -608,6 +608,6 @@ ol{
   animation: none !important;
 }
 
-footer{
-  background-color: aquamarine;
+.spacer{
+  height: 1000px;
 }
