@@ -45,7 +45,7 @@ a:visited {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 400px;
+  height: 200px;
   width: 100%;
   background-image: url('../images/sunset.png');
   background-size: cover;

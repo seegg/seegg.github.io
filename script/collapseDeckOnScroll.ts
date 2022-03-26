@@ -66,11 +66,13 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
           const temp = currentIndex.value;
           currentIndex.value = scrollPos;
 
-          //Add this to the queue to be process squentially so the function on the next scroll
+          //Add a range of cards to the queue to be process squentially so the function on the next scroll
           //event doesn't run before this finish executing.
-          autoQueue.add(async (duration = 200) => {
-            await stashCardsInRange(projectCards, temp, scrollPos, duration);
-          });
+          autoQueue.add(
+            async (duration = 200) => {
+              await stashCardsInRange(projectCards, temp, scrollPos, duration);
+            }
+          );
 
           //scrolling up.
         } else if (scrollPos < currentIndex.value) {
@@ -104,11 +106,19 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
 
           projectDisplay.classList.remove('attach-to-top');
 
-          for (let i = currentIndex.value; i < projectCards.length - 1; i++) {
-            stashCard(projectCards[i + 1], projectCards[i]);
-            await sleep(100);
-            toggleBackgroundCard(projectCards, i, 'add');
-          }
+          // for (let i = currentIndex.value; i < projectCards.length - 1; i++) {
+          //   stashCard(projectCards[i + 1], projectCards[i]);
+          //   await sleep(100);
+          //   toggleBackgroundCard(projectCards, i, 'add');
+          // }
+
+          autoQueue.add(
+            async () => {
+              await stashCardsInRange(projectCards, currentIndex.value, projectCards.length - 1, 100);
+            }
+          );
+
+
           currentIndex.value = projectCards.length - 1;
 
         } else {
