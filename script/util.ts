@@ -98,3 +98,10 @@ export const scrollYViewport = (yCoord: number, behavior: ScrollBehavior, disabl
     document.body.style.overflowY = 'auto';
   }, disableScrollDuration);
 };
+
+/**
+ * helper wrapper for setting element's height.
+ */
+export const setElementHeight = (elem: HTMLElement, height: number) => {
+  elem.style.height = height + 'px';
+};
