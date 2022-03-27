@@ -1,10 +1,5 @@
 import { sleep } from "./util";
 
-/*
-*Functions for manipulating project card deck.
-*/
-
-
 /**
  * Add css class to current selected project card to make its height smaller
  * and make the next card on the layout cover on top of it.

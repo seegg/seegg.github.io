@@ -1,5 +1,5 @@
 import { addNavCallback, navBar } from "./nav";
-import { sleep, setElementHeight, scrollToPosAndPause } from "./util";
+import { setElementHeight, scrollToPosAndPause } from "./util";
 import { SyncAutoQueue } from "./queue";
 import { UpdateDeckFn } from "./types";
 import {
@@ -7,8 +7,6 @@ import {
   setCardStatesInRange,
   stashCardsInRange,
   drawCardsInRange,
-  drawCard,
-  toggleBackgroundCard
 } from './card-deck';
 
 // const contentContainer = document.getElementById('content') as HTMLDivElement;
@@ -22,11 +20,6 @@ const hide = 'close-deck-full';
 const moveY = 'moveY-40';
 const projectNavID = 'nav-projects';
 
-/**
- * 
- * @param maxWidth 
- * @param cardHeight 
- */
 export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrollThreshold = 300) => {
   const projectCards = Array.from(projectsContainer.querySelectorAll('.project-card')) as HTMLElement[];
   const currentIndex = { value: 0 }; //store as an object property to makesure all requests reflects latest value.
@@ -53,13 +46,15 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
       //distance of container element bottom to screen bottom.
       const botDist = window.innerHeight - scrollContainerBottom;
 
+      //inside the scroll container
       if (scrollContainerTop < 0 && botDist < 0) {
         if (!isDisplayFixed) {
           switchSelectedNavIcons(projectCards[0]);
           toggleProjectDisplayFixedPosition('fixed');
           isDisplayFixed = true;
         }
-        //calculate the index value corresponding to the y scroll position.
+        //calculate the index value corresponding to the y scroll position. 
+        //use it to decide what cards to process.
         const scrollTopDist = Math.abs(scrollContainerTop);
         let scrollPos = Math.floor(scrollTopDist / cardScrollThreshold);
         scrollPos = Math.min(projectCards.length - 1, scrollPos);
@@ -79,9 +74,8 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
             currentIndex.value = scrollPos - 2;
           }
 
-          //because scroll events is fired so often, assign currentIndex to temp variable
-          //and then update immediately instead of waiting for loop to finish avoid 
-          //doubling up on calls.
+          //update currentIndex before queue item finishes executing so the next scroll event
+          //uses updated value instead of old value if waiting for queue.
           const temp = currentIndex.value;
           const tempY = window.scrollY;
           currentIndex.value = scrollPos;
@@ -92,7 +86,6 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
               lastScrollYPos = tempY;
               prevSavedIndex = scrollPos;
               const waitDuration = autoQueue.size >= 2 ? 200 : 200;
-              console.log(autoQueue.size);
               await stashCardsInRange(projectCards, temp, scrollPos, waitDuration);
             }
           );
@@ -100,19 +93,21 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           //scroll up enough to trigger draw card.
         } else if (scrollPos < currentIndex.value) {
 
-          //clear the queue if the previous action was triggered by scrolling down 
-          //and the queue is not already empty and currently no item executing.
+          //clear the rest of the queue and set the state of the deck to the last
+          //executed item in the queue.
           if (isFromTop) {
             isFromTop = false;
             autoQueue.empty();
-            scrollToPosAndPause(document.body, lastScrollYPos, 200);
+            scrollToPosAndPause(document.body, lastScrollYPos, 300);
             currentIndex.value = prevSavedIndex;
             return;
           }
           isFromTop = false;
           const tempIndex = currentIndex.value;
           currentIndex.value = scrollPos;
-          drawCardsInRange(projectCards, tempIndex, scrollPos, 100);
+          autoQueue.add(async () => {
+            await drawCardsInRange(projectCards, tempIndex, scrollPos, 100);
+          })
         } else {
           //adjust size of current card to make UI feel more responsive.
           if (heightOverlap > 0) {
@@ -126,28 +121,34 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
         }
 
         if (botDist >= 0) {
-          //handle any leftover cards after reaching end of scroll area.
-          autoQueue.add(async () => {
-            await setCardStatesInRange(projectCards, currentIndex.value, projectCards.length - 2);
-          })
-          currentIndex.value = projectCards.length - 2;
           projectDisplay.classList.remove('attach-to-top');
+          if (!isDisplayFixed) {
+            toggleProjectDisplayFixedPosition('fixed');
+            isDisplayFixed = true;
+          }
+          //handle any leftover cards after reaching end of scroll area.
+          if (currentIndex.value < projectCards.length - 2) {
+            const tempIndex = currentIndex.value;
+            currentIndex.value = projectCards.length - 2;
+            autoQueue.add(async () => {
+              await setCardStatesInRange(projectCards, tempIndex, projectCards.length - 2);
+            })
+          }
           //add reemaning cards to queue.
-          autoQueue.add(async () => {
-            await stashCardsInRange(projectCards, currentIndex.value, projectCards.length - 1, 100);
-          });
+          const tempIndex = currentIndex.value;
           currentIndex.value = projectCards.length - 1;
-
+          autoQueue.add(async () => {
+            await stashCardsInRange(projectCards, tempIndex, projectCards.length - 1, 100);
+            isFromTop = false;
+          });
         } else {
           //handle any leftover cards after reaching start of scroll area.
-          autoQueue.add(async () => {
-            for (let i = currentIndex.value; i > 0; i--) {
-              drawCard(projectCards[i - 1], projectCards[i]);
-              toggleBackgroundCard(projectCards, i - 1, 'remove');
-              await sleep(50);
-            }
-          });
+          const tempIndex = currentIndex.value;
           currentIndex.value = 0;
+          autoQueue.add(async () => {
+            await drawCardsInRange(projectCards, tempIndex, 0, 50);
+            isFromTop = true;
+          });
           if (botDist < 0) projectDisplay.classList.add('attach-to-top');
         }
       }
