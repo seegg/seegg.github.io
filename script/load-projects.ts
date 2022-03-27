@@ -1,6 +1,5 @@
-import { getProjects } from "./data";
-// import { createProjectCard, createProjectPlaceholder } from "./project-card/card"
 import { createProjectCard, createProjectPlaceholder } from "./project-card";
+import { Project } from "./types";
 
 
 const projectsContainer = document.getElementById('projects');
@@ -14,7 +13,7 @@ const cssInvisible = 'invisible';
 /**
  * load all the projects for display.
  */
-export const loadProjects = async () => {
+export const loadProjects = async (projects: Project[]) => {
   if (projectsContainer && contentContainer) {
     //project card dimensions.
     const fullCardWidth = 250; //expanded card size
@@ -24,7 +23,6 @@ export const loadProjects = async () => {
     const visibleHeightThreshold = 300; //visible height for the main element
 
     //Calculate initial size of project container.
-    const projects = getProjects();
     setprojectsContainerWidth(projects.length, fullCardWidth, partialCardWidth, maxWidth, minWidth);
 
     //Recalculate the container everytime window resizes.

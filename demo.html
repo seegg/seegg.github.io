@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Semi+Expanded:wght@200;400&display=swap"
+    rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Encode+Sans+Semi+Expanded:wght@200;400&family=Noto+Sans&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="./styles/animation.css">
+  <link rel="stylesheet" href="./styles/material.css">
+  <title>Hi, I am Yuan.</title>
+  <link rel="stylesheet" href="styles/main.css" type="text/css" />
+  <script src="./script/bundle.js" defer></script>
+</head>
+
+<body id="demo">
+  <div class="scroll-wrapper">
+    <section class="anim-fadein">
+      <div class="intro" id="intro-container">
+        <p>Test page to see large number of cards in effect.</p>
+      </div>
+    </section>
+
+    <main id="main">
+
+
+      <section class="content" id="content">
+
+        <nav class="tab-nav-bar" id="tab-nav-bar">
+          <ol class="tab-items">
+            <li class="tab-nav selected" id="nav-projects"><span class="material-icons">code</span></li>
+            <li class="tab-nav" id="nav-about"><span class="material-icons">person</span></li>
+            <li class="tab-nav" id="nav-contact"><span class="material-icons">email</span></li>
+            <li class="tab-nav"> <a href="https://seegg.github.io"> <span class="material-icons">home</span></a></li>
+          </ol>
+        </nav>
+        <div id="nav-filler" class="nav-filler"></div>
+
+        <div class="projects-scroll tab">
+          <div class="projects-display attach-to-top attach-to-bot mt-50">
+            <section id="projects" class="projects"></section>
+          </div>
+        </div>
+
+        <section id="about" class="about tab hide mt-50">
+          <h3>Hi, I am Yuan.</h3>
+          <p>I enjoy learning and making stuff with code.</p>
+        </section>
+
+        <section id="contacts" class="tab contacts hide mt-50">
+
+          <address class="contact">
+            <a href="https://github.com/seegg"><img class="contact-icon"
+                src="https://raw.githubusercontent.com/seegg/seegg.github.io/main/images/GitHub-Mark-Light-32px.png"
+                alt="github link"></a>
+          </address>
+
+          <address class="contact">
+            <a href="https://www.linkedin.com/in/yuan-tan-yt/"><img class="contact-icon" src="./images/In-Blue-Logo.png"
+                alt="linkedin link"></a>
+          </address>
+
+          <address class="contact">
+            <a href="mailto:dyxtan@gmail.com"><span class="material-icons md-light md-36">email</span></a>
+          </address>
+
+        </section>
+
+      </section>
+    </main>
+
+    <footer>
+      <section class="contacts-container">
+        <address class="contact">
+          <a href="https://github.com/seegg"><img class="contact-icon"
+              src="https://raw.githubusercontent.com/seegg/seegg.github.io/main/images/GitHub-Mark-Light-32px.png"
+              alt="github link"></a>
+        </address>
+        <address class="contact">
+          <a href="https://www.linkedin.com/in/yuan-tan-yt/"><img class="contact-icon" src="./images/In-Blue-Logo.png"
+              alt="linkedin link"></a>
+        </address>
+      </section>
+      <aside class="checkout-mob">
+        <p>Check out the mobile page, it's got a cool scrolling card deck.</p>
+      </aside>
+    </footer>
+
+    <div id="scroll-reminder" class="hide">
+      <div class="scroll-triangle"></div>
+    </div>
+
+  </div>
+</body>
+
+</html>
