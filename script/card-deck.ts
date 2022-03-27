@@ -120,7 +120,6 @@ export const stashCardsInRange = async (deck: HTMLElement[], start: number, end:
     stashCard(deck[i + 1], deck[i]);
     await sleep(waitPerCard);
     toggleBackgroundCard(deck, i, 'add');
-    // await sleep(waitPerCard);
   }
 };
 

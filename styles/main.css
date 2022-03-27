@@ -364,7 +364,8 @@ main{
 
 footer{
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   color: white;
   padding-top: 20px;
   padding-bottom: 20px;
@@ -372,6 +373,15 @@ footer{
 
 footer .contact{
   margin: none;
+}
+
+footer>.contacts-container{
+  display: flex;
+  justify-items: center;
+}
+
+footer>.checkout-mob{
+  display: none;
 }
 
 .scroll-triangle{
@@ -597,6 +607,10 @@ ol{
   .intro-only-once{ width: 10px; }
 
   .invisible {visibility: hidden;}
+
+  footer>.checkout-mob{
+    display: block;
+  }
 
 }
 

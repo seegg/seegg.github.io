@@ -105,3 +105,20 @@ export const scrollYViewport = (yCoord: number, behavior: ScrollBehavior, disabl
 export const setElementHeight = (elem: HTMLElement, height: number) => {
   elem.style.height = height + 'px';
 };
+
+/**
+ * helper function to scroll to a y coordinate on body and then wait for
+ * a specified duration before allowing scrolling again.
+ * @param yCoord y coordinate to scroll to.
+ * @param pauseDuration duration to disable overflow-y for.
+ */
+export const scrollToPosAndPause = (element: HTMLElement, yCoord: number, pauseDuration = 200) => {
+  element.style.overflowY = 'hidden';
+  setTimeout(() => {
+    element.style.overflowY = 'auto';
+    window.scrollTo({
+      top: yCoord,
+      behavior: 'auto'
+    });
+  }, pauseDuration);
+}

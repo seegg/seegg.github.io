@@ -36,6 +36,13 @@ export class SyncAutoQueue<T> {
     return this.queue.length;
   }
 
+  /**
+   * There is no item in queue and there's no item waiting to finish executing.
+   */
+  get isInactive() {
+    return this.size === 0 && !this.lockAquired;
+  }
+
   next() {
     if (this.size > 0) {
       this.poll();

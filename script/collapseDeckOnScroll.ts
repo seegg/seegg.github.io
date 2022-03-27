@@ -1,5 +1,5 @@
 import { addNavCallback, navBar } from "./nav";
-import { sleep, setElementHeight } from "./util";
+import { sleep, setElementHeight, scrollToPosAndPause } from "./util";
 import { SyncAutoQueue } from "./queue";
 import { UpdateDeckFn } from "./types";
 import {
@@ -59,11 +59,13 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           toggleProjectDisplayFixedPosition('fixed');
           isDisplayFixed = true;
         }
+        //calculate the index value corresponding to the y scroll position.
         const scrollTopDist = Math.abs(scrollContainerTop);
         let scrollPos = Math.floor(scrollTopDist / cardScrollThreshold);
         scrollPos = Math.min(projectCards.length - 1, scrollPos);
 
-        //use the determine how much the card can move before triggering a stash call.
+        //use the leftover distance from the after the last whole number index to set the height
+        //of the current card.
         const heightOverlap = Math.max(scrollTopDist % cardScrollThreshold - 200, 0);
 
         //scroll down enough to trigger stash card.
@@ -83,35 +85,34 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           const temp = currentIndex.value;
           const tempY = window.scrollY;
           currentIndex.value = scrollPos;
-          console.log('started', temp);
           //Add range of cards to the queue to be process squentially to avoid doubling up on calls.
+          //save the scrollY pos and card index to handle abrupt change in direction.
           autoQueue.add(
             async () => {
               lastScrollYPos = tempY;
               prevSavedIndex = scrollPos;
-
-              await stashCardsInRange(projectCards, temp, scrollPos, 200);
+              const waitDuration = autoQueue.size >= 2 ? 200 : 200;
+              console.log(autoQueue.size);
+              await stashCardsInRange(projectCards, temp, scrollPos, waitDuration);
             }
           );
           isFromTop = true;
           //scroll up enough to trigger draw card.
         } else if (scrollPos < currentIndex.value) {
 
-          //clear the queue when chaning directions.
+          //clear the queue if the previous action was triggered by scrolling down 
+          //and the queue is not already empty and currently no item executing.
           if (isFromTop) {
-            autoQueue.empty();
-            document.body.style.overflowY = 'hidden';
-            window.scrollTo(0, lastScrollYPos);
             isFromTop = false;
-            console.log(currentIndex.value, prevSavedIndex);
-            setTimeout(() => {
-              document.body.style.overflowY = 'auto';
-            }, 200);
+            autoQueue.empty();
+            scrollToPosAndPause(document.body, lastScrollYPos, 200);
+            currentIndex.value = prevSavedIndex;
             return;
           }
-          drawCardsInRange(projectCards, currentIndex.value, scrollPos, 100);
-          currentIndex.value = scrollPos;
           isFromTop = false;
+          const tempIndex = currentIndex.value;
+          currentIndex.value = scrollPos;
+          drawCardsInRange(projectCards, tempIndex, scrollPos, 100);
         } else {
           //adjust size of current card to make UI feel more responsive.
           if (heightOverlap > 0) {
@@ -119,11 +120,9 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           }
         }
       } else {
-        if (isDisplayFixed) {
-          if (scrollContainerTop >= 0) {
-            toggleProjectDisplayFixedPosition('not-fixed');
-            isDisplayFixed = false;
-          }
+        if (isDisplayFixed && scrollContainerTop >= 0) {
+          toggleProjectDisplayFixedPosition('not-fixed');
+          isDisplayFixed = false;
         }
 
         if (botDist >= 0) {
@@ -154,8 +153,6 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
       }
     }
   });
-
-
 
   //add callback for navigating to and from projects tab.
   //navigating from projects tab
