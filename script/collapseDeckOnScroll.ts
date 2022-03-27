@@ -36,6 +36,10 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
   const contentScrollContainer = document.querySelector('.projects-scroll') as HTMLElement;
   let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === projectNavID : true;
   let isDisplayFixed = false; //boolean flag to keep track whether project container is fixed to minimise calculations.
+  let lastScrollYPos = window.scrollY;
+  let prevSavedIndex = 0;
+  let isFromTop = true;
+
   //when the screen width meets the threshold, add height to scroll container to control the card deck.
   if (window.innerWidth < maxWidth) {
     setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
@@ -67,7 +71,9 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           //when the number of cards to handle gets pass a a number, precalculate the states of all the cards
           //except the last 2 so not too much time is spent playing the stash card animation.
           if (scrollPos - currentIndex.value > 2) {
-            setCardStatesInRange(projectCards, currentIndex.value, scrollPos - 2);
+            autoQueue.add(async () => {
+              await setCardStatesInRange(projectCards, currentIndex.value, scrollPos - 2);
+            });
             currentIndex.value = scrollPos - 2;
           }
 
@@ -75,21 +81,37 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           //and then update immediately instead of waiting for loop to finish avoid 
           //doubling up on calls.
           const temp = currentIndex.value;
+          const tempY = window.scrollY;
           currentIndex.value = scrollPos;
-
+          console.log('started', temp);
           //Add range of cards to the queue to be process squentially to avoid doubling up on calls.
           autoQueue.add(
             async () => {
+              lastScrollYPos = tempY;
+              prevSavedIndex = scrollPos;
+
               await stashCardsInRange(projectCards, temp, scrollPos, 200);
             }
           );
-
+          isFromTop = true;
           //scroll up enough to trigger draw card.
         } else if (scrollPos < currentIndex.value) {
-          // autoQueue.empty();
+
+          //clear the queue when chaning directions.
+          if (isFromTop) {
+            autoQueue.empty();
+            document.body.style.overflowY = 'hidden';
+            window.scrollTo(0, lastScrollYPos);
+            isFromTop = false;
+            console.log(currentIndex.value, prevSavedIndex);
+            setTimeout(() => {
+              document.body.style.overflowY = 'auto';
+            }, 200);
+            return;
+          }
           drawCardsInRange(projectCards, currentIndex.value, scrollPos, 100);
           currentIndex.value = scrollPos;
-
+          isFromTop = false;
         } else {
           //adjust size of current card to make UI feel more responsive.
           if (heightOverlap > 0) {
@@ -106,7 +128,9 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
 
         if (botDist >= 0) {
           //handle any leftover cards after reaching end of scroll area.
-          setCardStatesInRange(projectCards, currentIndex.value, projectCards.length - 2);
+          autoQueue.add(async () => {
+            await setCardStatesInRange(projectCards, currentIndex.value, projectCards.length - 2);
+          })
           currentIndex.value = projectCards.length - 2;
           projectDisplay.classList.remove('attach-to-top');
           //add reemaning cards to queue.
@@ -138,6 +162,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
   addNavCallback((tabs, from) => {
     //only take effect if screen width is >= maxwidth
     if (window.innerWidth >= maxWidth || tabs[from].id !== projectNavID) return;
+    autoQueue.empty();
     contentScrollContainer.style.removeProperty('height');
   }, 'before');
 
@@ -146,6 +171,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
     isInProjectsTab = tabs[to].id === projectNavID;
     if (window.innerWidth >= maxWidth || !isInProjectsTab) return;
     setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
+    window.scrollTo({ top: lastScrollYPos, behavior: 'auto' });
   }, 'after')
 
   //resize observer adjust heightThreshold and deck behaviour base on intro element dimensions.
