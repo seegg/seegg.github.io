@@ -7,14 +7,14 @@ import { Project } from "./types";
  * @returns 
  */
 export const createProjectCard =
-  (project: Project, contentContainer: HTMLElement, imagePath: string, focusWidth = 570): HTMLElement => {
+  (project: Project, contentContainer: HTMLElement, focusWidth = 570): HTMLElement => {
     //project container 
     const projectContainer = createElementWithClasses('section', 'project-card', 'anim-open-deck');
     projectContainer.tabIndex = -1;
 
     //link to repo with github logo
     const repoLink = createElementWithClasses('nav', 'nav-project', 'anim-fadein-long');
-    const gitHubLink = createNavItem(project.repo || '#', imagePath + "GitHub-Mark-Light-32px.png", 'nav-icon');
+    const gitHubLink = createNavItem(project.repo || '#', "../images/GitHub-Mark-Light-32px.png", 'nav-icon');
     repoLink.appendChild(gitHubLink);
     //external link for project, if any.
     const link = createNavItem(project.url || '#', '../images/link.png', 'nav-icon');
@@ -44,7 +44,7 @@ export const createProjectCard =
       animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
     };
 
-    const projectImg = project.image ? imagePath + project.image : null;
+    const projectImg = project.image ? project.image : null;
     // image for the project
     const imgWrapper: HTMLDivElement = createProjectImage(projectImg);
     secondArticle.appendChild(imgWrapper);

@@ -11,9 +11,6 @@ const cssFadeInLong = 'anim-fadein-long';
 const cssIntroOnce = 'intro-only-once';
 const cssInvisible = 'invisible';
 
-// const imagePath = location.href + "images/";
-const imagePath = "https://raw.githubusercontent.com/seegg/seegg.github.io/main/images/";
-
 /**
  * load all the projects for display.
  */
@@ -65,7 +62,7 @@ export const loadProjects = async () => {
         resolve(
           ((): HTMLDivElement => {
             //const projectCard = createProjectComponent(project, visibleProjectHeight);
-            const projectCard = createProjectCard(project, contentContainer, imagePath);
+            const projectCard = createProjectCard(project, contentContainer);
             if (visibleProjectHeight < visibleHeightThreshold) {
               toggleIntroDeckAnimation(projectCard);
             }

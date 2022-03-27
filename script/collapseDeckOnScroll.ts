@@ -24,17 +24,18 @@ const projectNavID = 'nav-projects';
 
 /**
  * 
- * @param maxWidth max screen viewport width size before this stops taking effect.
+ * @param maxWidth 
+ * @param cardHeight 
  */
-export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
+export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrollThreshold = 300) => {
   const projectCards = Array.from(projectsContainer.querySelectorAll('.project-card')) as HTMLElement[];
-  const cardScrollThreshold = 300; //distance to scroll in px to trigger cards.
-  const currentIndex = { value: 0 };
-  let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === projectNavID : true;
-  let isDisplayFixed = false;
+  const currentIndex = { value: 0 }; //store as an object property to makesure all requests reflects latest value.
   const heightRatio = cardHeight / cardScrollThreshold;
-  const autoQueue = new SyncAutoQueue<UpdateDeckFn>();
+  const autoQueue = new SyncAutoQueue<UpdateDeckFn>(); //queue responsible for scheduling card actions.
+
   const contentScrollContainer = document.querySelector('.projects-scroll') as HTMLElement;
+  let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === projectNavID : true;
+  let isDisplayFixed = false; //boolean flag to keep track whether project container is fixed to minimise calculations.
   //when the screen width meets the threshold, add height to scroll container to control the card deck.
   if (window.innerWidth < maxWidth) {
     setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
@@ -45,6 +46,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
     if (!contentScrollContainer) return;
     if (isInProjectsTab && window.innerWidth < maxWidth) {
       const { top: scrollContainerTop, bottom: scrollContainerBottom } = contentScrollContainer.getBoundingClientRect();
+      //distance of container element bottom to screen bottom.
       const botDist = window.innerHeight - scrollContainerBottom;
 
       if (scrollContainerTop < 0 && botDist < 0) {
@@ -75,11 +77,10 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
           const temp = currentIndex.value;
           currentIndex.value = scrollPos;
 
-          //Add a range of cards to the queue to be process squentially so the function on the next scroll
-          //event doesn't run before this finish executing.
+          //Add range of cards to the queue to be process squentially to avoid doubling up on calls.
           autoQueue.add(
-            async (duration = 200) => {
-              await stashCardsInRange(projectCards, temp, scrollPos, duration);
+            async () => {
+              await stashCardsInRange(projectCards, temp, scrollPos, 200);
             }
           );
 
@@ -128,7 +129,8 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
         }
       }
     }
-  })
+  });
+
 
 
   //add callback for navigating to and from projects tab.

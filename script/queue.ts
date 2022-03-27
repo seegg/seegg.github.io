@@ -44,6 +44,10 @@ export class SyncAutoQueue<T> {
     }
   }
 
+  peek(): T | null {
+    return this.size > 0 ? this.queue[0] : null;
+  }
+
   empty() {
     this.queue = [];
   }
