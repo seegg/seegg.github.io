@@ -1,35 +1,44 @@
-import { addNavCallback } from "./nav";
+import { addNavCallback, navBar } from "./nav";
 import { sleep, setElementHeight } from "./util";
 import { SyncAutoQueue } from "./queue";
-import { switchSelectedNavIcons, setCardStatesInRange, stashCardsInRange, drawCard, toggleBackgroundCard } from './card-deck';
+import { UpdateDeckFn } from "./types";
+import {
+  switchSelectedNavIcons,
+  setCardStatesInRange,
+  stashCardsInRange,
+  drawCardsInRange,
+  drawCard,
+  toggleBackgroundCard
+} from './card-deck';
 
 // const contentContainer = document.getElementById('content') as HTMLDivElement;
 const projectsContainer = document.getElementById('projects') as HTMLDivElement;
 const projectDisplay = document.querySelector('.projects-display') as HTMLDivElement;
-const intro = document.getElementById('intro-container');
-const navBar = document.getElementById('tab-nav-bar');
+//css classes
 const closeCard = 'close-deck-partial';
 const navIconSelected = 'nav-icon-selected';
 const backgroundCard = 'background-card';
 const hide = 'close-deck-full';
 const moveY = 'moveY-40';
+const projectNavID = 'nav-projects';
 
 /**
  * 
  * @param maxWidth max screen viewport width size before this stops taking effect.
  */
 export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
-  window.scrollTo(0, 0);
   const projectCards = Array.from(projectsContainer.querySelectorAll('.project-card')) as HTMLElement[];
   const cardScrollThreshold = 300; //distance to scroll in px to trigger cards.
   const currentIndex = { value: 0 };
-  let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === 'nav-projects' : true;
+  let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === projectNavID : true;
   let isDisplayFixed = false;
   const heightRatio = cardHeight / cardScrollThreshold;
-  const autoQueue = new SyncAutoQueue<(duration: number) => Promise<void>>();
+  const autoQueue = new SyncAutoQueue<UpdateDeckFn>();
   const contentScrollContainer = document.querySelector('.projects-scroll') as HTMLElement;
+  //when the screen width meets the threshold, add height to scroll container to control the card deck.
   if (window.innerWidth < maxWidth) {
     setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
+    window.scroll(0, 0);
   }
 
   document.addEventListener('scroll', async () => {
@@ -51,7 +60,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
         //use the determine how much the card can move before triggering a stash call.
         const heightOverlap = Math.max(scrollTopDist % cardScrollThreshold - 200, 0);
 
-        //scrolling down.
+        //scroll down enough to trigger stash card.
         if (scrollPos > currentIndex.value) {
           //when the number of cards to handle gets pass a a number, precalculate the states of all the cards
           //except the last 2 so not too much time is spent playing the stash card animation.
@@ -74,14 +83,10 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
             }
           );
 
-          //scrolling up.
+          //scroll up enough to trigger draw card.
         } else if (scrollPos < currentIndex.value) {
           // autoQueue.empty();
-          for (let i = currentIndex.value; i > scrollPos; i--) {
-            drawCard(projectCards[i - 1], projectCards[i]);
-            await sleep(100);
-            toggleBackgroundCard(projectCards, i - 1, 'remove');
-          }
+          drawCardsInRange(projectCards, currentIndex.value, scrollPos, 100);
           currentIndex.value = scrollPos;
 
         } else {
@@ -128,7 +133,6 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
 
   //add callback for navigating to and from projects tab.
   //navigating from projects tab
-  const projectNavID = 'nav-projects';
   addNavCallback((tabs, from) => {
     //only take effect if screen width is >= maxwidth
     if (window.innerWidth >= maxWidth || tabs[from].id !== projectNavID) return;
@@ -159,7 +163,8 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
       switchSelectedNavIcons(null, projectCards[currentIndex.value]);
     }
   }, { rootMargin: '0px', threshold: 0.25 })
-
+  //add intro to resize and intersection observer.
+  const intro = document.getElementById('intro-container');
   if (intro) {
     introResizeObserver.observe(intro);
     introIntersectObserver.observe(intro);
@@ -183,6 +188,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450) => {
   };
 };
 
+//toggle whether project card container css display is fixed or not
 const toggleProjectDisplayFixedPosition = (state: 'fixed' | 'not-fixed') => {
   if (state === 'fixed') {
     projectDisplay.classList.add('fixed');

@@ -1,10 +1,12 @@
-import { sleep } from "./util";
 import { NavigationHook } from "./types";
+import { openDeck, closeDeck } from './card-deck'
+
 
 const navTabs = Array.from(document.getElementsByClassName('tab-nav')) as HTMLElement[];
+//0: project cards, 1: about, 2: contacts
 const contentTabs = Array.from(document.getElementsByClassName('tab')) as HTMLElement[];
 
-const navBar = document.getElementById('tab-nav-bar');
+export const navBar = document.getElementById('tab-nav-bar');
 const navBarParentElement = navBar?.parentElement as HTMLElement;
 const navBarFiller = document.getElementById('nav-filler');
 const fixedNavBar = 'tab-nav-fixed';
@@ -13,19 +15,16 @@ const fixedNavBar = 'tab-nav-fixed';
 const cssSelected = 'selected';
 const cssHide = 'hide';
 const cssFadeIn = 'anim-fadein';
-const cssFadeOut = 'anim-fadeout-deck';
-const cssCloseDeck = 'anim-close-deck';
-const cssOpenDeck = 'anim-open-deck';
-const screenWidthThreshold = 570;
 const beforeNavCallbacks: NavigationHook[] = [];
 const afternavCallbacks: NavigationHook[] = [];
 
 //save the value as object property to make sure it's up to date and not just a snapshot.
-const latestInputIndex: { current: number | null } = { current: null };
+const latestInputIndex: { current: number } = { current: 0 };
 
 let isNavBarFixed = false;
 
-export const setUpNavBar = async (widthThreshold = screenWidthThreshold) => {
+
+export const setUpNavBar = async (widthThreshold = 570) => {
 
   document.addEventListener('scroll', () => {
     const { top } = navBarParentElement.getBoundingClientRect();
@@ -63,11 +62,11 @@ export const setUpNavBar = async (widthThreshold = screenWidthThreshold) => {
         let deckClosing = false;
         if (navTabs[currentSelectedTab].id === 'nav-projects') {
           deckClosing = true;
-          await closeDeck();
+          await closeDeck(contentTabs[0]);
         }
 
         if (index === 0) {
-          openDeck();
+          openDeck(contentTabs[0]);
         }
 
         //changing away from project tab and then back quickly.
@@ -101,31 +100,6 @@ export const setUpNavBar = async (widthThreshold = screenWidthThreshold) => {
   };
 
 };
-
-/**
- * close deck transistion
- */
-const closeDeck = async (container = contentTabs[0], duration = 500) => {
-  container.classList.add(cssFadeOut);
-  const deck = Array.from(container.querySelectorAll('.project-card')) as HTMLElement[];
-  deck?.forEach(card => {
-    card.classList.remove(cssOpenDeck);
-    card.classList.add(cssCloseDeck);
-  });
-  await sleep(duration);
-}
-
-/**
- * open deck transition
- */
-const openDeck = (container = contentTabs[0]) => {
-  container.classList.remove(cssFadeOut);
-  const deck = Array.from(container.querySelectorAll('.project-card')) as HTMLElement[];
-  deck.forEach(card => {
-    card.classList.add(cssOpenDeck);
-    card.classList.remove(cssCloseDeck);
-  });
-}
 
 /**
  * toggle the fixed state of the navigation bar
@@ -178,4 +152,8 @@ export const removeNavCallback = (callback: NavigationHook, pos: 'before' | 'aft
     const indexToBeDeleted = target.findIndex(cb => cb === callback);
     if (indexToBeDeleted !== -1) target.splice(indexToBeDeleted, 1);
   }
+}
+
+export const getCurrentTab = () => {
+  return latestInputIndex.current;
 }

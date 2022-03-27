@@ -6,3 +6,5 @@ export interface Project {
   description: string
 }
 export type NavigationHook = (tabs: HTMLElement[], fromTab: number, toTab: number) => void;
+
+export type UpdateDeckFn = (duration: number) => Promise<void>;

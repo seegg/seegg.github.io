@@ -9,6 +9,7 @@ addCssClassToTouchDevices(document.getElementById('content') || null);
 
 const setUp = async () => {
 
+  //ordering matters.
   setUpNavBar(570);
   await intro();
   await loadProjects();
