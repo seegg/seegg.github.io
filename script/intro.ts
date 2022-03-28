@@ -1,7 +1,16 @@
+import * as ramblings from './ramblings.json';
+import { createElementWithClasses } from './util';
 const content = document.getElementById('content');
+const about = document.getElementById('about');
+
 
 export const intro = async () => {
 
+  const rambling: string[] = JSON.parse(JSON.stringify(ramblings)).ramblings[0].text.split('\n');
+
+  const ramblingArticle = createRambling(rambling);
+  about?.appendChild(ramblingArticle);
+  console.log(about);
 
   changeContentOpacityOnHeightShown();
   showScrollReminder();
@@ -43,4 +52,16 @@ const showScrollReminder = () => {
   } else {
     document.getElementById('scroll-reminder')?.classList.add('show-scroll');
   }
+}
+
+const createRambling = (paragrahs: string[]) => {
+  const container = createElementWithClasses('article', 'ramblings');
+  paragrahs.forEach(paragraph => {
+    const para = document.createElement('p');
+    para.textContent = paragraph;
+    container.appendChild(para);
+  });
+
+  return container;
+
 }
