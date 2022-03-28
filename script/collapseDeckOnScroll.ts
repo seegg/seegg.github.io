@@ -178,11 +178,8 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
   //resize observer adjust heightThreshold and deck behaviour base on intro element dimensions.
   const introResizeObserver = new ResizeObserver(entries => {
     const { inlineSize } = entries[0].contentBoxSize[0];
-
-    if (inlineSize >= maxWidth) {
-      reset();
-    } else {
-      reset();
+    reset();
+    if (inlineSize < maxWidth) {
       window.scrollTo(0, 0);
       setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
     }
