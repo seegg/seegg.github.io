@@ -92,10 +92,10 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           isFromTop = true;
           //scroll up enough to trigger draw card.
         } else if (scrollPos < currentIndex.value) {
-
           //clear the rest of the queue and set the state of the deck to the last
           //executed item in the queue.
           if (isFromTop) {
+            console.log('is from top');
             isFromTop = false;
             autoQueue.empty();
             scrollToPosAndPause(document.body, lastScrollYPos, 300);
@@ -104,8 +104,11 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           }
           isFromTop = false;
           const tempIndex = currentIndex.value;
+          const tempY = window.scrollY;
           currentIndex.value = scrollPos;
           autoQueue.add(async () => {
+            lastScrollYPos = tempY;
+            prevSavedIndex = scrollPos;
             await drawCardsInRange(projectCards, tempIndex, scrollPos, 100);
           })
         } else {
@@ -179,6 +182,8 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
     if (inlineSize >= maxWidth) {
       reset();
     } else {
+      reset();
+      window.scrollTo(0, 0);
       setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
     }
   });
@@ -198,6 +203,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
 
   //reset the state of the cards.
   const reset = () => {
+    autoQueue.empty();
     //remove any css classes that alter the card
     projectCards.forEach(card => {
       card.classList.remove(closeCard, hide);

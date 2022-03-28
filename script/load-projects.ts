@@ -5,6 +5,13 @@ import { Project } from "./types";
 const projectsContainer = document.getElementById('projects');
 const contentContainer = document.getElementById('content');
 
+//project card dimensions.
+const fullCardWidth = 250; //expanded card size
+const partialCardWidth = 160; //overlapping card size
+const maxWidth = 1690; //max container width
+const minWidth = 310; //min container width, acutal size of each project card.
+const visibleHeightThreshold = 300; //visible height for the main element
+
 //css utility classes
 const cssFadeInLong = 'anim-fadein-long';
 const cssIntroOnce = 'intro-only-once';
@@ -14,14 +21,8 @@ const cssInvisible = 'invisible';
  * load all the projects for display.
  */
 export const loadProjects = async (projects: Project[]) => {
-  if (projectsContainer && contentContainer) {
-    //project card dimensions.
-    const fullCardWidth = 250; //expanded card size
-    const partialCardWidth = 160; //overlapping card size
-    const maxWidth = 1690; //max container width
-    const minWidth = 310; //min container width, acutal size of each project card.
-    const visibleHeightThreshold = 300; //visible height for the main element
 
+  if (projectsContainer && contentContainer) {
     //Calculate initial size of project container.
     setprojectsContainerWidth(projects.length, fullCardWidth, partialCardWidth, maxWidth, minWidth);
 
@@ -31,7 +32,7 @@ export const loadProjects = async (projects: Project[]) => {
         setprojectsContainerWidth(projects.length, fullCardWidth, partialCardWidth, maxWidth, minWidth);
       });
 
-    //add intro listener, if projects are not visible. don't play deck open animation
+    //add self removing listener, if projects are not visible. don't play deck open animation
     const visibleProjectHeight = window.innerHeight - projectsContainer.getBoundingClientRect().top;
 
     if (visibleProjectHeight < visibleHeightThreshold) {
@@ -42,7 +43,7 @@ export const loadProjects = async (projects: Project[]) => {
           (Array.from(projectsContainer.children) as HTMLElement[]).forEach(project => {
             toggleIntroDeckAnimation(project);
           });
-          //remove this listener
+          //remove this listener after animation has been triggered.
           document.removeEventListener('scroll', introDeckAnimation);
         }
       });

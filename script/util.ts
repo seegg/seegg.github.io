@@ -114,11 +114,11 @@ export const setElementHeight = (elem: HTMLElement, height: number) => {
  */
 export const scrollToPosAndPause = (element: HTMLElement, yCoord: number, pauseDuration = 200) => {
   element.style.overflowY = 'hidden';
+  window.scrollTo({
+    top: yCoord,
+    behavior: 'auto'
+  });
   setTimeout(() => {
     element.style.overflowY = 'auto';
-    window.scrollTo({
-      top: yCoord,
-      behavior: 'auto'
-    });
   }, pauseDuration);
 }
