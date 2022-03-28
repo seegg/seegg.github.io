@@ -8,3 +8,5 @@ export interface Project {
 export type NavigationHook = (tabs: HTMLElement[], fromTab: number, toTab: number) => void;
 
 export type UpdateDeckFn = (duration: number) => Promise<void>;
+
+export type CardFn = (deck: HTMLElement[], start: number, end: number, waitPerCard: number) => Promise<void>;
