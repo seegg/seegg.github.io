@@ -4,10 +4,10 @@
  */
 export const addCssClassToTouchDevices = (container: HTMLElement | null): void => {
   if (container === null) return;
-  // const lastTouchTime = 0;
+  let lastTouchTime = 0;
   container.classList.add('hasHover');
   const enableHover = () => {
-    // if (new Date().getTime() - lastTouchTime < 500) return;
+    if (new Date().getTime() - lastTouchTime < 500) return;
     container.classList.add('hasHover');
     container.classList.remove('touch-device');
   };
@@ -17,11 +17,11 @@ export const addCssClassToTouchDevices = (container: HTMLElement | null): void =
     container.classList.remove('hasHover');
   };
 
-  // const updateLastTouchTime = () => {
-  //   lastTouchTime = new Date().getTime();
-  // };
+  const updateLastTouchTime = () => {
+    lastTouchTime = new Date().getTime();
+  };
 
-  // document.addEventListener('touchstart', updateLastTouchTime, true);
+  document.addEventListener('touchstart', updateLastTouchTime, true);
   document.addEventListener('touchstart', disableHover, true);
   document.addEventListener('mousemove', enableHover, true);
 }

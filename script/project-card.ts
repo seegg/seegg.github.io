@@ -37,6 +37,7 @@ export const createProjectCard =
       animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
     };
     projectContainer.onblur = () => {
+      if (!contentContainer?.classList.contains('touch-device')) return;
       animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
     }
     projectContainer.onfocus = () => {
