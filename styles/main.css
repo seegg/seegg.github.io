@@ -418,6 +418,14 @@ ol{
   padding-top: 50px;
 }
 
+.mt-62{
+  padding-top: 62px;
+}
+
+.mt-82{
+  padding-top: 82px;
+}
+
 .fixed-projects{
   position: fixed;
   padding-top: 82px;
@@ -494,6 +502,7 @@ ol{
 }
 
 .nav-filler{
+  display: none;
   height: 32px;
   width: 10px;
   visibility: hidden;
@@ -538,6 +547,10 @@ ol{
 
 
 @media screen and (min-width: 570px) {
+
+  .nav-filler{
+    display: block;
+  }
 
   .close-deck-full{ display: flex; }
 

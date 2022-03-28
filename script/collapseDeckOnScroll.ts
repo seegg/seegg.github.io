@@ -233,8 +233,8 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
 //toggle whether project card container css display is fixed or not
 const toggleProjectDisplayFixedPosition = (state: 'fixed' | 'not-fixed') => {
   if (state === 'fixed') {
-    projectDisplay.classList.add('fixed-projects');
+    projectDisplay.classList.add('fixed', 'mt-82');
   } else {
-    projectDisplay.classList.remove('fixed-projects');
+    projectDisplay.classList.remove('fixed', 'mt-82');
   }
 };
