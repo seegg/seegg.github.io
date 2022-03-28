@@ -46,7 +46,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
       const { top } = contentContainer.getBoundingClientRect();
       //distance of container element bottom to screen bottom.
       const botDist = window.innerHeight - scrollContainerBottom;
-
+      console.log('scrolling');
       //inside the scroll container
       if (top < 0 && botDist < 0) {
         if (!isDisplayFixed) {
@@ -72,7 +72,6 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           }
 
           isFromTop = true;
-          //add cards to the queue
           addCardsToQueue(autoQueue, currentIndex, scrollPos, 200, stashCardsInRange);
 
           //scroll up enough to trigger draw card.
@@ -81,13 +80,10 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           //executed item in the queue.
           if (isFromTop) {
             isFromTop = false;
-            autoQueue.empty();
-            scrollToPosAndPause(document.body, lastScrollYPos, 300);
-            currentIndex.value = prevSavedIndex;
+            handleScrollDirectionChange();
             return;
           }
           isFromTop = false;
-          //add cards to the queue
           addCardsToQueue(autoQueue, currentIndex, scrollPos, 100, drawCardsInRange);
 
         } else {
@@ -102,20 +98,18 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
 
         if (botDist >= 0) {
           projectDisplay.classList.remove('attach-to-top');
-          //handle any leftover cards after reaching end of scroll area.
-          if (currentIndex.value < projectCards.length - 3) {
-            autoQueue.add(async () => {
-              await setCardStatesInRange(projectCards, currentIndex.value, projectCards.length - 3);
-            })
-            currentIndex.value = projectCards.length - 3;
+          //handle leftover cards, if any, after reaching end of scroll area.
+          if (currentIndex.value < projectCards.length - 1) {
+            //pre process up to the last 2 cards, so the last 2 can be use to animate the transition.
+            if (currentIndex.value < projectCards.length - 3) {
+              autoQueue.add(async () => {
+                await setCardStatesInRange(projectCards, currentIndex.value, projectCards.length - 3);
+              })
+              currentIndex.value = projectCards.length - 3;
+            }
+            //add reemaning cards to queue.
+            addCardsToQueue(autoQueue, currentIndex, projectCards.length - 1, 100, stashCardsInRange, () => { isFromTop = false; });
           }
-          //add reemaning cards to queue.
-          const tempIndex = currentIndex.value;
-          currentIndex.value = projectCards.length - 1;
-          autoQueue.add(async () => {
-            await stashCardsInRange(projectCards, tempIndex, projectCards.length - 1, 100);
-            isFromTop = false;
-          });
         } else {
 
           if (scrollContainerTop >= 0) {
@@ -123,13 +117,10 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
             projectDisplay.classList.add('attach-to-top');
             isDisplayFixed = false;
           }
-          //handle any leftover cards after reaching start of scroll area.ssss
-          const tempIndex = currentIndex.value;
-          currentIndex.value = 0;
-          autoQueue.add(async () => {
-            await drawCardsInRange(projectCards, tempIndex, 0, 50);
-            isFromTop = true;
-          });
+          //handle any leftover cards after reaching start of scroll area.
+          if (currentIndex.value > 0) {
+            addCardsToQueue(autoQueue, currentIndex, 0, 50, drawCardsInRange, () => { isFromTop = true; });
+          }
         }
       }
     }
@@ -160,7 +151,8 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
     currentIndex: { value: number },
     scrollPos: number,
     wait: number,
-    cardFn: CardFn
+    cardFn: CardFn,
+    callback?: () => void
   ) => {
     //update currentIndex before queue item finishes executing so the next scroll event
     //uses updated value instead of old value as if the queue items has aleady finish executing.
@@ -171,6 +163,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
     //save the scrollY pos and card index to handle abrupt change in direction.
     queue.add(
       async () => {
+        if (callback) callback();
         updatePrevIndexAndScrollY(scrollPos, tempY);
         await cardFn(projectCards, temp, scrollPos, wait);
       }
