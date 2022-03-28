@@ -94,7 +94,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           }
         }
       } else {
-
+        //scroll container bottom is above screen bottom.
         if (botDist >= 0) {
           projectDisplay.classList.remove('attach-to-top');
           //handle leftover cards, if any, after reaching end of scroll area.
@@ -109,9 +109,9 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
             //add reemaning cards to queue.
             addCardsToQueue(autoQueue, currentIndex, projectCards.length - 1, 100, stashCardsInRange, () => { isFromTop = false; });
           }
+          //scroll container top is below screen top.
         } else {
-
-          if (scrollContainerTop >= 0) {
+          if (isDisplayFixed) {
             toggleProjectDisplayFixedPosition('not-fixed');
             projectDisplay.classList.add('attach-to-top');
             isDisplayFixed = false;
