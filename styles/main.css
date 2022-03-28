@@ -20,14 +20,6 @@
   padding: 0;
 }
 
-body {
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
-}
-html {
-  height: -webkit-fill-available;
-}
-
 body{ 
   background-color: black; 
   margin: 0;
@@ -101,7 +93,7 @@ main{
 .projects-display{
   box-sizing: border-box;
   position: absolute;
-  height: 100vh;
+  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
