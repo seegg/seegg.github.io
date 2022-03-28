@@ -418,6 +418,11 @@ ol{
   padding-top: 50px;
 }
 
+.fixed-projects{
+  position: fixed;
+  padding-top: 82px;
+}
+
 .tab-nav{
   font-family: 'Encode Sans Semi Expanded', sans-serif;
   font-family: 'Noto Sans', sans-serif;

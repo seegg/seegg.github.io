@@ -28,7 +28,7 @@ export const setUpNavBar = async (widthThreshold = 570) => {
 
   document.addEventListener('scroll', () => {
     const { top } = navBarParentElement.getBoundingClientRect();
-    if (top <= 0) {
+    if (top < 0) {
       toggleNavBarFixedPosition('fixed');
     } else {
       toggleNavBarFixedPosition('not-fixed');

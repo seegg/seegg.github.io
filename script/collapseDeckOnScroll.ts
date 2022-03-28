@@ -9,7 +9,7 @@ import {
   drawCardsInRange,
 } from './card-deck';
 
-// const contentContainer = document.getElementById('content') as HTMLDivElement;
+const contentContainer = document.getElementById('content') as HTMLDivElement;
 const projectsContainer = document.getElementById('projects') as HTMLDivElement;
 const projectDisplay = document.querySelector('.projects-display') as HTMLDivElement;
 //css classes
@@ -43,11 +43,12 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
     if (!contentScrollContainer) return;
     if (isInProjectsTab && window.innerWidth < maxWidth) {
       const { top: scrollContainerTop, bottom: scrollContainerBottom } = contentScrollContainer.getBoundingClientRect();
+      const { top } = contentContainer.getBoundingClientRect();
       //distance of container element bottom to screen bottom.
       const botDist = window.innerHeight - scrollContainerBottom;
 
       //inside the scroll container
-      if (scrollContainerTop < 0 && botDist < 0) {
+      if (top < 0 && botDist < 0) {
         if (!isDisplayFixed) {
           switchSelectedNavIcons(projectCards[0]);
           toggleProjectDisplayFixedPosition('fixed');
@@ -119,8 +120,8 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
         }
       } else {
         if (isDisplayFixed && scrollContainerTop >= 0) {
-          toggleProjectDisplayFixedPosition('not-fixed');
-          isDisplayFixed = false;
+          // toggleProjectDisplayFixedPosition('not-fixed');
+          // isDisplayFixed = false;
         }
 
         if (botDist >= 0) {
@@ -143,16 +144,16 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           autoQueue.add(async () => {
             await stashCardsInRange(projectCards, tempIndex, projectCards.length - 1, 100);
             isFromTop = false;
-            toggleProjectDisplayFixedPosition('not-fixed');
-            isDisplayFixed = false;
+            // toggleProjectDisplayFixedPosition('not-fixed');
+            // isDisplayFixed = false;
           });
         } else {
           //handle any leftover cards after reaching start of scroll area.
-          if (botDist < 0) {
-            console.log('fixed');
-            toggleProjectDisplayFixedPosition('fixed');
-            isDisplayFixed = true;
-          }
+          // if (botDist < 0) {
+          //   console.log('fixed');
+          //   toggleProjectDisplayFixedPosition('fixed');
+          //   isDisplayFixed = true;
+          // }
           if (scrollContainerTop >= 0) {
             toggleProjectDisplayFixedPosition('not-fixed');
             projectDisplay.classList.add('attach-to-top');
@@ -232,8 +233,8 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
 //toggle whether project card container css display is fixed or not
 const toggleProjectDisplayFixedPosition = (state: 'fixed' | 'not-fixed') => {
   if (state === 'fixed') {
-    projectDisplay.classList.add('fixed');
+    projectDisplay.classList.add('fixed-projects');
   } else {
-    projectDisplay.classList.remove('fixed');
+    projectDisplay.classList.remove('fixed-projects');
   }
 };
