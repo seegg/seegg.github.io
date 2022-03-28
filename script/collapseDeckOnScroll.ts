@@ -87,8 +87,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           addCardsToQueue(autoQueue, currentIndex, scrollPos, 100, drawCardsInRange);
 
         } else {
-          //use the leftover distance from the after the last whole number index to adjust the height
-          //of the current card.
+          //use the leftover distance between cards to adjust current card height.
           const heightOverlap = Math.max(scrollTopDist % cardScrollThreshold - 200, 0);
           if (heightOverlap > 0) {
             projectCards[currentIndex.value].style.height = cardHeight - heightOverlap * heightRatio + 'px';
