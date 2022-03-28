@@ -6,25 +6,31 @@ const about = document.getElementById('about');
 
 export const intro = async () => {
 
+  //add the scroll reminder after bg image has loaded.
+  const introBGImg = '../images/sunset.png';
+  const image = new Image();
+  image.src = introBGImg;
+  image.onload = () => {
+    showScrollReminder();
+  }
+
   const rambling: string[] = JSON.parse(JSON.stringify(ramblings)).ramblings[0].text.split('\n');
 
   const ramblingArticle = createRambling(rambling);
   about?.appendChild(ramblingArticle);
-  console.log(about);
 
   changeContentOpacityOnHeightShown();
-  showScrollReminder();
 
   //call the resize image function in scroll and resize events.
   document.onscroll = () => {
     changeContentOpacityOnHeightShown();
     showScrollReminder();
-  }
+  };
 
   window.addEventListener('resize', () => {
     changeContentOpacityOnHeightShown();
     showScrollReminder();
-  }, false)
+  }, false);
 
 }
 
