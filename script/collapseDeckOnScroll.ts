@@ -126,8 +126,8 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
         if (botDist >= 0) {
           projectDisplay.classList.remove('attach-to-top');
           if (!isDisplayFixed) {
-            toggleProjectDisplayFixedPosition('fixed');
-            isDisplayFixed = true;
+            // toggleProjectDisplayFixedPosition('fixed');
+            // isDisplayFixed = true;
           }
           //handle any leftover cards after reaching end of scroll area.
           if (currentIndex.value < projectCards.length - 2) {
@@ -143,16 +143,28 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           autoQueue.add(async () => {
             await stashCardsInRange(projectCards, tempIndex, projectCards.length - 1, 100);
             isFromTop = false;
+            toggleProjectDisplayFixedPosition('not-fixed');
+            isDisplayFixed = false;
           });
         } else {
           //handle any leftover cards after reaching start of scroll area.
+          if (botDist < 0) {
+            console.log('fixed');
+            toggleProjectDisplayFixedPosition('fixed');
+            isDisplayFixed = true;
+          }
+          if (scrollContainerTop >= 0) {
+            toggleProjectDisplayFixedPosition('not-fixed');
+            projectDisplay.classList.add('attach-to-top');
+            isDisplayFixed = false;
+          }
           const tempIndex = currentIndex.value;
           currentIndex.value = 0;
           autoQueue.add(async () => {
             await drawCardsInRange(projectCards, tempIndex, 0, 50);
             isFromTop = true;
           });
-          if (botDist < 0) projectDisplay.classList.add('attach-to-top');
+          // if (botDist < 0) projectDisplay.classList.add('attach-to-top');
         }
       }
     }
