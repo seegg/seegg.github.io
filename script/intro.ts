@@ -7,7 +7,7 @@ const about = document.getElementById('about');
 export const intro = async () => {
 
   //add the scroll reminder after bg image has loaded.
-  const introBGImg = '../images/sunset.png';
+  const introBGImg = '../public/images/sunset.png';
   const image = new Image();
   image.src = introBGImg;
   image.onload = () => {
