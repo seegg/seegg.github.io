@@ -626,3 +626,12 @@ ol{
 .spacer{
   height: 1000px;
 }
+
+.ramblings{
+  padding-inline: 10px;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  max-width: 900px;
+  row-gap: 20px
+}
