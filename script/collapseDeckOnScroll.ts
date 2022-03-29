@@ -46,13 +46,14 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
     if (isInProjectsTab && window.innerWidth < maxWidth) {
       const { top: scrollContainerTop, bottom: scrollContainerBottom } = contentScrollContainer.getBoundingClientRect();
       const { top: contentTopDistance } = contentContainer.getBoundingClientRect();
-      //distance of container element bottom to screen bottom.
-      const containerBtmDistance = window.innerHeight - scrollContainerBottom;
+
+      const containerBtmDistance = window.innerHeight - scrollContainerBottom;//distance of container element bottom to screen bottom.
+
       //inside the scroll container
       if (contentTopDistance < 0 && containerBtmDistance < 0) {
         if (!isDisplayFixed) {
           switchSelectedNavIcons(deck[0]);
-          toggleProjectDisplayFixedPosition('fixed');
+          toggleProjectDisplayFixedPosition(true);
           isDisplayFixed = true;
         }
         //calculate the index value corresponding to the y scroll position. 
@@ -71,13 +72,13 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           }
           isFromTop = true;
           addCardsToQueue(autoQueue, currentIndex, scrollPos, 200, stashCardsInRange, null,
-            () => { prevTime = new Date().getTime(); console.log(prevTime) });
+            () => { prevTime = new Date().getTime(); });
 
           //scroll up enough to trigger draw card.
           //when there's more than 2 cards to process, set state without playing animations.
         } else if (scrollPos < currentIndex.value) {
           //clear the rest of the queue and set the state of the deck to the last item polled.
-          if (isFromTop && new Date().getTime() - prevTime < 1000) {
+          if (isFromTop && new Date().getTime() - prevTime < 500) {
             isFromTop = false;
             handleScrollDirectionChange();
             return;
@@ -89,35 +90,29 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           }
           addCardsToQueue(autoQueue, currentIndex, scrollPos, 100, drawCardsInRange);
 
-        } else {
-          //use the leftover distance between cards to adjust current card height.
+        } else {//use the leftover distance between cards to adjust current card height.
           const heightOverlap = Math.max(scrollTopDist % cardScrollThreshold - 200, 0);
           if (heightOverlap > 0) {
             deck[currentIndex.value].style.height = cardHeight - heightOverlap * heightRatio + 'px';
           }
         }
-      } else {
-        //scroll container bottom is above screen bottom.
+        //outside the scroll container
+      } else { //scroll container bottom is above screen bottom.
         if (containerBtmDistance >= 0) {
           projectDisplay.classList.remove('attach-to-top');
           //handle leftover cards, if any, after reaching end of scroll area.
           if (currentIndex.value < deck.length - 1) {
-            //pre process up to the last 2 cards, so the last 2 can be use to animate the transition.
             if (currentIndex.value < deck.length - 3) {
               const temp = currentIndex.value;
               currentIndex.value = deck.length - 3;
-              autoQueue.add(async () => {
-                await setStashCardsInRange(deck, temp, deck.length - 3);
-              })
+              autoQueue.add(async () => { await setStashCardsInRange(deck, temp, deck.length - 3); });
             }
             //add reemaning cards to queue.
             addCardsToQueue(autoQueue, currentIndex, deck.length - 1, 100, stashCardsInRange, () => { isFromTop = false; });
           }
-
-          //scroll container top is below screen top.
-        } else {
+        } else {//scroll container top is below screen top.
           if (isDisplayFixed || contentTopDistance > 0) {
-            toggleProjectDisplayFixedPosition('not-fixed');
+            toggleProjectDisplayFixedPosition(false);
             projectDisplay.classList.add('attach-to-top');
             isDisplayFixed = false;
           }
@@ -129,7 +124,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
               currentIndex.value = 2;
               autoQueue.add(async () => { setDrawCardsInRange(deck, temp, 2,); });
             }
-
+            //handle final cards, remove selected card status.
             addCardsToQueue(autoQueue, currentIndex, 0, 50, drawCardsInRange, null,
               () => {
                 isFromTop = true;
@@ -210,7 +205,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
 
   const handleScrollDirectionChange = () => {
     autoQueue.empty();
-    scrollToPosAndPause(document.body, lastScrollYPos, 1000);
+    scrollToPosAndPause(document.body, lastScrollYPos, 300);
     currentIndex.value = prevSavedIndex;
   }
 
@@ -242,8 +237,8 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
 };
 
 //toggle whether project card container css display is fixed or not
-const toggleProjectDisplayFixedPosition = (state: 'fixed' | 'not-fixed') => {
-  if (state === 'fixed') {
+const toggleProjectDisplayFixedPosition = (state: boolean) => {
+  if (state) {
     projectDisplay.classList.add('fixed', 'mt-82');
   } else {
     projectDisplay.classList.remove('fixed', 'mt-82');
