@@ -29,6 +29,8 @@ export class SyncAutoQueue<T> {
       this.next();
     } catch (e) {
       console.error(e);
+      this.empty();
+      this.lockAquired = false;
     }
   }
 
