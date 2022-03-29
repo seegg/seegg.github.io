@@ -1,6 +1,9 @@
 import { createElementWithClasses, createNavItem } from "./util";
 import { Project } from "./types";
 
+type InputState = 'entering' | 'leaving';
+type InputType = 'touch' | 'mouse';
+
 /**
  * Create the product card to display a project.
  * @param project 
@@ -24,39 +27,25 @@ export const createProjectCard =
     //container for the project image and project details
     const secondArticle = createElementWithClasses('article', 'project');
 
-    gitHubLink.addEventListener('click', () => {
-      console.log('click');
-      animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
-    });
+    /**
+     * Wrapper for addListener function
+     */
+    const addListenerToComponent = (
+      component: HTMLElement, eventType: keyof HTMLElementEventMap, state: InputState, input?: InputType) => {
+      const callback = () => { animateMouseEnterArticle(secondArticle, repoLink, projectContainer, state); };
+      addListener(component, eventType, callback, contentContainer, input);
+    }
 
     //animate the log and article body when mousing over it.
     secondArticle.onpointerenter = () => {
       if (window.innerWidth >= focusWidth) projectContainer.focus();
       animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
     };
-    projectContainer.onpointerleave = () => {
-      if (contentContainer?.classList.contains('touch-device')) return;
-      animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
-    };
-    projectContainer.onpointercancel = () => {
-      animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
-    };
-    projectContainer.onblur = () => {
-      if (!contentContainer?.classList.contains('touch-device')) return;
-      animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
-    }
-    projectContainer.onfocus = () => {
-      if (!contentContainer?.classList.contains('touch-device')) return;
-      animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
-    };
 
-    // const addListener = (elem: HTMLElement, eventType: keyof HTMLElementEventMap, input: 'touch' | 'mouse' | 'all', state: 'entering' | 'leaving') => {
-    //   if (input === 'touch') {
-    //     if (!contentContainer?.classList.contains('touch-device')) return;
-    //   } else if (input === 'mouse') {
-
-    //   }
-    // };
+    addListenerToComponent(projectContainer, 'pointerleave', 'leaving', 'mouse');
+    addListenerToComponent(projectContainer, 'pointercancel', 'leaving');
+    addListenerToComponent(projectContainer, 'blur', 'leaving', 'touch');
+    addListenerToComponent(projectContainer, 'focus', 'entering', 'touch');
 
     const projectImg = project.image ? project.image : null;
     // image for the project
@@ -76,11 +65,13 @@ export const createProjectCard =
 /**
  * wrapper for animating the enter and leave effects for the card.
  */
-const animateMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, container: HTMLElement, status: 'entering' | 'leaving') => {
+const animateMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, container: HTMLElement, state: InputState) => {
 
   const logoImgs = Array.from(repoLink.querySelectorAll('img')) as HTMLImageElement[];
 
-  if (status === "entering") {
+  console.log('animate', state);
+
+  if (state === "entering") {
     article.classList.add('project-select');
     repoLink.classList.add('nav-project-moveY');
     logoImgs.forEach(img => img.classList.add('nav-icon-partial'));
@@ -91,6 +82,26 @@ const animateMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, c
     container.classList.remove('full-card-size');
     logoImgs.forEach(img => img.classList.remove('nav-icon-partial'));
   }
+};
+
+/**
+ * helper method for adding an event listener to one of the card componets.
+ * @param elem the element to add the listener to.
+ * @param eventType 
+ * @param callback event listener
+ * @param contentContainer 
+ * @param input mouse or touch input only
+ */
+const addListener = (elem: HTMLElement, eventType: keyof HTMLElementEventMap, callback: () => void, contentContainer?: HTMLElement, input?: InputType,) => {
+  elem.addEventListener(eventType, () => {
+    console.log('helper');
+    if (input === 'touch') {
+      if (!contentContainer?.classList.contains('touch-device')) return;
+    } else if (input === 'mouse') {
+      if (contentContainer?.classList.contains('touch-device')) return;
+    }
+    callback();
+  });
 };
 
 /**

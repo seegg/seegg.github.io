@@ -49,6 +49,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
       console.log('scrolling');
       //inside the scroll container
       if (top < 0 && botDist < 0) {
+        console.log('insdie container');
         if (!isDisplayFixed) {
           switchSelectedNavIcons(projectCards[0]);
           toggleProjectDisplayFixedPosition('fixed');
@@ -179,8 +180,9 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
     const { inlineSize } = entries[0].contentBoxSize[0];
     reset();
     if (inlineSize < maxWidth) {
-      window.scrollTo(0, 0);
       setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
+      window.scrollTo(0, 0);
+      projectDisplay.classList.add('attach-to-top');
     }
   });
 
