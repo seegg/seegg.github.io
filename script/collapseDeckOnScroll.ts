@@ -111,6 +111,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
             //add reemaning cards to queue.
             addCardsToQueue(autoQueue, currentIndex, deck.length - 1, 100, stashCardsInRange, () => { isFromTop = false; });
           }
+
           //scroll container top is below screen top.
         } else {
           if (isDisplayFixed || top > 0) {
