@@ -64,8 +64,9 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
         if (scrollPos > currentIndex.value) {
           //when there's more than 2 cards to process, set state without playing animations.
           if (scrollPos - currentIndex.value > 2) {
-            autoQueue.add(async () => { await setStashCardsInRange(deck, currentIndex.value, scrollPos - 2); });
+            const temp = currentIndex.value;
             currentIndex.value = scrollPos - 2;
+            autoQueue.add(async () => { await setStashCardsInRange(deck, temp, scrollPos - 2); });
           }
           isFromTop = true;
           addCardsToQueue(autoQueue, currentIndex, scrollPos, 200, stashCardsInRange);
@@ -78,13 +79,12 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
             handleScrollDirectionChange();
             return;
           }
+          isFromTop = false;
           //when there's more than 2 cards to process, set state without playing animations.
           if (currentIndex.value - scrollPos > 2) {
             autoQueue.add(async () => { await setDrawCardsInRange(deck, currentIndex.value, scrollPos + 2); });
             currentIndex.value = scrollPos + 2;
           }
-
-          isFromTop = false;
           addCardsToQueue(autoQueue, currentIndex, scrollPos, 100, drawCardsInRange);
 
         } else {
@@ -102,10 +102,11 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           if (currentIndex.value < deck.length - 1) {
             //pre process up to the last 2 cards, so the last 2 can be use to animate the transition.
             if (currentIndex.value < deck.length - 3) {
-              autoQueue.add(async () => {
-                await setStashCardsInRange(deck, currentIndex.value, deck.length - 3);
-              })
+              const temp = currentIndex.value;
               currentIndex.value = deck.length - 3;
+              autoQueue.add(async () => {
+                await setStashCardsInRange(deck, temp, deck.length - 3);
+              })
             }
             //add reemaning cards to queue.
             addCardsToQueue(autoQueue, currentIndex, deck.length - 1, 100, stashCardsInRange, () => { isFromTop = false; });
@@ -119,12 +120,18 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
           }
           //handle any leftover cards after reaching start of scroll area.
           if (currentIndex.value > 0) {
+
             if (currentIndex.value > 2) {
-              autoQueue.add(async () => { await setDrawCardsInRange(deck, currentIndex.value, 2); });
+              const temp = currentIndex.value;
               currentIndex.value = 2;
+              autoQueue.add(async () => { setDrawCardsInRange(deck, temp, 2); });
             }
 
-            addCardsToQueue(autoQueue, currentIndex, 0, 50, drawCardsInRange, () => { isFromTop = true; });
+            addCardsToQueue(autoQueue, currentIndex, 0, 50, drawCardsInRange, null,
+              () => {
+                isFromTop = true;
+                if (top >= 0) switchSelectedNavIcons(null, deck[0]);
+              });
           }
         }
       }
@@ -157,7 +164,8 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
     scrollPos: number,
     wait: number,
     cardFn: CardFn,
-    callback?: () => void
+    callbackBefore?: (() => void) | null,
+    callbackAfter?: (() => void) | null,
   ) => {
     //update currentIndex before queue item finishes executing so the next scroll event
     //uses updated value instead of old value as if the queue items has aleady finish executing.
@@ -168,9 +176,10 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
     //save the scrollY pos and card index to handle abrupt change in direction.
     queue.add(
       async () => {
-        if (callback) callback();
+        if (callbackBefore) callbackBefore();
         updatePrevIndexAndScrollY(scrollPos, tempY);
         await cardFn(deck, temp, scrollPos, wait);
+        if (callbackAfter) callbackAfter();
       }
     );
   };
@@ -187,12 +196,13 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
       projectDisplay.classList.add('attach-to-top');
       window.scrollTo(0, 0);
       setElementHeight(contentScrollContainer, window.innerHeight + (deck.length * cardScrollThreshold));
-      resetDeck(deck);
+      contentScrollContainer.classList.add('anim-fadein-long');
+      // resetDeck(deck);
     } else {
       contentScrollContainer.style.removeProperty('height');
+      contentScrollContainer.classList.remove('anim-fadein-long');
       resetDeck(deck);
     }
-    // resetDeck(deck);
   });
 
   const handleScrollDirectionChange = () => {
