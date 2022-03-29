@@ -84,11 +84,11 @@ export const toggleBackgroundCard = (
 };
 
 /**
- * Calculate and set the states for cards from start upto but not inculding end.
+ * Calculate and stash the cards in range with no animation delay
  * @param start 
  * @param end 
  */
-export const setCardStatesInRange = (
+export const setStashCardsInRange = (
   deck: HTMLElement[],
   start: number,
   end: number,
@@ -104,7 +104,7 @@ export const setCardStatesInRange = (
 }
 
 /**
- * stash the selected range of cards, from start to end, not inclusive.  
+ * Stash the selected range of cards, from start to end, not inclusive.  
  * @param deck the project cards
  * @param start index of start range
  * @param end index of end range
@@ -117,6 +117,26 @@ export const stashCardsInRange = async (deck: HTMLElement[], start: number, end:
     toggleBackgroundCard(deck, i, 'add');
   }
 };
+
+/**
+ * Draw the cards in range with no animation delay
+ * @param start 
+ * @param end 
+ */
+export const setDrawCardsInRange = (
+  deck: HTMLElement[],
+  start: number,
+  end: number,
+  noCssTransition = 'disable-transitions'
+) => {
+  for (let i = start; i > end; i--) {
+    deck[i].classList.add(noCssTransition);
+    drawCard(deck[i - 1], deck[i]);
+    toggleBackgroundCard(deck, i - 1, 'remove');
+    deck[i].offsetHeight;
+    deck[i].classList.remove(noCssTransition);
+  }
+}
 
 /**
  * stash the selected range of cards, from start to end, not inclusive.  
