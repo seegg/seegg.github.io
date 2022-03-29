@@ -27,6 +27,13 @@ export const createProjectCard =
     //container for the project image and project details
     const secondArticle = createElementWithClasses('article', 'project');
 
+    //remove selected status from the card when an external link is clicked.
+    repoLink.childNodes.forEach(child => {
+      child.addEventListener('click', () => {
+        animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
+      });
+    })
+
     /**
      * Wrapper for addListener function
      */
@@ -41,7 +48,6 @@ export const createProjectCard =
       if (window.innerWidth >= focusWidth) projectContainer.focus();
       animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
     };
-
     addListenerToComponent(projectContainer, 'pointerleave', 'leaving', 'mouse');
     addListenerToComponent(projectContainer, 'pointercancel', 'leaving');
     addListenerToComponent(projectContainer, 'blur', 'leaving', 'touch');
@@ -69,8 +75,6 @@ const animateMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, c
 
   const logoImgs = Array.from(repoLink.querySelectorAll('img')) as HTMLImageElement[];
 
-  console.log('animate', state);
-
   if (state === "entering") {
     article.classList.add('project-select');
     repoLink.classList.add('nav-project-moveY');
@@ -94,7 +98,6 @@ const animateMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, c
  */
 const addListener = (elem: HTMLElement, eventType: keyof HTMLElementEventMap, callback: () => void, contentContainer?: HTMLElement, input?: InputType,) => {
   elem.addEventListener(eventType, () => {
-    console.log('helper');
     if (input === 'touch') {
       if (!contentContainer?.classList.contains('touch-device')) return;
     } else if (input === 'mouse') {
