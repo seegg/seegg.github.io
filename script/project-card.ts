@@ -14,15 +14,20 @@ export const createProjectCard =
 
     //link to repo with github logo
     const repoLink = createElementWithClasses('nav', 'nav-project', 'anim-fadein-long');
-    const gitHubLink = createNavItem(project.repo || '#', "../images/GitHub-Mark-Light-32px.png", 'nav-icon');
+    const gitHubLink = createNavItem(project.repo || '#', "../public/images/GitHub-Mark-Light-32px.png", 'nav-icon');
     repoLink.appendChild(gitHubLink);
     //external link for project, if any.
-    const link = createNavItem(project.url || '#', '../images/link.png', 'nav-icon');
+    const link = createNavItem(project.url || '#', '../public/images/link.png', 'nav-icon');
     repoLink.prepend(link);
     projectContainer.appendChild(repoLink);
 
     //container for the project image and project details
     const secondArticle = createElementWithClasses('article', 'project');
+
+    gitHubLink.addEventListener('click', () => {
+      console.log('click');
+      animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'leaving');
+    });
 
     //animate the log and article body when mousing over it.
     secondArticle.onpointerenter = () => {
@@ -44,6 +49,14 @@ export const createProjectCard =
       if (!contentContainer?.classList.contains('touch-device')) return;
       animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
     };
+
+    // const addListener = (elem: HTMLElement, eventType: keyof HTMLElementEventMap, input: 'touch' | 'mouse' | 'all', state: 'entering' | 'leaving') => {
+    //   if (input === 'touch') {
+    //     if (!contentContainer?.classList.contains('touch-device')) return;
+    //   } else if (input === 'mouse') {
+
+    //   }
+    // };
 
     const projectImg = project.image ? project.image : null;
     // image for the project

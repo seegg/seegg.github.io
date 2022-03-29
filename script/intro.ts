@@ -13,7 +13,7 @@ export const intro = async () => {
   image.onload = () => {
     showScrollReminder();
   }
-
+  // showScrollReminder();
   const rambling: string[] = JSON.parse(JSON.stringify(ramblings)).ramblings[0].text.split('\n');
 
   const ramblingArticle = createRambling(rambling);
