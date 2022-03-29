@@ -33,6 +33,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
   let lastScrollYPos = window.scrollY;
   let prevSavedIndex = 0;
   let isFromTop = true;
+  let prevTime = 0;
 
   //when the screen width meets the threshold, add height to scroll container to control the card deck.
   if (window.innerWidth < maxWidth) {
@@ -44,11 +45,11 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
     if (!contentScrollContainer) return;
     if (isInProjectsTab && window.innerWidth < maxWidth) {
       const { top: scrollContainerTop, bottom: scrollContainerBottom } = contentScrollContainer.getBoundingClientRect();
-      const { top } = contentContainer.getBoundingClientRect();
+      const { top: contentTopDistance } = contentContainer.getBoundingClientRect();
       //distance of container element bottom to screen bottom.
-      const botDist = window.innerHeight - scrollContainerBottom;
+      const containerBtmDistance = window.innerHeight - scrollContainerBottom;
       //inside the scroll container
-      if (top < 0 && botDist < 0) {
+      if (contentTopDistance < 0 && containerBtmDistance < 0) {
         if (!isDisplayFixed) {
           switchSelectedNavIcons(deck[0]);
           toggleProjectDisplayFixedPosition('fixed');
@@ -61,26 +62,27 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
         scrollPos = Math.min(deck.length - 1, scrollPos);
 
         //scroll down enough to trigger stash card.
+        //when there's more than 2 cards to process, set state without playing animations.
         if (scrollPos > currentIndex.value) {
-          //when there's more than 2 cards to process, set state without playing animations.
           if (scrollPos - currentIndex.value > 2) {
             const temp = currentIndex.value;
             currentIndex.value = scrollPos - 2;
             autoQueue.add(async () => { await setStashCardsInRange(deck, temp, scrollPos - 2); });
           }
           isFromTop = true;
-          addCardsToQueue(autoQueue, currentIndex, scrollPos, 200, stashCardsInRange);
+          addCardsToQueue(autoQueue, currentIndex, scrollPos, 200, stashCardsInRange, null,
+            () => { prevTime = new Date().getTime(); console.log(prevTime) });
 
           //scroll up enough to trigger draw card.
+          //when there's more than 2 cards to process, set state without playing animations.
         } else if (scrollPos < currentIndex.value) {
           //clear the rest of the queue and set the state of the deck to the last item polled.
-          if (isFromTop) {
+          if (isFromTop && new Date().getTime() - prevTime < 1000) {
             isFromTop = false;
             handleScrollDirectionChange();
             return;
           }
           isFromTop = false;
-          //when there's more than 2 cards to process, set state without playing animations.
           if (currentIndex.value - scrollPos > 2) {
             autoQueue.add(async () => { await setDrawCardsInRange(deck, currentIndex.value, scrollPos + 2); });
             currentIndex.value = scrollPos + 2;
@@ -96,7 +98,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
         }
       } else {
         //scroll container bottom is above screen bottom.
-        if (botDist >= 0) {
+        if (containerBtmDistance >= 0) {
           projectDisplay.classList.remove('attach-to-top');
           //handle leftover cards, if any, after reaching end of scroll area.
           if (currentIndex.value < deck.length - 1) {
@@ -114,7 +116,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
 
           //scroll container top is below screen top.
         } else {
-          if (isDisplayFixed || top > 0) {
+          if (isDisplayFixed || contentTopDistance > 0) {
             toggleProjectDisplayFixedPosition('not-fixed');
             projectDisplay.classList.add('attach-to-top');
             isDisplayFixed = false;
@@ -125,13 +127,13 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
             if (currentIndex.value > 2) {
               const temp = currentIndex.value;
               currentIndex.value = 2;
-              autoQueue.add(async () => { setDrawCardsInRange(deck, temp, 2); });
+              autoQueue.add(async () => { setDrawCardsInRange(deck, temp, 2,); });
             }
 
             addCardsToQueue(autoQueue, currentIndex, 0, 50, drawCardsInRange, null,
               () => {
                 isFromTop = true;
-                if (top >= 0) switchSelectedNavIcons(null, deck[0]);
+                if (contentTopDistance >= 0) switchSelectedNavIcons(null, deck[0]);
               });
           }
         }
@@ -208,7 +210,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
 
   const handleScrollDirectionChange = () => {
     autoQueue.empty();
-    scrollToPosAndPause(document.body, lastScrollYPos, 300);
+    scrollToPosAndPause(document.body, lastScrollYPos, 1000);
     currentIndex.value = prevSavedIndex;
   }
 

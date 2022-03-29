@@ -2,6 +2,7 @@ import * as ramblings from './ramblings.json';
 import { createElementWithClasses } from './util';
 const content = document.getElementById('content');
 const about = document.getElementById('about');
+const introContainer = document.getElementById('intro-container');
 
 
 export const intro = async () => {
@@ -12,6 +13,7 @@ export const intro = async () => {
   image.src = introBGImg;
   image.onload = () => {
     showScrollReminder();
+    introContainer?.classList.add('anim-fadein-long');
   }
   // showScrollReminder();
   const rambling: string[] = JSON.parse(JSON.stringify(ramblings)).ramblings[0].text.split('\n');

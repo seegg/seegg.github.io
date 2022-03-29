@@ -167,13 +167,15 @@ export const switchSelectedNavIcons = (targetCard: HTMLElement | null, currentCa
 const setSelectedNavIcons = (
   card: HTMLElement | null, selected: boolean,
   iconSelector = '.nav-icon',
-  cssSelected = 'nav-icon-selected'
+  cssSelected = 'nav-icon-selected',
+  cardSelected = 'current-card'
 ) => {
   if (card === null) return;
   const action = selected ? 'add' : 'remove';
   card.querySelectorAll(iconSelector).forEach(icon => {
     icon.classList[action](cssSelected);
-  })
+  });
+  card.querySelector('.project')?.classList[action](cardSelected);
 };
 
 /**
