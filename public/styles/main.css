@@ -324,6 +324,7 @@ main{
 .placeholder-triangle-big{
   position: relative;
   left: 10px;
+  top: 30px;
   height: 70px;
   width: 0px;
   border-left: 60px solid rgb(176, 175, 179);
@@ -335,17 +336,10 @@ main{
   outline: 5px solid black;
 }
 
-.placeholder-triangle-big::after{
-  content: '';
-  border-radius: 50%;
-  height: 60px;
-  width: 60px;
-}
-
 .placeholder-triangle{
   position: relative;;
-  top: -40px;
-  left: -10px;
+  top: -10px;
+  left: -20px;
   height: 0px;
   width: 90px;
   border-left: 40px solid transparent;
