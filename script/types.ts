@@ -5,6 +5,16 @@ export interface Project {
   image: string,
   description: string
 }
+
+interface Rambling {
+  title: string,
+  text: string
+}
+
+export interface ReflectionsBlog {
+  ramblings: Rambling[]
+}
+
 export type NavigationHook = (tabs: HTMLElement[], fromTab: number, toTab: number) => void;
 
 export type UpdateDeckFn = (duration: number) => Promise<void>;

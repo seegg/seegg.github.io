@@ -1,7 +1,4 @@
-import * as ramblings from './ramblings.json';
-import { createElementWithClasses } from './util';
 const content = document.getElementById('content');
-const about = document.getElementById('about');
 const introContainer = document.getElementById('intro-container');
 
 
@@ -14,12 +11,7 @@ export const intro = async () => {
   image.onload = () => {
     showScrollReminder();
     introContainer?.classList.add('anim-fadein-long');
-  }
-  // showScrollReminder();
-  const rambling: string[] = JSON.parse(JSON.stringify(ramblings)).ramblings[0].text.split('\n');
-
-  const ramblingArticle = createRambling(rambling);
-  about?.appendChild(ramblingArticle);
+  };
 
   changeContentOpacityOnHeightShown();
 
@@ -34,7 +26,7 @@ export const intro = async () => {
     showScrollReminder();
   }, false);
 
-}
+};
 
 
 /**
@@ -47,7 +39,7 @@ const changeContentOpacityOnHeightShown = (threshold = 500) => {
   heightShown = Math.pow(heightShown * 0.05, 2);
   const opacity = heightShown <= 0 ? 0 : heightShown >= threshold ? 1 : heightShown / threshold;
   content.style.opacity = opacity.toString();
-}
+};
 
 
 /**
@@ -60,16 +52,4 @@ const showScrollReminder = () => {
   } else {
     document.getElementById('scroll-reminder')?.classList.add('show-scroll');
   }
-}
-
-const createRambling = (paragrahs: string[]) => {
-  const container = createElementWithClasses('article', 'ramblings');
-  paragrahs.forEach(paragraph => {
-    const para = document.createElement('p');
-    para.textContent = paragraph;
-    container.appendChild(para);
-  });
-
-  return container;
-
-}
+};

@@ -1,5 +1,6 @@
 import { createProjectCard, createProjectPlaceholder } from "./project-card";
 import { Project } from "./types";
+import { collapseDeckOnScroll } from './collapseDeckOnScroll';
 
 
 const projectsContainer = document.getElementById('projects');
@@ -20,7 +21,7 @@ const cssInvisible = 'invisible';
 /**
  * load all the projects for display.
  */
-export const loadProjects = async (projects: Project[]) => {
+export const loadProjects = async (projects: Project[], widthThreshold = 570) => {
 
   if (projectsContainer && contentContainer) {
     //Calculate initial size of project container.
@@ -50,14 +51,38 @@ export const loadProjects = async (projects: Project[]) => {
     }
 
     //load projects from projects.json
-    projects.forEach(async project => {
-      //construct and attach the placeholder to the DOM
+    // projects.forEach(async project => {
+    //   //construct and attach the placeholder to the DOM
+    //   const placeHolder = createProjectPlaceholder();
+    //   projectsContainer.appendChild(placeHolder);
+
+    //   // replace the placeholder once the acutal project card has finish loading.
+
+    //   await new Promise<HTMLDivElement>(resolve => {
+    //     resolve(
+    //       ((): HTMLDivElement => {
+    //         //const projectCard = createProjectComponent(project, visibleProjectHeight);
+    //         const projectCard = createProjectCard(project, contentContainer);
+    //         if (visibleProjectHeight < visibleHeightThreshold) {
+    //           toggleIntroDeckAnimation(projectCard);
+    //         }
+    //         return projectCard as HTMLDivElement;
+    //       })()
+    //     )
+    //   }).then((card) => {
+    //     placeHolder.replaceWith(card);
+    //     (card as HTMLDivElement).classList.add('anim-fadein');
+    //   }).catch(err => console.error(err));
+    // });
+
+    await Promise.allSettled(projects.map(project => {
+      //
       const placeHolder = createProjectPlaceholder();
       projectsContainer.appendChild(placeHolder);
 
       // replace the placeholder once the acutal project card has finish loading.
 
-      await new Promise<HTMLDivElement>(resolve => {
+      return new Promise<HTMLDivElement>(resolve => {
         resolve(
           ((): HTMLDivElement => {
             //const projectCard = createProjectComponent(project, visibleProjectHeight);
@@ -71,8 +96,11 @@ export const loadProjects = async (projects: Project[]) => {
       }).then((card) => {
         placeHolder.replaceWith(card);
         (card as HTMLDivElement).classList.add('anim-fadein');
-      }).catch(err => console.error(err))
-    });
+      }).catch(err => console.error(err));
+    }));
+
+    collapseDeckOnScroll(widthThreshold);
+
   } else {
     throw new Error('Some error');
   }
