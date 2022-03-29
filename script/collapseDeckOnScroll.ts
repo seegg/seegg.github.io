@@ -207,25 +207,7 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
     introIntersectObserver.observe(intro);
   }
 
-  //reset the state of the cards.
-  const reset = () => {
-    autoQueue.empty();
-    //remove any css classes that alter the card
-    // projectCards.forEach(card => {
-    //   card.classList.remove(closeCard, hide);
-    //   card.querySelector('.project')?.classList.remove(backgroundCard);
-    //   card.querySelector('.nav-project')?.classList.remove(moveY);
-    // });
-    // //remove the selected icons
-    // projectCards[currentIndex.value].querySelectorAll('.' + navIconSelected)?.forEach(card => {
-    //   card.classList.remove(navIconSelected);
-    // })
-    resetDeck(projectCards);
-    //reset values to original;
-    currentIndex.value = 0;
-    contentScrollContainer.style.removeProperty('height');
-  };
-
+  //reset the deck to original values
   const resetDeck = (deck: HTMLElement[]) => {
     deck.forEach(card => {
       card.classList.remove(closeCard, hide);
