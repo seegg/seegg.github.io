@@ -130,7 +130,7 @@ main{
   flex-wrap: wrap;
   display: flex;
   flex-direction: column;
-  transition: all 0.5s;
+  /* transition: all 0.5s; */
   animation: fade-in 0.5s linear 0s;
 }
 

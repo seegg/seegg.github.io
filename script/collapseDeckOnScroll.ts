@@ -46,10 +46,8 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
       const { top } = contentContainer.getBoundingClientRect();
       //distance of container element bottom to screen bottom.
       const botDist = window.innerHeight - scrollContainerBottom;
-      console.log('scrolling');
       //inside the scroll container
       if (top < 0 && botDist < 0) {
-        console.log('insdie container');
         if (!isDisplayFixed) {
           switchSelectedNavIcons(projectCards[0]);
           toggleProjectDisplayFixedPosition('fixed');
@@ -175,14 +173,18 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
     lastScrollYPos = scrollPos;
   }
 
-  //resize observer adjust heightThreshold and deck behaviour base on intro element dimensions.
+  //resize observer to set the scroll container height reset the cards.
   const introResizeObserver = new ResizeObserver(entries => {
     const { inlineSize } = entries[0].contentBoxSize[0];
-    reset();
+    // reset();
     if (inlineSize < maxWidth) {
+      projectDisplay.classList.add('attach-to-top');
       setElementHeight(contentScrollContainer, window.innerHeight + (projectCards.length * cardScrollThreshold));
       window.scrollTo(0, 0);
-      projectDisplay.classList.add('attach-to-top');
+      // resetDeck(projectCards);
+    } else {
+      contentScrollContainer.style.removeProperty('height');
+      resetDeck(projectCards);
     }
   });
 
@@ -209,19 +211,32 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
   const reset = () => {
     autoQueue.empty();
     //remove any css classes that alter the card
-    projectCards.forEach(card => {
-      card.classList.remove(closeCard, hide);
-      card.querySelector('.project')?.classList.remove(backgroundCard);
-      card.querySelector('.nav-project')?.classList.remove(moveY);
-    });
-    //remove the selected icons
-    projectCards[currentIndex.value].querySelectorAll('.nav-icon')?.forEach(card => {
-      card.classList.remove(navIconSelected);
-    })
+    // projectCards.forEach(card => {
+    //   card.classList.remove(closeCard, hide);
+    //   card.querySelector('.project')?.classList.remove(backgroundCard);
+    //   card.querySelector('.nav-project')?.classList.remove(moveY);
+    // });
+    // //remove the selected icons
+    // projectCards[currentIndex.value].querySelectorAll('.' + navIconSelected)?.forEach(card => {
+    //   card.classList.remove(navIconSelected);
+    // })
+    resetDeck(projectCards);
     //reset values to original;
     currentIndex.value = 0;
     contentScrollContainer.style.removeProperty('height');
   };
+
+  const resetDeck = (deck: HTMLElement[]) => {
+    deck.forEach(card => {
+      card.classList.remove(closeCard, hide);
+      card.querySelector('.project')?.classList.remove(backgroundCard);
+      card.querySelector('.nav-project')?.classList.remove(moveY);
+    });
+
+    deck[0].parentElement?.querySelectorAll('.' + navIconSelected).forEach(icon => {
+      icon.classList.remove(navIconSelected);
+    })
+  }
 };
 
 //toggle whether project card container css display is fixed or not
