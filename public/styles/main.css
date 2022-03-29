@@ -329,7 +329,17 @@ main{
   border-left: 60px solid rgb(176, 175, 179);
   border-right: 60px solid rgb(176, 175, 179);
   border-bottom: 60px solid hsl(17, 71%, 12%);
-  border-radius: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background-color: rgb(176, 175, 179);
+  outline: 5px solid black;
+}
+
+.placeholder-triangle-big::after{
+  content: '';
+  border-radius: 50%;
+  height: 60px;
+  width: 60px;
 }
 
 .placeholder-triangle{
@@ -337,17 +347,14 @@ main{
   top: -40px;
   left: -10px;
   height: 0px;
-  width: 0px;
+  width: 90px;
   border-left: 40px solid transparent;
   border-right: 40px solid transparent;
   border-bottom: 40px solid hsl(120, 91%, 9%);
   
 }
 
-.placeholder-triangle-big::after{
-  outline: 2px solid black;
-  border-bottom: 40px solid hsl(120, 91%, 9%);
-}
+
 
 .placeholder-container{ width: 310px; }
 
