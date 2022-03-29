@@ -183,16 +183,16 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
   //resize observer to set the scroll container height reset the cards.
   const introResizeObserver = new ResizeObserver(entries => {
     const { inlineSize } = entries[0].contentBoxSize[0];
-    // reset();
     if (inlineSize < maxWidth) {
       projectDisplay.classList.add('attach-to-top');
       window.scrollTo(0, 0);
       setElementHeight(contentScrollContainer, window.innerHeight + (deck.length * cardScrollThreshold));
-      // resetDeck(deck);
+      resetDeck(deck);
     } else {
       contentScrollContainer.style.removeProperty('height');
       resetDeck(deck);
     }
+    // resetDeck(deck);
   });
 
   const handleScrollDirectionChange = () => {
