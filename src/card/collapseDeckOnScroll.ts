@@ -10,7 +10,6 @@ import {
 } from './card-deck';
 
 const contentContainer = document.getElementById('content') as HTMLDivElement;
-const projectsContainer = document.getElementById('projects') as HTMLDivElement;
 const projectDisplay = document.querySelector('.projects-display') as HTMLDivElement;
 //css classes
 const closeCard = 'close-deck-partial';
@@ -20,8 +19,7 @@ const hide = 'close-deck-full';
 const moveY = 'moveY-40';
 const projectNavID = 'nav-projects';
 
-export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrollThreshold = 300) => {
-  const deck = Array.from(projectsContainer.querySelectorAll('.project-card')) as HTMLElement[];
+export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHeight = 450, cardScrollThreshold = 300) => {
   const currentIndex = { value: 0 }; //store as an object property to makesure all requests reflects latest value.
   const heightRatio = cardHeight / cardScrollThreshold;
   const autoQueue = new SyncAutoQueue<UpdateDeckFn>(); //queue responsible for scheduling card actions.
@@ -235,7 +233,9 @@ export const collapseDeckOnScroll = (maxWidth = 570, cardHeight = 450, cardScrol
   }
 };
 
-//toggle whether project card container css display is fixed or not
+/**
+ * toggle whether project card display container is fixed or not
+ */
 const toggleProjectDisplayFixedPosition = (state: boolean) => {
   if (state) {
     projectDisplay.classList.add('fixed', 'mt-82');

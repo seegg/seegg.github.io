@@ -75,7 +75,9 @@ export const loadProjects = async (widthThreshold = 570) => {
       }).catch(err => console.error(err));
     }));
 
-    collapseDeckOnScroll(widthThreshold);
+    const projectCards = Array.from(projectsContainer.querySelectorAll('.project-card')) as HTMLElement[];
+
+    collapseDeckOnScroll(projectCards, widthThreshold);
 
   } else {
     throw new Error('Some error');
