@@ -14,7 +14,7 @@ export class SyncAutoQueue<T> {
     if (!this.lockAquired) this.poll();
   }
 
-  async poll() {
+  private async poll() {
     //only dequque and call the item if the lock is free.
     if (this.lockAquired) return;
     //aquire the lock and then call the item at the front of the queue.
