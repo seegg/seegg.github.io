@@ -257,7 +257,7 @@ main{
   width: var(--icon-size-w);
   height:var(--icon-size-h);
   opacity: 1;
-  transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out, opacity 0.25s ease-in-out 0.3s;
 }
 
 .nav-icon:hover{ opacity: 1; }
@@ -266,7 +266,6 @@ main{
   opacity: 1;
   border: 1px solid black;
   outline: 2px solid white;
-  /* margin-right: 10px; */
 }
 
 .placeholder{ background-color: hsl(0, 0%, 30%); }
@@ -649,6 +648,8 @@ ol{
     opacity: 1;
     border: 1px solid black;
     outline: 2px solid white;
+    background-color: black;
+    /* transition: all 0.25s ease-in-out, opacity 0.25s ease-in-out; */
     /* margin-right: 10px; */
   }
 
