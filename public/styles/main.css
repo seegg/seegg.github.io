@@ -323,13 +323,13 @@ main{
   overflow: hidden;
 }
 
-.trangle-container{ display: inline; }
+.triangle-container{ display: inline; }
 
 .placeholder-triangle-big{
   position: relative;
   left: 10px;
   top: 30px;
-  height: 70px;
+  height: 0px;
   width: 0px;
   border-left: 60px solid rgb(176, 175, 179);
   border-right: 60px solid rgb(176, 175, 179);
