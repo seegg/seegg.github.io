@@ -222,9 +222,9 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
   //reset the deck to original values
   const resetDeck = (deck: HTMLElement[]) => {
     deck.forEach(card => {
-      card.classList.remove(closeCard, hide);
-      card.querySelector('.project')?.classList.remove(backgroundCard);
-      card.querySelector('.nav-project')?.classList.remove(moveY);
+      card.classList.remove(closeCard, hide, 'z-20', 'overlay-card-size');
+      card.querySelector('.project')?.classList.remove(backgroundCard, 'project-select');
+      card.querySelector('.nav-project')?.classList.remove(moveY, 'nav-project-moveY');
     });
 
     deck[0].parentElement?.querySelectorAll('.' + navIconSelected).forEach(icon => {

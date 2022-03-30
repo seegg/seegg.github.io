@@ -71,22 +71,27 @@ export const createProjectCard =
 /**
  * wrapper for animating the enter and leave effects for the card.
  */
-const animateMouseEnterArticle = (article: HTMLElement, repoLink: HTMLElement, container: HTMLElement, state: InputState) => {
-
-  const logoImgs = Array.from(repoLink.querySelectorAll('img')) as HTMLImageElement[];
-
-  if (state === "entering") {
-    article.classList.add('project-select');
-    repoLink.classList.add('nav-project-moveY');
-    logoImgs.forEach(img => img.classList.add('nav-icon-partial'));
-    container.classList.add('full-card-size');
-  } else {
-    article.classList.remove('project-select');
-    repoLink.classList.remove('nav-project-moveY');
-    container.classList.remove('full-card-size');
-    logoImgs.forEach(img => img.classList.remove('nav-icon-partial'));
-  }
-};
+const animateMouseEnterArticle =
+  (article: HTMLElement, repoLink: HTMLElement, container: HTMLElement, state: InputState, widthThreshold = 570) => {
+    if (window.innerWidth < widthThreshold) return;
+    const logoImgs = Array.from(repoLink.querySelectorAll('img')) as HTMLImageElement[];
+    if (state === "entering") {
+      article.classList.add('project-select');
+      repoLink.classList.add('nav-project-moveY');
+      logoImgs.forEach(img => img.classList.add('nav-icon-partial'));
+      container.classList.add('full-card-size');
+      setTimeout(() => {
+        if (container.classList.contains('full-card-size')) {
+          container.classList.add('z-20', 'overlay-card-size');
+        }
+      }, 350);
+    } else {
+      article.classList.remove('project-select');
+      repoLink.classList.remove('nav-project-moveY');
+      container.classList.remove('full-card-size', 'z-20', 'overlay-card-size');
+      logoImgs.forEach(img => img.classList.remove('nav-icon-partial'));
+    }
+  };
 
 /**
  * helper method for adding an event listener to one of the card componets.
