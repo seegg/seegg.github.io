@@ -1,6 +1,5 @@
-import { createProjectCard, createProjectPlaceholder } from "./project-card";
-import { collapseDeckOnScroll } from './collapseDeckOnScroll';
-import { getProjects } from "./data";
+import { createProjectCard, createProjectPlaceholder, collapseDeckOnScroll } from "../card";
+import { getProjects } from "../data";
 
 
 const projectsContainer = document.getElementById('projects');
@@ -24,7 +23,7 @@ const cssInvisible = 'invisible';
 export const loadProjects = async (widthThreshold = 570) => {
 
   //fetch projects data
-  const projectsData = await getProjects('https://seegg.github.io/script/projects.json');
+  const projectsData = await getProjects('https://seegg.github.io/src/data/projects.json');
   const projects = projectsData[document.body.id === 'demo' ? 'test-projects' : 'projects'];
 
   if (projectsContainer && contentContainer) {

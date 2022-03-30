@@ -1,5 +1,5 @@
-import { createElementWithClasses, createNavItem } from "./util";
-import { Project } from "./types";
+import { createElementWithClasses, createNavItem } from "../util";
+import { Project } from "../types";
 
 type InputState = 'entering' | 'leaving';
 type InputType = 'touch' | 'mouse';

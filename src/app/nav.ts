@@ -1,5 +1,5 @@
-import { NavigationHook } from "./types";
-import { openDeck, closeDeck } from './card-deck'
+import { NavigationHook } from "../types";
+import { openDeck, closeDeck } from '../card'
 
 
 const navTabs = Array.from(document.getElementsByClassName('tab-nav')) as HTMLElement[];

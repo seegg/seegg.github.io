@@ -1,4 +1,4 @@
-import { sleep } from "./util";
+import { sleep } from "../util";
 
 /**
  * Add css class to current selected project card to make its height smaller

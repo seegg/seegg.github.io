@@ -1,7 +1,6 @@
-import { addNavCallback, navBar } from "./nav";
-import { setElementHeight, scrollToPosAndPause } from "./util";
-import { SyncAutoQueue } from "./queue";
-import { UpdateDeckFn, CardFn } from "./types";
+import { addNavCallback, navBar } from "../app";
+import { setElementHeight, scrollToPosAndPause, SyncAutoQueue } from "../util";
+import { UpdateDeckFn, CardFn } from "../types";
 import {
   switchSelectedNavIcons,
   setStashCardsInRange,
