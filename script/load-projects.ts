@@ -1,6 +1,6 @@
 import { createProjectCard, createProjectPlaceholder } from "./project-card";
-import { Project } from "./types";
 import { collapseDeckOnScroll } from './collapseDeckOnScroll';
+import { getProjects } from "./data";
 
 
 const projectsContainer = document.getElementById('projects');
@@ -21,7 +21,11 @@ const cssInvisible = 'invisible';
 /**
  * load all the projects for display.
  */
-export const loadProjects = async (projects: Project[], widthThreshold = 570) => {
+export const loadProjects = async (widthThreshold = 570) => {
+
+  //fetch projects data
+  const projectsData = await getProjects('https://seegg.github.io/script/projects.json');
+  const projects = projectsData[document.body.id === 'demo' ? 'test-projects' : 'projects'];
 
   if (projectsContainer && contentContainer) {
     //Calculate initial size of project container.
@@ -50,38 +54,12 @@ export const loadProjects = async (projects: Project[], widthThreshold = 570) =>
       });
     }
 
-    //load projects from projects.json
-    // projects.forEach(async project => {
-    //   //construct and attach the placeholder to the DOM
-    //   const placeHolder = createProjectPlaceholder();
-    //   projectsContainer.appendChild(placeHolder);
-
-    //   // replace the placeholder once the acutal project card has finish loading.
-
-    //   await new Promise<HTMLDivElement>(resolve => {
-    //     resolve(
-    //       ((): HTMLDivElement => {
-    //         //const projectCard = createProjectComponent(project, visibleProjectHeight);
-    //         const projectCard = createProjectCard(project, contentContainer);
-    //         if (visibleProjectHeight < visibleHeightThreshold) {
-    //           toggleIntroDeckAnimation(projectCard);
-    //         }
-    //         return projectCard as HTMLDivElement;
-    //       })()
-    //     )
-    //   }).then((card) => {
-    //     placeHolder.replaceWith(card);
-    //     (card as HTMLDivElement).classList.add('anim-fadein');
-    //   }).catch(err => console.error(err));
-    // });
-
     await Promise.allSettled(projects.map(project => {
       //
       const placeHolder = createProjectPlaceholder();
       projectsContainer.appendChild(placeHolder);
 
       // replace the placeholder once the acutal project card has finish loading.
-
       return new Promise<HTMLDivElement>(resolve => {
         resolve(
           ((): HTMLDivElement => {

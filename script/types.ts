@@ -6,6 +6,11 @@ export interface Project {
   description: string
 }
 
+export interface AllProjects {
+  projects: Project[],
+  'test-projects': Project[]
+}
+
 interface Rambling {
   title: string,
   text: string
