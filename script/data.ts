@@ -7,7 +7,6 @@ export const getProjects = (path: string): Promise<AllProjects> => {
     return fetchJSONData(path);
   } catch (err) {
     console.error('Error fetching data, using fallback project data.');
-    //round about way to satisfy eslint and ts-check.
     return JSON.parse(JSON.stringify(projects));
   }
 };

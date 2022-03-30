@@ -7,8 +7,8 @@ const projectsContainer = document.getElementById('projects');
 const contentContainer = document.getElementById('content');
 
 //project card dimensions.
-const fullCardWidth = 250; //expanded card size
-const partialCardWidth = 160; //overlapping card size
+const fullCardWidth = 250; //width taken up by an expanded card on the layout.
+const partialCardWidth = 160; //width taken up by an overlapping card layout.
 const maxWidth = 1690; //max container width
 const minWidth = 310; //min container width, acutal size of each project card.
 const visibleHeightThreshold = 300; //visible height for the main element
@@ -54,16 +54,15 @@ export const loadProjects = async (widthThreshold = 570) => {
       });
     }
 
+    //wait until all cards are loaded before adding the scrolling deck effect for small screens.
     await Promise.allSettled(projects.map(project => {
-      //
+      //create place holder project card and replace it when the acutal project loads.
       const placeHolder = createProjectPlaceholder();
       projectsContainer.appendChild(placeHolder);
 
-      // replace the placeholder once the acutal project card has finish loading.
       return new Promise<HTMLDivElement>(resolve => {
         resolve(
           ((): HTMLDivElement => {
-            //const projectCard = createProjectComponent(project, visibleProjectHeight);
             const projectCard = createProjectCard(project, contentContainer);
             if (visibleProjectHeight < visibleHeightThreshold) {
               toggleIntroDeckAnimation(projectCard);
