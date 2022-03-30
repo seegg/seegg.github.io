@@ -6,6 +6,9 @@
   --card-partial-bg-colour: hsl(0, 20%, 25%);
   --card-bg-colour: hsl(0, 20%, 40%);
   --description-bg-colour: hsl(0, 20%, 20%);
+  --card-highlight: hsla(0, 10%, 45%, 0.5);
+  --card-highlight-partial: hsla(0, 10%, 30%, 0.5);
+  --card-highlight-full: hsla(0, 10%, 65%, 0.5);
   --min-content-height: 608px;
   --card-border-radius: 5px;
   --card-height: 450px;
@@ -182,6 +185,8 @@ main{
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-top: 2.5px solid var(--card-highlight);
+  border-right: 2.5px solid var(--card-highlight);
   box-shadow: -2px 0px 2px 2px rgba(0, 0, 0, 0.5);
   transition: transform 0.2s ease-in, box-shadow 0.2s ease-in;
   z-index: 2;
@@ -555,15 +560,18 @@ ol{
 
   .project{
     background-color: var(--card-partial-bg-colour);
+    border-color: var(--card-highlight-partial);
     transition: background-color 0.2s linear;
   }
   
   .current-card{
     background-color: var(--card-bg-colour);
+    border-color: var(--card-highlight);
   }
 
   .background-card{
     background-color: var(--background-card-bg-colour);
+    border-color: transparent;
   }
 }
 
@@ -611,7 +619,7 @@ ol{
     opacity: 1;
   }
 
-  .project{width: 300px;}
+  .project{width: 300px; border-color: var(--card-highlight-full);}
   .placeholder-container{ width: 160px; }
 
   .nav-project-moveY{
@@ -627,9 +635,7 @@ ol{
   #content .project-select{
     position: relative;
     outline: none;
-    box-shadow: -15px 15px 2px rgba(0, 0, 0, 0.5),
-    -4px 4px 4px rgba(0, 0, 0, 0.5),
-    1px -2px 1px hsl(0, 20%, 60%);
+    box-shadow: -15px 15px 2px rgba(0, 0, 0, 0.5);
     transform: translate(-55px, -30px);
   }
 
