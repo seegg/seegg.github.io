@@ -7,7 +7,6 @@ const introContainer = document.getElementById('intro-container');
 export const intro = async () => {
 
   //set background and scroll remainder after the iamge either loads or fails.
-  const introBGImg = '../public/images/sunset.png';
   const introBGCallback: loadImageCallback = (img) => {
     showScrollReminder();
     if (introContainer) {
@@ -15,19 +14,17 @@ export const intro = async () => {
       introContainer.classList.add('anim-fadein-long');
     }
   };
-  loadImage(introBGImg, introBGCallback, introBGCallback);
+  loadImage('../public/images/sunset.png', introBGCallback, introBGCallback);
 
   //preload placeholder image
-  const placeHolderImg = '../public/images/placeholder.png';
-  loadImage(placeHolderImg);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const placeHolderImg = loadImage('../public/images/placeholder.png');
 
   changeContentOpacityOnHeightShown();
 
   document.onscroll = () => {
     changeContentOpacityOnHeightShown();
     showScrollReminder();
-    console.log((document.querySelector('.intro') as HTMLElement).style.backgroundImage)
-    console.log(introContainer?.style.backgroundImage);
   };
 
   window.addEventListener('resize', () => {

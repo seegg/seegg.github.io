@@ -1,4 +1,4 @@
-import { createElementWithClasses, createNavItem } from "../util";
+import { createElementWithClasses, createNavItem, loadImage } from "../util";
 import { Project } from "../types";
 
 type InputState = 'entering' | 'leaving';
@@ -166,12 +166,8 @@ export const createProjectPlaceholder = () => {
 
 const createImgPlaceHolder = () => {
   const imageContainer = createElementWithClasses('div', 'placeholder-image', 'placeholder');
-  const triangle = createElementWithClasses('div', 'placeholder-triangle');
-  const triangleBig = createElementWithClasses('div', 'placeholder-triangle-big');
-  const triangleContainer = createElementWithClasses('div', 'triangle-container');
-  triangleContainer.appendChild(triangleBig);
-  triangleContainer.appendChild(triangle);
-  imageContainer.appendChild(triangleContainer);
+  const img = loadImage('../public/images/placeholder.png', (img) => { imageContainer.appendChild(img) });
+  img.classList.add('project-img');
 
   return imageContainer;
 };
