@@ -120,10 +120,10 @@ export const toggleNavBarFixedPosition = (state: 'fixed' | 'not-fixed') => {
 /**
  * add a callback to be called during navigation between tabs.
  * @param callback 
- * @param pos navigation lifecycle state the callback is to be called.
+ * @param position specify whether the callback is to be called before or after navigation.
  */
-export const addNavCallback = (callback: NavigationHook, pos: 'before' | 'after') => {
-  switch (pos) {
+export const addNavCallback = (callback: NavigationHook, position: 'before' | 'after') => {
+  switch (position) {
     case 'before':
       beforeNavCallbacks.push(callback);
       break;
@@ -138,9 +138,9 @@ export const addNavCallback = (callback: NavigationHook, pos: 'before' | 'after'
  * @param callback callback to be removed
  * @param pos 'before' or 'after'
  */
-export const removeNavCallback = (callback: NavigationHook, pos: 'before' | 'after') => {
+export const removeNavCallback = (callback: NavigationHook, position: 'before' | 'after') => {
   let target: NavigationHook[] | null = null;
-  switch (pos) {
+  switch (position) {
     case 'before':
       target = beforeNavCallbacks;
       break;

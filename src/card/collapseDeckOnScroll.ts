@@ -7,19 +7,14 @@ import {
   setDrawCardsInRange,
   stashCardsInRange,
   drawCardsInRange,
+  resetDeck
 } from './card-deck';
 
 const contentContainer = document.getElementById('content') as HTMLDivElement;
 const projectDisplay = document.querySelector('.projects-display') as HTMLDivElement;
-//css classes
-const closeCard = 'close-deck-partial';
-const navIconSelected = 'nav-icon-selected';
-const backgroundCard = 'background-card';
-const hide = 'close-deck-full';
-const moveY = 'moveY-40';
 const projectNavID = 'nav-projects';
 
-export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHeight = 450, cardScrollThreshold = 300) => {
+export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHeight = 450, cardScrollThreshold = 200) => {
   const currentIndex = { value: 0 }; //store as an object property to makesure all requests reflects latest value.
   const heightRatio = cardHeight / cardScrollThreshold;
   const autoQueue = new SyncAutoQueue<UpdateDeckFn>(); //queue responsible for scheduling card actions.
@@ -88,7 +83,7 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
           addCardsToQueue(autoQueue, currentIndex, scrollPos, 100, drawCardsInRange);
 
         } else {//use the leftover distance between cards to adjust current card height.
-          const heightOverlap = Math.max(scrollTopDist % cardScrollThreshold - 200, 0);
+          const heightOverlap = Math.max(scrollTopDist % cardScrollThreshold - 150, 0);
           if (heightOverlap > 0) {
             deck[currentIndex.value].style.height = cardHeight - heightOverlap * heightRatio + 'px';
           }
@@ -217,19 +212,6 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
   if (intro) {
     introResizeObserver.observe(intro);
     introIntersectObserver.observe(intro);
-  }
-
-  //reset the deck to original values
-  const resetDeck = (deck: HTMLElement[]) => {
-    deck.forEach(card => {
-      card.classList.remove(closeCard, hide, 'z-20', 'overlay-card-size');
-      card.querySelector('.project')?.classList.remove(backgroundCard, 'project-select');
-      card.querySelector('.nav-project')?.classList.remove(moveY, 'nav-project-moveY');
-    });
-
-    deck[0].parentElement?.querySelectorAll('.' + navIconSelected).forEach(icon => {
-      icon.classList.remove(navIconSelected);
-    })
   }
 };
 

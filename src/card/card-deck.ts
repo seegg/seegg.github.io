@@ -1,5 +1,15 @@
 import { sleep } from "../util";
 
+const cssCloseCardPartial = 'close-deck-partial';
+const cssNavIconSelected = 'nav-icon-selected';
+const cssBackgroundCard = 'background-card';
+const cssHide = 'hide';
+const cssMoveY = 'moveY-40';
+const cssFadeOut = 'anim-fadeout-deck';
+const cssOpenCard = 'anim-open-deck';
+const cssCloseCard = 'anim-close-deck';
+const cssCardClass = 'project-card';
+
 /**
  * Add css class to current selected project card to make its height smaller
  * and make the next card on the layout cover on top of it.
@@ -31,22 +41,22 @@ export const drawCard = (next: HTMLElement, current: HTMLElement) => {
  * Toggle the height of project card by adding and removing css classes.
  * @param card project card
  * @param state state of card's height
- * @param nav css selector for card navigation
+ * @param nav css class for card navigation
  * @param closeCard css class for closing card
  * @param moveY css class for moving nav icons on the y-axis.
  */
 const toggleCardHeightStatus = (
   card: HTMLElement, state: 'collapse' | 'expand',
-  nav = '.nav-project',
-  closeCard = 'close-deck-partial',
-  moveY = 'moveY-40'
+  nav = 'nav-project',
+  closeCard = cssCloseCardPartial,
+  moveY = cssMoveY
 ) => {
   try {
     //decide wether to add or remove css classes.
     const action = state === 'collapse' ? 'add' : state === 'expand' ? 'remove' : undefined;
     if (action === undefined) throw new Error('state can only be either collapse or expand');
     card.classList[action](closeCard);
-    card.querySelector(nav)?.classList[action](moveY);
+    card.querySelector('.' + nav)?.classList[action](moveY);
   } catch (err: unknown) {
     if (err instanceof Error) {
       console.error(err.message);
@@ -67,8 +77,8 @@ export const toggleBackgroundCard = (
   cards: HTMLElement[],
   currentIndex: number, action: 'add' | 'remove',
   cardSelector = '.project',
-  backgroundCard = 'background-card',
-  hide = 'close-deck-full'
+  backgroundCard = cssBackgroundCard,
+  hide = cssHide
 ) => {
   try {
     if (currentIndex < 1) return;
@@ -167,7 +177,7 @@ export const switchSelectedNavIcons = (targetCard: HTMLElement | null, currentCa
 const setSelectedNavIcons = (
   card: HTMLElement | null, selected: boolean,
   iconSelector = '.nav-icon',
-  cssSelected = 'nav-icon-selected',
+  cssSelected = cssNavIconSelected,
   cardSelected = 'current-card'
 ) => {
   if (card === null) return;
@@ -184,16 +194,16 @@ const setSelectedNavIcons = (
 export const closeDeck = async (
   container: HTMLElement,
   duration = 500,
-  cssFadeOut = 'anim-fadeout-deck',
-  cssOpenDeck = 'anim-open-deck',
-  cssCloseDeck = 'anim-close-deck',
-  cardSelector = '.project-card'
+  fadeOut = cssFadeOut,
+  openCard = cssOpenCard,
+  closeCard = cssCloseCard,
+  cardClass = cssCardClass
 ) => {
-  container.classList.add(cssFadeOut);
-  const deck = Array.from(container.querySelectorAll(cardSelector)) as HTMLElement[];
+  container.classList.add(fadeOut);
+  const deck = Array.from(container.querySelectorAll('.' + cardClass)) as HTMLElement[];
   deck?.forEach(card => {
-    card.classList.remove(cssOpenDeck);
-    card.classList.add(cssCloseDeck);
+    card.classList.remove(openCard);
+    card.classList.add(closeCard);
   });
   await sleep(duration);
 };
@@ -203,15 +213,43 @@ export const closeDeck = async (
  */
 export const openDeck = (
   container: HTMLElement,
-  cssFadeOut = 'anim-fadeout-deck',
-  cssOpenDeck = 'anim-open-deck',
-  cssCloseDeck = 'anim-close-deck',
-  cardSelector = '.project-card'
+  fadeOut = cssFadeOut,
+  openCard = cssOpenCard,
+  closeCard = cssCloseCard,
+  cardClass = cssCardClass
 ) => {
-  container.classList.remove(cssFadeOut);
-  const deck = Array.from(container.querySelectorAll(cardSelector)) as HTMLElement[];
+  container.classList.remove(fadeOut);
+  const deck = Array.from(container.querySelectorAll('.' + cardClass)) as HTMLElement[];
+  console.log(deck);
   deck.forEach(card => {
-    card.classList.add(cssOpenDeck);
-    card.classList.remove(cssCloseDeck);
+    card.classList.add(openCard);
+    card.classList.remove(closeCard);
   });
 };
+
+/**
+ * reset the cards back to starting state.
+ * @param deck 
+ */
+export const resetDeck = (
+  deck: HTMLElement[],
+  closeCard = cssCloseCardPartial,
+  hide = cssHide,
+  backgroundCard = cssBackgroundCard,
+  moveY = cssMoveY,
+  navIconSelected = cssNavIconSelected,
+  zindex20 = 'z-20',
+  overlaySize = 'overlay-card-size',
+  projectSelected = 'project-select',
+  moveNavYAxis = 'nav-project-moveY'
+) => {
+  deck.forEach(card => {
+    card.classList.remove(closeCard, hide, zindex20, overlaySize);
+    card.querySelector('.project')?.classList.remove(backgroundCard, projectSelected);
+    card.querySelector('.nav-project')?.classList.remove(moveY, moveNavYAxis);
+  });
+
+  deck[0].parentElement?.querySelectorAll('.' + navIconSelected).forEach(icon => {
+    icon.classList.remove(navIconSelected);
+  })
+}
