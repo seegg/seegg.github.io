@@ -475,7 +475,7 @@ ol {
   }
 
   100% {
-    right: 30px;
+    right: 32px;
     transform: rotate(180deg);
     border-radius: 0px;
   }
@@ -500,11 +500,11 @@ ol {
 
 .tab-nav::after {
   content: '';
-  right: -32px;
+  right: 0px;
   box-sizing: border-box;
-  border-radius: 15px;
-  height: 36px;
-  width: 36px;
+  border-radius: 10px;
+  height: 32px;
+  width: 32px;
   border: 2.5px solid transparent;
   transform: rotate(360deg);
   transition: all 0.5s;
@@ -518,7 +518,7 @@ ol {
   border-color: white;
   background-color: rgba(255, 255, 255, 1);
   transform: rotate(180deg);
-  right: 30px;
+  right: 32px;
   animation: spinning-box 0.5s linear;
   z-index: -1;
 }
