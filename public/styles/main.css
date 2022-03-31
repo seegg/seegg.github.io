@@ -528,7 +528,7 @@ ol {
 }
 
 .tab-nav:not(.tab-nav.selected):hover,
-:not(.tab-nav.selected):focus {
+.tab-nav:not(.tab-nav.selected):focus {
   color: black;
   /* background-color: lightgray; */
   outline: 2px solid white;
