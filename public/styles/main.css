@@ -54,7 +54,6 @@ a:visited {
   height: 200px;
   width: 100%;
   color: white;
-  /* background-image: url('../images/sunset.png'); */
   background-size: cover;
   background-position: bottom;
 }
@@ -363,8 +362,6 @@ main {
 
 }
 
-
-
 .placeholder-container {
   width: 310px;
 }
@@ -465,14 +462,14 @@ ol {
 
 @keyframes spinning-box {
   0% {
-    right: 96px;
+    right: 84px;
     transform: rotate(0deg);
-    border-radius: 15px;
+    border-radius: 10px;
   }
 
-  20% {
+  /* 20% {
     transform: rotate(0deg);
-  }
+  } */
 
   100% {
     right: 32px;
@@ -498,7 +495,7 @@ ol {
   z-index: 1;
 }
 
-.tab-nav::after {
+.tab-nav:not(.tab-nav.selected):after {
   content: '';
   right: 0px;
   box-sizing: border-box;
@@ -512,25 +509,29 @@ ol {
   z-index: -1;
 }
 
-.tab-nav:not(.tab-nav.selected):hover::after {
+.tab-nav:not(.tab-nav.selected):hover::after,
+:not(.tab-nav.selected):focus::after {
   position: absolute;
   border-radius: 0px;
   border-color: white;
   background-color: rgba(255, 255, 255, 1);
   transform: rotate(180deg);
   right: 32px;
-  animation: spinning-box 0.5s linear;
+  animation: spinning-box 0.3s linear;
   z-index: -1;
 }
 
 .tab-nav.selected {
   background-color: white;
   color: black;
+  transition: background-color 0.5s ease-in;
 }
 
-.tab-nav:not(.tab-nav.selected):hover {
+.tab-nav:not(.tab-nav.selected):hover,
+:not(.tab-nav.selected):focus {
   color: black;
   /* background-color: lightgray; */
+  outline: 2px solid white;
 }
 
 .tab-items {
