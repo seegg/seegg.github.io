@@ -7,5 +7,6 @@ export {
   navBar,
   removeNavCallback,
   setUpNavBar,
-  toggleNavBarFixedPosition
+  toggleNavBarFixedPosition,
+  removeAllNavCallbacks
 } from './nav';

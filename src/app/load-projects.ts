@@ -1,5 +1,5 @@
 import { createProjectCard, createProjectPlaceholder, collapseDeckOnScroll } from "../card";
-import { getProjects } from "../data";
+import { Project } from "../types";
 
 
 const projectsContainer = document.getElementById('projects');
@@ -20,13 +20,10 @@ const cssInvisible = 'invisible';
 /**
  * load all the projects for display.
  */
-export const loadProjects = async (widthThreshold = 570) => {
-
-  //fetch projects data
-  const projectsData = await getProjects('https://seegg.github.io/src/data/projects.json');
-  const projects = projectsData[document.body.id === 'demo' ? 'test-projects' : 'projects'];
+export const loadProjects = async (projects: Project[], widthThreshold = 570) => {
 
   if (projectsContainer && contentContainer) {
+    projectsContainer.replaceChildren();
     //Calculate initial size of project container.
     setprojectsContainerWidth(projects.length, fullCardWidth, partialCardWidth, maxWidth, minWidth);
 
@@ -38,14 +35,12 @@ export const loadProjects = async (widthThreshold = 570) => {
 
     //add self removing listener, if projects are not visible. don't play deck open animation
     const visibleProjectHeight = window.innerHeight - projectsContainer.getBoundingClientRect().top;
-
     if (visibleProjectHeight < visibleHeightThreshold) {
       document.addEventListener('scroll', function introDeckAnimation() {
-
         const currentVisibleProjectHeight = window.innerHeight - projectsContainer.getBoundingClientRect().top;
         if (currentVisibleProjectHeight >= visibleHeightThreshold) {
           (Array.from(projectsContainer.children) as HTMLElement[]).forEach(project => {
-            toggleIntroDeckAnimation(project);
+            toggleIntroDeckAnimation(project, false);
           });
           //remove this listener after animation has been triggered.
           document.removeEventListener('scroll', introDeckAnimation);
@@ -54,28 +49,30 @@ export const loadProjects = async (widthThreshold = 570) => {
     }
 
     //wait until all cards are loaded before adding the scrolling deck effect for small screens.
-    await Promise.allSettled(projects.map(project => {
+    const promiseResults = await Promise.allSettled(projects.map(project => {
       //create place holder project card and replace it when the acutal project loads.
       const placeHolder = createProjectPlaceholder();
       projectsContainer.appendChild(placeHolder);
 
-      return new Promise<HTMLDivElement>(resolve => {
+      return new Promise<HTMLElement>(resolve => {
         resolve(
-          ((): HTMLDivElement => {
+          ((): HTMLElement => {
             const projectCard = createProjectCard(project, contentContainer);
             if (visibleProjectHeight < visibleHeightThreshold) {
-              toggleIntroDeckAnimation(projectCard);
+              toggleIntroDeckAnimation(projectCard, true);
             }
-            return projectCard as HTMLDivElement;
+            return projectCard as HTMLElement;
           })()
         )
       }).then((card) => {
         placeHolder.replaceWith(card);
-        (card as HTMLDivElement).classList.add('anim-fadein');
+        (card as HTMLElement).classList.add('anim-fadein');
+        return card;
       }).catch(err => console.error(err));
     }));
 
-    const projectCards = Array.from(projectsContainer.querySelectorAll('.project-card')) as HTMLElement[];
+    const projectCards =
+      promiseResults.map(result => { if (result.status === 'fulfilled') return result.value }) as HTMLElement[];
 
     collapseDeckOnScroll(projectCards, widthThreshold);
 
@@ -89,11 +86,11 @@ export const loadProjects = async (widthThreshold = 570) => {
  * Helper function to toggle the css classes responsible for the initial 
  * card opening animation.
  */
-const toggleIntroDeckAnimation = (project: HTMLElement) => {
-  project.classList.toggle(cssIntroOnce);
+const toggleIntroDeckAnimation = (project: HTMLElement, isStart = true) => {
+  project.classList[isStart ? 'add' : 'remove'](cssIntroOnce);
   const nav = project.querySelector('.nav-project');
-  nav?.classList.toggle(cssInvisible);
-  nav?.classList.toggle(cssFadeInLong);
+  nav?.classList[isStart ? 'add' : 'remove'](cssInvisible);
+  nav?.classList[!isStart ? 'add' : 'remove'](cssFadeInLong);
 }
 
 /**

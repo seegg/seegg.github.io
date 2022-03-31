@@ -1,4 +1,4 @@
-import { addNavCallback, navBar } from "../app";
+import { addNavCallback, navBar, removeAllNavCallbacks } from "../app";
 import { setElementHeight, scrollToPosAndPause, SyncAutoQueue } from "../util";
 import { UpdateDeckFn, CardFn } from "../types";
 import {
@@ -13,6 +13,7 @@ import {
 const contentContainer = document.getElementById('content') as HTMLDivElement;
 const projectDisplay = document.querySelector('.projects-display') as HTMLDivElement;
 const projectNavID = 'nav-projects';
+let currentListener: (() => void) | null = null;
 
 export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHeight = 450, cardScrollThreshold = 200) => {
   const currentIndex = { value: 0 }; //store as an object property to makesure all requests reflects latest value.
@@ -33,7 +34,46 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
     window.scroll(0, 0);
   }
 
-  document.addEventListener('scroll', async () => {
+  //resize observer to set the scroll container height reset the cards.
+  const introResizeObserver = new ResizeObserver(entries => {
+    const { inlineSize } = entries[0].contentBoxSize[0];
+    if (inlineSize < maxWidth) {
+      projectDisplay.classList.add('attach-to-top');
+      window.scrollTo(0, 0);
+      setElementHeight(contentScrollContainer, window.innerHeight + (deck.length * cardScrollThreshold));
+      contentScrollContainer.classList.add('anim-fadein-long');
+      // resetDeck(deck);
+    } else {
+      contentScrollContainer.style.removeProperty('height');
+      contentScrollContainer.classList.remove('anim-fadein-long');
+      resetDeck(deck);
+    }
+  });
+
+  //remove selected css class from nav icons when intro element is 25% or more visible.
+  const introIntersectObserver = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting && currentIndex.value < deck.length - 1) {
+      switchSelectedNavIcons(null, deck[currentIndex.value]);
+    }
+  }, { rootMargin: '0px', threshold: 0.25 })
+  //add intro to resize and intersection observer.
+  const intro = document.getElementById('intro-container');
+  if (intro) {
+    introResizeObserver.observe(intro);
+    introIntersectObserver.observe(intro);
+  }
+
+  //clean up
+  if (currentListener) {
+    document.removeEventListener('scroll', currentListener);
+    removeAllNavCallbacks();
+    introIntersectObserver.disconnect();
+    introResizeObserver.disconnect();
+    currentListener = null;
+  }
+  if (deck.length <= 0) return;
+
+  const scrollListener = async () => {
     if (!contentScrollContainer) return;
     if (isInProjectsTab && window.innerWidth < maxWidth) {
       const { top: scrollContainerTop, bottom: scrollContainerBottom } = contentScrollContainer.getBoundingClientRect();
@@ -126,7 +166,10 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
         }
       }
     }
-  });
+  };
+
+  document.addEventListener('scroll', scrollListener);
+  currentListener = scrollListener;
 
   //add callback for navigating to and from projects tab.
   //navigating from projects tab
@@ -177,42 +220,13 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
   const updatePrevIndexAndScrollY = (index: number, scrollPos: number) => {
     prevSavedIndex = index;
     lastScrollYPos = scrollPos;
-  }
-
-  //resize observer to set the scroll container height reset the cards.
-  const introResizeObserver = new ResizeObserver(entries => {
-    const { inlineSize } = entries[0].contentBoxSize[0];
-    if (inlineSize < maxWidth) {
-      projectDisplay.classList.add('attach-to-top');
-      window.scrollTo(0, 0);
-      setElementHeight(contentScrollContainer, window.innerHeight + (deck.length * cardScrollThreshold));
-      contentScrollContainer.classList.add('anim-fadein-long');
-      // resetDeck(deck);
-    } else {
-      contentScrollContainer.style.removeProperty('height');
-      contentScrollContainer.classList.remove('anim-fadein-long');
-      resetDeck(deck);
-    }
-  });
+  };
 
   const handleScrollDirectionChange = () => {
     autoQueue.empty();
     scrollToPosAndPause(document.body, lastScrollYPos, 300);
     currentIndex.value = prevSavedIndex;
-  }
-
-  //remove selected css class from nav icons when intro element is 25% or more visible.
-  const introIntersectObserver = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting && currentIndex.value < deck.length - 1) {
-      switchSelectedNavIcons(null, deck[currentIndex.value]);
-    }
-  }, { rootMargin: '0px', threshold: 0.25 })
-  //add intro to resize and intersection observer.
-  const intro = document.getElementById('intro-container');
-  if (intro) {
-    introResizeObserver.observe(intro);
-    introIntersectObserver.observe(intro);
-  }
+  };
 };
 
 /**

@@ -222,7 +222,6 @@ export const openDeck = (
 ) => {
   container.classList.remove(fadeOut);
   const deck = Array.from(container.querySelectorAll('.' + cardClass)) as HTMLElement[];
-  console.log(deck);
   deck.forEach(card => {
     card.classList.add(openCard);
     card.classList.remove(closeCard);

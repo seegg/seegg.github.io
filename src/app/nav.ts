@@ -38,6 +38,7 @@ export const setUpNavBar = async (widthThreshold = 570) => {
   //navigation bar at the top
   navTabs.forEach(async (tab, index) => {
     tab.addEventListener('click', async () => {
+      console.log(beforeNavCallbacks.length);
       //clicking on currently selected tab
       if (tab.classList.contains(cssSelected)) return;
       latestInputIndex.current = index;
@@ -157,3 +158,8 @@ export const removeNavCallback = (callback: NavigationHook, position: 'before' |
 export const getCurrentTab = () => {
   return latestInputIndex.current;
 }
+
+export const removeAllNavCallbacks = () => {
+  beforeNavCallbacks.length = 0;
+  afternavCallbacks.length = 0;
+};
