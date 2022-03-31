@@ -1,9 +1,10 @@
 import { sleep } from "../util";
 
 const cssCloseCardPartial = 'close-deck-partial';
+// const cssCloseCardFull = 'close-deck-full';
 const cssNavIconSelected = 'nav-icon-selected';
 const cssBackgroundCard = 'background-card';
-const cssHide = 'hide';
+const cssHide = 'close-deck-full';
 const cssMoveY = 'moveY-40';
 const cssFadeOut = 'anim-fadeout-deck';
 const cssOpenCard = 'anim-open-deck';
@@ -87,6 +88,7 @@ export const toggleBackgroundCard = (
     }
     if (currentIndex >= 2) {
       cards[currentIndex - 2].classList[action](hide);
+      cards[currentIndex - 3]?.classList[action]('hide');
     }
   } catch (err) {
     console.error(err);

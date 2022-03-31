@@ -24,8 +24,7 @@ export const loadProjects = async (widthThreshold = 570) => {
 
   //fetch projects data
   const projectsData = await getProjects('https://seegg.github.io/src/data/projects.json');
-  // const projects = projectsData[document.body.id === 'demo' ? 'test-projects' : 'projects'];
-  const projects = projectsData[document.body.id === 'demo' ? 'test-projects' : 'projects'].filter(t => t.name !== 'Budget Tracker API');
+  const projects = projectsData[document.body.id === 'demo' ? 'test-projects' : 'projects'];
 
   if (projectsContainer && contentContainer) {
     //Calculate initial size of project container.

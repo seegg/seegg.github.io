@@ -122,16 +122,12 @@ const createProjectImage = (imgSrc: string | null) => {
   const placeHolder: HTMLDivElement = createImgPlaceHolder();
   if (imgSrc) {
     const wrapper = createElementWithClasses('div', 'project-img-container');
-    const projectImg = new Image();
-    projectImg.src = imgSrc;
-    projectImg.classList.add('project-img');
-    wrapper.appendChild(projectImg);
-
-    projectImg.onload = () => {
-      //replace placholder when image finish loading.
+    const image = loadImage(imgSrc, () => {
       placeHolder.parentElement?.replaceChild(wrapper, placeHolder);
-      projectImg.classList.add('anim-fadein-long');
-    }
+      image.classList.add('anim-fadein-long');
+    });
+    image.classList.add('project-img');
+    wrapper.appendChild(image);
   }
   return placeHolder;
 };
@@ -165,7 +161,7 @@ export const createProjectPlaceholder = () => {
 };
 
 const createImgPlaceHolder = () => {
-  const imageContainer = createElementWithClasses('div', 'placeholder-image', 'placeholder');
+  const imageContainer = createElementWithClasses('div', 'project-img-container');
   const img = loadImage('../public/images/placeholder.png', (img) => { imageContainer.appendChild(img) });
   img.classList.add('project-img');
 
