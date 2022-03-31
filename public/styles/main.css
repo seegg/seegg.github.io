@@ -649,8 +649,6 @@ ol{
     border: 1px solid black;
     outline: 2px solid white;
     background-color: black;
-    /* transition: all 0.25s ease-in-out, opacity 0.25s ease-in-out; */
-    /* margin-right: 10px; */
   }
 
   .z-20{
@@ -658,9 +656,8 @@ ol{
   }
 
   .nav-icon-partial:hover {
-    transform: scale(1.2);
-    border-radius: 50px;
-    box-shadow: 0px 0px 1px 1px black;  
+    transform: scale(1.1);
+    border-radius: 5px;
   }
 
   .intro-only-once{ width: 10px; }
