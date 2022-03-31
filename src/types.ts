@@ -10,7 +10,6 @@ export interface AllProjects {
   projects: Project[],
   'test-projects': Project[]
 }
-
 interface Rambling {
   title: string,
   text: string
@@ -25,3 +24,5 @@ export type NavigationHook = (tabs: HTMLElement[], fromTab: number, toTab: numbe
 export type UpdateDeckFn = (duration: number) => Promise<void>;
 
 export type CardFn = (deck: HTMLElement[], start: number, end: number, waitPerCard: number) => Promise<void>;
+
+export type loadImageCallback = ((img: HTMLImageElement, evt?: Event | string) => void) | null;

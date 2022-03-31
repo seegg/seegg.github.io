@@ -1,3 +1,4 @@
+import { loadImageCallback } from "../types";
 /**
  * Enable and disabled hover effects by adding and removing a class from parent container.
  * @param container HTMLElement parent node containing all the elements that is to be checked.
@@ -121,4 +122,20 @@ export const scrollToPosAndPause = (element: HTMLElement, yCoord: number, pauseD
   setTimeout(() => {
     element.style.overflowY = 'auto';
   }, pauseDuration);
+}
+
+/**
+ * helper function for preloading images
+ */
+export const loadImage = (src: string, onLoadCallback?: loadImageCallback, onErrorCallback?: loadImageCallback) => {
+  const image = new Image();
+  image.src = src;
+  if (onLoadCallback) {
+    image.onload = (evt) => { onLoadCallback(image, evt) };
+  }
+  if (onErrorCallback) {
+    image.onerror = (evt) => { onErrorCallback(image, evt) };
+  }
+
+  return image;
 }

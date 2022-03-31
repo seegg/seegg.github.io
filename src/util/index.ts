@@ -8,5 +8,6 @@ export {
   scrollToPosAndPause,
   scrollYViewport,
   setElementHeight,
-  sleep
+  sleep,
+  loadImage
 } from './util';

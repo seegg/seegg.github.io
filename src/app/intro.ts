@@ -1,24 +1,33 @@
+import { loadImage } from "../util";
+import { loadImageCallback } from "../types";
+
 const content = document.getElementById('content');
 const introContainer = document.getElementById('intro-container');
 
-
 export const intro = async () => {
 
-  //add the scroll reminder after bg image has loaded.
+  //set background and scroll remainder after the iamge either loads or fails.
   const introBGImg = '../public/images/sunset.png';
-  const image = new Image();
-  image.src = introBGImg;
-  image.onload = () => {
+  const introBGCallback: loadImageCallback = (img) => {
     showScrollReminder();
-    introContainer?.classList.add('anim-fadein-long');
+    if (introContainer) {
+      introContainer.style.backgroundImage = `url(${img.src})`;
+      introContainer.classList.add('anim-fadein-long');
+    }
   };
+  loadImage(introBGImg, introBGCallback, introBGCallback);
+
+  //preload placeholder image
+  const placeHolderImg = '../public/images/placeholder.png';
+  loadImage(placeHolderImg);
 
   changeContentOpacityOnHeightShown();
 
-  //call the resize image function in scroll and resize events.
   document.onscroll = () => {
     changeContentOpacityOnHeightShown();
     showScrollReminder();
+    console.log((document.querySelector('.intro') as HTMLElement).style.backgroundImage)
+    console.log(introContainer?.style.backgroundImage);
   };
 
   window.addEventListener('resize', () => {
