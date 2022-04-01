@@ -9,7 +9,6 @@ module.exports = {
     path: path.join(__dirname, 'public'),
     filename: 'main.bundle.js'
   },
-  watch: true,
   mode: 'development',
   module: {
     rules: [

@@ -1,5 +1,6 @@
 import { NavigationHook } from "../types";
 import { openDeck, closeDeck } from '../card'
+import { SyncAutoQueue } from "../util";
 
 
 const navTabs = Array.from(document.getElementsByClassName('tab-nav')) as HTMLElement[];
@@ -10,6 +11,9 @@ export const navBar = document.getElementById('tab-nav-bar');
 const navBarParentElement = navBar?.parentElement as HTMLElement;
 const navBarFiller = document.getElementById('nav-filler');
 const fixedNavBar = 'tab-nav-fixed';
+
+const navigationQueue = new SyncAutoQueue<() => void>(); //queue use to schedule navigating between tabs.
+const navigationRoutes = new Map<string, () => void>();
 
 //css classes
 const cssSelected = 'selected';
@@ -33,12 +37,25 @@ export const setUpNavBar = async (widthThreshold = 570) => {
     } else {
       toggleNavBarFixedPosition('not-fixed');
     }
-  })
+  });
+
+  navigationRoutes.set('#projects', () => {
+    navigationQueue.empty();
+    navigationQueue.add(async () => {
+      toggleTab('projects-wrapper', contentTabs);
+    });
+  });
+
+  navigationRoutes.set('#blog', () => {
+    navigationQueue.empty();
+    navigationQueue.add(async () => {
+      toggleTab('about', contentTabs);
+    });
+  });
 
   //navigation bar at the top
   navTabs.forEach(async (tab, index) => {
     tab.addEventListener('click', async () => {
-      console.log(beforeNavCallbacks.length);
       //clicking on currently selected tab
       if (tab.classList.contains(cssSelected)) return;
       latestInputIndex.current = index;
@@ -80,6 +97,14 @@ export const setUpNavBar = async (widthThreshold = 570) => {
       await toggleContent(index, contentTabs);
       afternavCallbacks.forEach(cb => cb(navTabs, currentSelectedTab, index));
 
+    });
+
+    window.addEventListener('hashchange', () => {
+      const hash = location.hash;
+      const navFunction = navigationRoutes.get(hash);
+      if (typeof navFunction === 'function') {
+        navFunction();
+      }
     })
   });
 
@@ -101,6 +126,18 @@ export const setUpNavBar = async (widthThreshold = 570) => {
   };
 
 };
+
+const toggleTab = (tabID: string, tabs: HTMLElement[]) => {
+  tabs.forEach(tab => {
+    if (tab.id === tabID) {
+      tab.classList.remove(cssHide);
+      tab.classList.add(cssFadeIn);
+    } else {
+      tab.classList.add(cssHide);
+      tab.classList.remove(cssFadeIn);
+    }
+  })
+}
 
 /**
  * toggle the fixed state of the navigation bar

@@ -56,6 +56,7 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
       switchSelectedNavIcons(null, deck[currentIndex.value]);
     }
   }, { rootMargin: '0px', threshold: 0.25 })
+
   //add intro to resize and intersection observer.
   const intro = document.getElementById('intro-container');
   if (intro) {
