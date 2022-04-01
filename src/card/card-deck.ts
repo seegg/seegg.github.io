@@ -194,13 +194,15 @@ const setSelectedNavIcons = (
  * close deck transistion
  */
 export const closeDeck = async (
-  container: HTMLElement,
+  container: HTMLElement | null,
   duration = 500,
   fadeOut = cssFadeOut,
   openCard = cssOpenCard,
   closeCard = cssCloseCard,
   cardClass = cssCardClass
 ) => {
+  if (!container) return;
+  console.log('close deck');
   container.classList.add(fadeOut);
   const deck = Array.from(container.querySelectorAll('.' + cardClass)) as HTMLElement[];
   deck?.forEach(card => {
@@ -214,12 +216,14 @@ export const closeDeck = async (
  * open deck transition
  */
 export const openDeck = (
-  container: HTMLElement,
+  container: HTMLElement | null,
   fadeOut = cssFadeOut,
   openCard = cssOpenCard,
   closeCard = cssCloseCard,
   cardClass = cssCardClass
 ) => {
+  if (!container) return;
+  console.log('open dekc');
   container.classList.remove(fadeOut);
   const deck = Array.from(container.querySelectorAll('.' + cardClass)) as HTMLElement[];
   deck.forEach(card => {
@@ -245,7 +249,7 @@ export const resetDeck = (
   moveNavYAxis = 'nav-project-moveY'
 ) => {
   deck.forEach(card => {
-    card.classList.remove(closeCard, hide, zindex20, overlaySize);
+    card.classList.remove(closeCard, hide, zindex20, overlaySize, cssOpenCard, cssCloseCard, 'hide');
     card.querySelector('.project')?.classList.remove(backgroundCard, projectSelected);
     card.querySelector('.nav-project')?.classList.remove(moveY, moveNavYAxis);
   });

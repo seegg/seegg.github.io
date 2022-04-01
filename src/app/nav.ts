@@ -1,4 +1,4 @@
-import { NavigationHook } from "../types";
+import { NavigationCallback } from "../types";
 import { openDeck, closeDeck } from '../card'
 import { SyncAutoQueue } from "../util";
 
@@ -19,12 +19,14 @@ const navigationRoutes = new Map<string, () => void>();
 const cssSelected = 'selected';
 const cssHide = 'hide';
 const cssFadeIn = 'anim-fadein';
-const beforeNavCallbacks: NavigationHook[] = [];
-const afternavCallbacks: NavigationHook[] = [];
+const beforeNavCallbacks: NavigationCallback[] = [];
+const afternavCallbacks: NavigationCallback[] = [];
 
 //save the value as object property to make sure it's up to date and not just a snapshot.
 const latestInputIndex: { current: number } = { current: 0 };
 
+let currentHash = '#projects';
+let prevHash = '#projects';
 let isNavBarFixed = false;
 
 
@@ -39,94 +41,92 @@ export const setUpNavBar = async (widthThreshold = 570) => {
     }
   });
 
-  navigationRoutes.set('#projects', () => {
-    navigationQueue.empty();
-    navigationQueue.add(async () => {
-      toggleTab('projects-wrapper', contentTabs);
-    });
-  });
 
-  navigationRoutes.set('#blog', () => {
-    navigationQueue.empty();
-    navigationQueue.add(async () => {
-      toggleTab('about', contentTabs);
-    });
-  });
+  //registering routes.
+  addRoute('#projects', 'projects-wrapper', navTabs[0],
+    () => { if (window.innerWidth >= widthThreshold) openDeck(document.getElementById('projects-wrapper')); });
 
-  //navigation bar at the top
-  navTabs.forEach(async (tab, index) => {
-    tab.addEventListener('click', async () => {
-      //clicking on currently selected tab
-      if (tab.classList.contains(cssSelected)) return;
-      latestInputIndex.current = index;
-      //save a reference to the current selected tab before it's changed.
-      const currentSelectedTab = navTabs.findIndex(tab => tab.classList.contains(cssSelected));
-
-      //callbacks to be called at the start of navigation.
-      beforeNavCallbacks.forEach(cb => cb(navTabs, currentSelectedTab, index));
-
-      tab.classList.add(cssSelected);
-
-      navTabs.forEach((otherTabs, index2) => {
-        if (index2 !== index) {
-          otherTabs.classList.remove(cssSelected);
-        }
-      })
-
-      // open and close project cards animation. only if screen width is above threshold.
-      // decide what to do base on if index equals latestInputIndex to make sure corrent content is
-      // rendered.
-      if (window.innerWidth >= widthThreshold) {
-        let deckClosing = false;
-        if (navTabs[currentSelectedTab].id === 'nav-projects') {
-          deckClosing = true;
-          await closeDeck(contentTabs[0]);
-        }
-
-        if (index === 0) {
-          openDeck(contentTabs[0]);
-        }
-
-        //changing away from project tab and then back quickly.
-        if (deckClosing && latestInputIndex.current === 0) return;
-        //clicking multiple different tabs during  deck closing transition.
-        if (index !== latestInputIndex.current) return;
-
+  addRoute('#blog', 'about', navTabs[1],
+    async () => {
+      if (currentHash === '#projects' && window.innerWidth >= widthThreshold) {
+        await closeDeck(document.getElementById('projects-wrapper'));
       }
-      //if everything matches up, render the selected tab.
-      await toggleContent(index, contentTabs);
-      afternavCallbacks.forEach(cb => cb(navTabs, currentSelectedTab, index));
+    }
+  );
 
-    });
-
-    window.addEventListener('hashchange', () => {
-      const hash = location.hash;
-      const navFunction = navigationRoutes.get(hash);
-      if (typeof navFunction === 'function') {
-        navFunction();
+  addRoute('#contacts', 'contacts', navTabs[2],
+    async () => {
+      if (currentHash === '#projects' && window.innerWidth >= widthThreshold) {
+        await closeDeck(document.getElementById('projects-wrapper'));
       }
-    })
+    }
+  );
+
+  if (location.hash !== currentHash) {
+    const route = navigationRoutes.get(location.hash);
+    if (typeof route === 'function') route();
+  }
+
+  window.addEventListener('hashchange', () => {
+    const hash = location.hash;
+    if (hash === prevHash) return;
+    const navFunction = navigationRoutes.get(hash);
+    if (typeof navFunction === 'function') {
+      navFunction();
+    }
   });
-
-  /**
-   * Toggle seletect tab to visible and hide all others.
-   * @param index index of the tab
-   * @param tabs tabs corrensponding to content being shown.
-   */
-  const toggleContent = async (index: number, tabs: HTMLElement[]) => {
-    await tabs.forEach(async (tab, idx) => {
-      if (index === idx) {
-        tab.classList.remove(cssHide);
-        tab.classList.add(cssFadeIn);
-      } else {
-        tab.classList.add(cssHide);
-        tab.classList.remove(cssFadeIn);
-      }
-    })
-  };
-
 };
 
+
+/**
+ * Wrapper function for adding hash route entries
+ */
+const addRoute = (hash: string, contentTabID: string, navTab: HTMLElement, before?: (() => void) | null, after?: (() => void) | null) => {
+  navigationRoutes.set(hash, () => {
+    //trigger callbacks that are to be ran at the start of navigation.
+    beforeNavCallbacks.forEach(callback => { callback(prevHash, hash) });
+    //set the seleted tab to the tab associated with the path.
+    setSelectedTab(navTab);
+    prevHash = location.hash;
+    addItemToNavigationQueue(contentTabID,
+      async () => {
+        if (before) await before();
+      },
+      async () => {
+        //trigger callbacks for end of navigation.
+        afternavCallbacks.forEach(callback => { callback(currentHash, hash) });
+        currentHash = hash;
+        if (after) await after();
+      });
+  });
+}
+
+/**
+ * Helper function for adding items to the navigation queue. 
+ * @param before optional callback for before navigation.
+ * @param after optional callback for after navigation.
+ */
+const addItemToNavigationQueue = (tabID: string, before?: (() => void) | null, after?: (() => void) | null) => {
+  navigationQueue.empty();
+  navigationQueue.add(async () => {
+    if (before) await before();
+    toggleTab(tabID, contentTabs);
+    if (after) await after();
+  })
+}
+
+/**
+   * Change the target tab to be the selected tab.
+   */
+const setSelectedTab = (tab: HTMLElement, selected = cssSelected, navItemsContainer = navBar) => {
+  if (tab.classList.contains(cssSelected)) return;
+  navItemsContainer?.querySelector('.' + cssSelected)?.classList.remove(selected);
+  tab.classList.add(selected);
+}
+
+/**
+ * Toggle which tab gets displayed.
+ */
 const toggleTab = (tabID: string, tabs: HTMLElement[]) => {
   tabs.forEach(tab => {
     if (tab.id === tabID) {
@@ -157,10 +157,11 @@ export const toggleNavBarFixedPosition = (state: 'fixed' | 'not-fixed') => {
 
 /**
  * add a callback to be called during navigation between tabs.
+ * 'before' callbacks are not guranteed to complete.
  * @param callback 
  * @param position specify whether the callback is to be called before or after navigation.
  */
-export const addNavCallback = (callback: NavigationHook, position: 'before' | 'after') => {
+export const addNavCallback = (callback: NavigationCallback, position: 'before' | 'after') => {
   switch (position) {
     case 'before':
       beforeNavCallbacks.push(callback);
@@ -176,8 +177,8 @@ export const addNavCallback = (callback: NavigationHook, position: 'before' | 'a
  * @param callback callback to be removed
  * @param pos 'before' or 'after'
  */
-export const removeNavCallback = (callback: NavigationHook, position: 'before' | 'after') => {
-  let target: NavigationHook[] | null = null;
+export const removeNavCallback = (callback: NavigationCallback, position: 'before' | 'after') => {
+  let target: NavigationCallback[] | null = null;
   switch (position) {
     case 'before':
       target = beforeNavCallbacks;

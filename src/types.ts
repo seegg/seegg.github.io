@@ -21,6 +21,8 @@ export interface ReflectionsBlog {
 
 export type NavigationHook = (tabs: HTMLElement[], fromTab: number, toTab: number) => void;
 
+export type NavigationCallback = (from: string, to: string) => void;
+
 export type UpdateDeckFn = (duration: number) => Promise<void>;
 
 export type CardFn = (deck: HTMLElement[], start: number, end: number, waitPerCard: number) => Promise<void>;
