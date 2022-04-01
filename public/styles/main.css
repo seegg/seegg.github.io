@@ -135,7 +135,7 @@ main {
   flex-wrap: wrap;
   display: flex;
   flex-direction: column;
-  /* transition: all 0.5s; */
+  transition: all 0.5s;
   animation: fade-in 0.5s linear 0s;
 }
 
@@ -467,10 +467,6 @@ ol {
     border-radius: 10px;
   }
 
-  /* 20% {
-    transform: rotate(0deg);
-  } */
-
   100% {
     right: 32px;
     transform: rotate(180deg);
@@ -513,7 +509,7 @@ ol {
 :not(.tab-nav.selected):focus::after {
   position: absolute;
   border-radius: 0px;
-  border-color: white;
+  /* border-color: white; */
   background-color: rgba(255, 255, 255, 1);
   transform: rotate(180deg);
   right: 32px;
