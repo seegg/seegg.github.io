@@ -202,7 +202,6 @@ export const closeDeck = async (
   cardClass = cssCardClass
 ) => {
   if (!container) return;
-  console.log('close deck');
   container.classList.add(fadeOut);
   const deck = Array.from(container.querySelectorAll('.' + cardClass)) as HTMLElement[];
   deck?.forEach(card => {
@@ -223,7 +222,6 @@ export const openDeck = (
   cardClass = cssCardClass
 ) => {
   if (!container) return;
-  console.log('open dekc');
   container.classList.remove(fadeOut);
   const deck = Array.from(container.querySelectorAll('.' + cardClass)) as HTMLElement[];
   deck.forEach(card => {

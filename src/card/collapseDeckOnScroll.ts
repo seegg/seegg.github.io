@@ -43,10 +43,11 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
       setElementHeight(contentScrollContainer, window.innerHeight + (deck.length * cardScrollThreshold));
       contentScrollContainer.classList.add('anim-fadein-long');
       resetDeck(deck);
+      console.log('reset');
     } else {
       contentScrollContainer.style.removeProperty('height');
       contentScrollContainer.classList.remove('anim-fadein-long');
-      resetDeck(deck);
+      // resetDeck(deck);
     }
   });
 
