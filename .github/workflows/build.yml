@@ -15,6 +15,6 @@ jobs:
       - name: Build project
         run: npm run build
       - name: Track main.bundle.js
-        run: git add --force public/main.bundle.js
+        run: test -e public/main.bundle.js && echo exists || echo not found
       - name: Push
         run: git push origin main
