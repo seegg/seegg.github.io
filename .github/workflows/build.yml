@@ -14,9 +14,11 @@ jobs:
         run: npm install
       - name: Build project
         run: npm run build
-      - name: Track main.bundle.js
-        run: git add -f public/main.bundle.js
-      - name: commit changes
-        run: git commit -m 'add main.bundle.js through github actions'
+      - name: track main.bundle.js and commit
+        run: |
+          git add -f public/main.bundle.js   
+          git config --local user.email "$(git log --format='%ae' HEAD^!)"
+          git config --local user.name "$(git log --format='%an' HEAD^!)"
+          git commit -m 'add main.bundle.js through actions'
       - name: Push
         run: git push origin main
