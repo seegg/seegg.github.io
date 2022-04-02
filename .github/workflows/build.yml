@@ -15,6 +15,8 @@ jobs:
       - name: Build project
         run: npm run build
       - name: Track main.bundle.js
-        run: test -e public/main.bundle.js && echo exists || echo not found
+        run: git add -f public/main.bundle.js
+      - name: commit changes
+        run: git commit -m 'add main.bundle.js through github actions'
       - name: Push
         run: git push origin main
