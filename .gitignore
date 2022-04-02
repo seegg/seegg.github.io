@@ -1,4 +1,4 @@
 node_modules
-main.bundle.js
+**/*.bundle.js
 **/bundle.js.*
 **/*.bundle.js.*
