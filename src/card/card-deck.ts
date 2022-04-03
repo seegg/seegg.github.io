@@ -206,6 +206,7 @@ export const closeDeck = async (
   deck?.forEach(card => {
     card.classList.add(closeCard);
   });
+  console.log('close deck');
   await sleep(duration);
 };
 
@@ -224,6 +225,7 @@ export const openDeck = (
   deck.forEach(card => {
     card.classList.remove(closeCard);
   });
+  console.log('open deck');
 };
 
 /**
@@ -243,7 +245,7 @@ export const resetDeck = (
   moveNavYAxis = 'nav-project-moveY'
 ) => {
   deck.forEach(card => {
-    card.classList.remove(closeCard, hide, zindex20, overlaySize, cssOpenCard, cssCloseCard, 'hide');
+    card.classList.remove(closeCard, hide, zindex20, overlaySize, 'hide');
     card.querySelector('.project')?.classList.remove(backgroundCard, projectSelected);
     card.querySelector('.nav-project')?.classList.remove(moveY, moveNavYAxis);
   });

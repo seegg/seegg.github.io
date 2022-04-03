@@ -69,7 +69,7 @@ export const setUpNavBar = async (widthThreshold = 570) => {
 
   addRoute(contact, 'contacts', contentTabs, navTabs[2],);
 
-  //check hash value at start
+  //check hash value at start, navigate to default route if hash is empty or if it doesn't match any register routes.
   if (location.hash !== '' && navigationRoutes.has(location.hash)) {
     navigateToHashRoute(location.hash);
   } else {

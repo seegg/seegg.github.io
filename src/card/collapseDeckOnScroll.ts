@@ -23,7 +23,7 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
   const contentScrollContainer = document.querySelector('.projects-scroll') as HTMLElement;
   let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === projectNavID : true;
   let isDisplayFixed = false; //boolean flag to keep track whether project container is fixed to minimise calculations.
-  let lastScrollYPos = window.scrollY;
+  let lastScrollYPos = 0;
   let prevSavedIndex = 0;
   let isFromTop = true;
   let prevTime = 0;
@@ -43,7 +43,6 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
       setElementHeight(contentScrollContainer, window.innerHeight + (deck.length * cardScrollThreshold));
       contentScrollContainer.classList.add('anim-fadein-long');
       resetDeck(deck);
-      console.log('reset');
     } else {
       contentScrollContainer.style.removeProperty('height');
       contentScrollContainer.classList.remove('anim-fadein-long');

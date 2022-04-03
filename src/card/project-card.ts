@@ -12,7 +12,7 @@ type InputType = 'touch' | 'mouse';
 export const createProjectCard =
   (project: Project, contentContainer: HTMLElement, focusWidth = 570): HTMLElement => {
     //project container 
-    const projectContainer = createElementWithClasses('section', 'project-card', 'anim-open-deck');
+    const projectContainer = createElementWithClasses('section', 'project-card');
     projectContainer.tabIndex = -1;
 
     //link to repo with github logo
