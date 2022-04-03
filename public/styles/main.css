@@ -13,6 +13,7 @@
   --card-border-radius: 5px;
   --card-height: 450px;
   --card-bot-margin: 100px;
+  --text-color: hsl(0, 0%, 100%);
 }
 
 *,
@@ -53,7 +54,7 @@ a:visited {
   align-items: center;
   height: 200px;
   width: 100%;
-  color: white;
+  color: var(--text-color);
   background-size: cover;
   background-position: bottom;
 }
@@ -74,6 +75,10 @@ a:visited {
   }
 }
 
+.default-text {
+  color: var(--text-color);
+  font-size: 32px;
+}
 
 main {
   width: 100%;
@@ -221,7 +226,7 @@ main {
   display: flex;
   width: 100%;
   font-size: 1.2rem;
-  color: white;
+  color: var(--text-color);
   margin-top: 2px;
   margin-bottom: 2px;
 }

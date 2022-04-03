@@ -26,7 +26,7 @@ const afternavCallbacks: NavigationCallback[] = [];
 const latestInputIndex: { current: number } = { current: 0 };
 
 //hash values for routes
-export const [project, blog, contact] = ['#project', '#blog', '#contact'];
+export const [project, blog, contact, fallback] = ['#project', '#blog', '#contact', '#fallback'];
 
 let currentHash = project;
 let prevHash = project;
@@ -43,14 +43,14 @@ export const setUpNavBar = async (widthThreshold = 570) => {
       toggleNavBarFixedPosition('not-fixed');
     }
   });
+
   //handle route change when hash changes
   window.addEventListener('hashchange', () => {
     const hash = location.hash;
-    if (hash === currentHash) return;
     navigateToHashRoute(hash);
   });
 
-  //register routes.
+  //registering routes.
 
   //add a self removing callback that plays the leaving transition when navigating away from projects.
   addRoute(project, 'projects-wrapper', contentTabs, navTabs[0],
@@ -70,33 +70,36 @@ export const setUpNavBar = async (widthThreshold = 570) => {
 
   addRoute(contact, 'contacts', contentTabs, navTabs[2],);
 
+  addRoute(fallback, 'not-found', contentTabs, null);
+
   //check hash value at start, navigate to default route if hash is empty or if it doesn't match any register routes.
   if (location.hash !== '' && navigationRoutes.has(location.hash)) {
     navigateToHashRoute(location.hash);
   } else {
-    navigateToHashRoute(currentHash);
+    // navigateToHashRoute(currentHash);
+    location.hash = currentHash;
   }
 
 };
 
 const navigateToHashRoute = (hash: string, storedHashRoutes = navigationRoutes) => {
-  const route = storedHashRoutes.get(hash);
+  const route = storedHashRoutes.get(hash) || storedHashRoutes.get(fallback);
   if (typeof route === 'function') {
     route();
   }
-}
+};
 
 /**
  * Wrapper function for adding hash route entries
  */
 const addRoute =
-  (hash: string, contentTabID: string, contentTabs: HTMLElement[], navTab: HTMLElement, before?: (() => void) | null, after?: (() => void) | null) => {
+  (hash: string, contentTabID: string, contentTabs: HTMLElement[], navTab?: HTMLElement | null, before?: (() => void) | null, after?: (() => void) | null) => {
     navigationRoutes.set(hash, () => {
+      //set the tab associated with the path to be the selected tab.
+      setSelectedTab(navTab || null);
+      prevHash = currentHash;
       //trigger callbacks that are to be ran at the start of navigation.
       beforeNavCallbacks.forEach(callback => { callback(prevHash, hash) });
-      //set the tab associated with the path to be the selected tab.
-      setSelectedTab(navTab);
-      prevHash = currentHash;
       addItemToNavigationQueue(
         //navigate to selected content.
         () => { toggleTab(contentTabID, contentTabs) },
@@ -111,7 +114,7 @@ const addRoute =
           if (after) await after();
         });
     });
-  }
+  };
 
 /**
  * Helper function for adding items to the navigation queue. 
@@ -125,16 +128,16 @@ const addItemToNavigationQueue = (item: () => void, before?: (() => void) | null
     await item();
     if (after) await after();
   })
-}
+};
 
 /**
    * Change the target tab to be the selected tab.
    */
-const setSelectedTab = (tab: HTMLElement, selected = cssSelected, navItemsContainer = navBar) => {
-  if (tab.classList.contains(cssSelected)) return;
+const setSelectedTab = (tab: HTMLElement | null, selected = cssSelected, navItemsContainer = navBar) => {
+  if (tab?.classList.contains(cssSelected)) return;
   navItemsContainer?.querySelector('.' + cssSelected)?.classList.remove(selected);
-  tab.classList.add(selected);
-}
+  tab?.classList.add(selected);
+};
 
 /**
  * Toggle which tab gets displayed.
@@ -149,7 +152,7 @@ const toggleTab = (tabID: string, tabs: HTMLElement[]) => {
       tab.classList.remove(cssFadeIn);
     }
   })
-}
+};
 
 /**
  * toggle the fixed state of the navigation bar
@@ -182,7 +185,7 @@ export const addNavCallback = (callback: NavigationCallback, position: 'before' 
       afternavCallbacks.push(callback);
       break;
   }
-}
+};
 
 /**
  * remove a tab navigation callback
@@ -203,11 +206,7 @@ export const removeNavCallback = (callback: NavigationCallback, position: 'befor
     const indexToBeDeleted = target.findIndex(cb => cb === callback);
     if (indexToBeDeleted !== -1) target.splice(indexToBeDeleted, 1);
   }
-}
-
-export const getCurrentTab = () => {
-  return latestInputIndex.current;
-}
+};
 
 export const removeAllNavCallbacks = () => {
   beforeNavCallbacks.length = 0;
