@@ -54,8 +54,9 @@ export const setUpNavBar = async (widthThreshold = 570) => {
 
   //add a self removing callback that plays the leaving transition when navigating away from projects.
   addRoute(project, 'projects-wrapper', contentTabs, navTabs[0],
-    () => { if (window.innerWidth >= widthThreshold) openDeck(document.getElementById('projects-wrapper')); },
-    () => {
+    null,
+    async () => {
+      await openDeck(document.getElementById('projects-wrapper'));
       addNavCallback(function playLeaveTransition() {
         if (window.innerWidth >= widthThreshold) {
           addItemToNavigationQueue(async () => { await closeDeck(document.getElementById('projects-wrapper')); });
@@ -81,7 +82,6 @@ export const setUpNavBar = async (widthThreshold = 570) => {
 const navigateToHashRoute = (hash: string, storedHashRoutes = navigationRoutes) => {
   const route = storedHashRoutes.get(hash);
   if (typeof route === 'function') {
-    console.log(prevHash);
     route();
   }
 }
@@ -119,7 +119,7 @@ const addRoute =
 const addItemToNavigationQueue = (item: () => void, before?: (() => void) | null, after?: (() => void) | null) => {
   navigationQueue.empty();
   navigationQueue.add(async () => {
-    if (before) await before();
+    if (before) { await before(); }
     await item();
     if (after) await after();
   })

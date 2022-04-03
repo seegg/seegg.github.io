@@ -21,13 +21,13 @@
   <title>Hi, I am Yuan.</title>
   <link rel="stylesheet" href="./public/styles/main.css" type="text/css" />
   <script src="./public/main.bundle.js" defer></script>
+  <link rel="shortcut icon" href="public/images/icon.png" type="image/x-icon">
 </head>
 
 <body id="demo">
   <div class="scroll-wrapper">
-    <section class="anim-fadein">
+    <section>
       <div class="intro" id="intro-container">
-        <p>Test page to see large number of cards in action.</p>
       </div>
     </section>
 
@@ -38,15 +38,29 @@
 
         <nav class="tab-nav-bar" id="tab-nav-bar">
           <ol class="tab-items">
-            <li class="tab-nav selected" id="nav-projects"><span class="material-icons">code</span></li>
-            <li class="tab-nav" id="nav-about"><span class="material-icons">person</span></li>
-            <li class="tab-nav" id="nav-contact"><span class="material-icons">email</span></li>
-            <li class="tab-nav"> <a href="https://seegg.github.io"> <span class="material-icons">home</span></a></li>
+            <li class="tab-nav" id="nav-projects" tabindex="1">
+              <a href="#project">
+                <span class="material-icons">code</span>
+              </a>
+            </li>
+            <li class="tab-nav" id="nav-about" tabindex="2">
+              <a href="#blog">
+                <span class="material-icons">person</span>
+              </a>
+            </li>
+            <li class="tab-nav" id="nav-contact" tabindex="3">
+              <a href="#contact">
+                <span class="material-icons">email</span>
+              </a>
+            </li>
           </ol>
         </nav>
+        <!-- <div>
+          <input id="search-input" type="text" placeholder="Search"><button id="submit-search">Go</button>
+        </div> -->
         <div id="nav-filler" class="nav-filler"></div>
 
-        <div class="projects-scroll tab">
+        <div class="projects-scroll tab" id="projects-wrapper">
           <div class="projects-display attach-to-top attach-to-bot mt-50">
             <section id="projects" class="projects"></section>
           </div>
@@ -54,7 +68,7 @@
 
         <section id="about" class="about tab hide mt-50">
           <h3>Hi, I am Yuan.</h3>
-          <p>I enjoy learning and making stuff with code.</p>
+          <p>I like to learn new tech and code things.</p>
         </section>
 
         <section id="contacts" class="tab contacts hide mt-50">
@@ -97,7 +111,6 @@
     <div id="scroll-reminder" class="hide">
       <div class="scroll-triangle"></div>
     </div>
-
   </div>
 </body>
 

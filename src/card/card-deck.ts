@@ -8,7 +8,7 @@ const cssHide = 'close-deck-full';
 const cssMoveY = 'moveY-40';
 const cssFadeOut = 'anim-fadeout-deck';
 const cssOpenCard = 'anim-open-deck';
-const cssCloseCard = 'anim-close-deck';
+const cssCloseCard = 'card-closed';
 const cssCardClass = 'project-card';
 
 /**
@@ -201,10 +201,12 @@ export const closeDeck = async (
   cardClass = cssCardClass
 ) => {
   if (!container) return;
+  container.offsetHeight;
   container.classList.add(fadeOut);
   const deck = Array.from(container.querySelectorAll('.' + cardClass)) as HTMLElement[];
   deck?.forEach(card => {
     card.classList.add(closeCard);
+    card.classList.remove(cssOpenCard);
   });
   console.log('close deck');
   await sleep(duration);
@@ -213,7 +215,7 @@ export const closeDeck = async (
 /**
  * open deck transition
  */
-export const openDeck = (
+export const openDeck = async (
   container: HTMLElement | null,
   fadeOut = cssFadeOut,
   closeCard = cssCloseCard,
@@ -221,6 +223,8 @@ export const openDeck = (
 ) => {
   if (!container) return;
   container.classList.remove(fadeOut);
+  container.offsetHeight;
+  await sleep(250);
   const deck = Array.from(container.querySelectorAll('.' + cardClass)) as HTMLElement[];
   deck.forEach(card => {
     card.classList.remove(closeCard);
@@ -245,7 +249,7 @@ export const resetDeck = (
   moveNavYAxis = 'nav-project-moveY'
 ) => {
   deck.forEach(card => {
-    card.classList.remove(closeCard, hide, zindex20, overlaySize, 'hide');
+    card.classList.remove(closeCard, hide, zindex20, overlaySize, 'hide', 'card-closed');
     card.querySelector('.project')?.classList.remove(backgroundCard, projectSelected);
     card.querySelector('.nav-project')?.classList.remove(moveY, moveNavYAxis);
   });

@@ -182,6 +182,7 @@ main {
   transition: all 0.5s, z-index 0s;
   transform-style: preserve-3d;
   margin-bottom: var(--card-bot-margin);
+  opacity: 1;
 }
 
 .project {
@@ -697,9 +698,13 @@ ol {
     animation: open-deck 1s ease-in-out;
   }
 
-  .anim-close-deck {
+  .card-closed {
     width: 10px;
-    transition: all 0.5s, z-index 0s, width 1s;
+    transition: all 0.5s, z-index 0s, width 0.5s;
+  }
+
+  .test-card {
+    width: 160px;
   }
 
   .nav-project-moveY {
