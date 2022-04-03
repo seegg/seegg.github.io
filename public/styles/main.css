@@ -148,6 +148,14 @@ main {
   opacity: 1;
 }
 
+.tab-container {
+  width: 100%;
+  align-items: center;
+  flex-wrap: wrap;
+  display: flex;
+  flex-direction: column;
+}
+
 .projects {
   display: flex;
   flex-wrap: wrap;
@@ -589,7 +597,7 @@ ol {
 }
 
 .nav-filler-expand {
-  height: 64px;
+  height: 84px;
 }
 
 .moveY-40 {

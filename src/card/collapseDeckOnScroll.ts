@@ -177,8 +177,8 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
     //only take effect if screen width is >= maxwidth
     if (window.innerWidth >= maxWidth || from !== projectHash) return;
     autoQueue.empty();
-    contentScrollContainer.style.removeProperty('height');
     if (window.scrollY > 200) window.scrollTo(0, 200);
+    contentScrollContainer.style.removeProperty('height');
   }, 'before');
 
   //navigating to projects tab

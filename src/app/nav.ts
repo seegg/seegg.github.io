@@ -4,8 +4,6 @@ import { SyncAutoQueue } from "../util";
 
 
 const navTabs = Array.from(document.getElementsByClassName('tab-nav')) as HTMLElement[];
-//0: project cards, 1: about, 2: contacts
-const contentTabs = Array.from(document.getElementsByClassName('tab')) as HTMLElement[];
 
 export const navBar = document.getElementById('tab-nav-bar');
 const navBarParentElement = navBar?.parentElement as HTMLElement;
@@ -50,7 +48,7 @@ export const setUpNavBar = async (widthThreshold = 570) => {
   //registering routes.
 
   //add a self removing callback that plays the leaving transition when navigating away from projects.
-  addRoute(project, 'projects-wrapper', contentTabs, navTabs[0],
+  addRoute(project, document.getElementById('projects-wrapper'), navTabs[0],
     null,
     async () => {
       await openDeck(document.getElementById('projects-wrapper'));
@@ -63,11 +61,11 @@ export const setUpNavBar = async (widthThreshold = 570) => {
     }
   );
 
-  addRoute(blog, 'about', contentTabs, navTabs[1],);
+  addRoute(blog, document.getElementById('about'), navTabs[1],);
 
-  addRoute(contact, 'contacts', contentTabs, navTabs[2],);
+  addRoute(contact, document.getElementById('contacts'), navTabs[2],);
 
-  addRoute(fallback, 'not-found', contentTabs, null);
+  addRoute(fallback, document.getElementById('not-found'), null);
 
   //check hash value at start, navigate to default route if hash is empty or if it doesn't match any register routes.
   if (location.hash !== '' && navigationRoutes.has(location.hash)) {
@@ -90,7 +88,7 @@ const navigateToHashRoute = (hash: string, storedHashRoutes = navigationRoutes) 
  * Wrapper function for adding hash route entries
  */
 const addRoute =
-  (hash: string, contentTabID: string, contentTabs: HTMLElement[], navTab?: HTMLElement | null, before?: (() => void) | null, after?: (() => void) | null) => {
+  (hash: string, content: HTMLElement | null, navTab?: HTMLElement | null, before?: (() => void) | null, after?: (() => void) | null) => {
     navigationRoutes.set(hash, () => {
       //set the tab associated with the path to be the selected tab.
       setSelectedTab(navTab || null);
@@ -99,7 +97,7 @@ const addRoute =
       beforeNavCallbacks.forEach(callback => { callback(prevHash, hash) });
       addItemToNavigationQueue(
         //navigate to selected content.
-        () => { toggleTab(contentTabID, contentTabs) },
+        () => { toggleTab(content) },
         //before and after callback functions.
         async () => {
           if (before) await before();
@@ -139,16 +137,28 @@ const setSelectedTab = (tab: HTMLElement | null, selected = cssSelected, navItem
 /**
  * Toggle which tab gets displayed.
  */
-const toggleTab = (tabID: string, tabs: HTMLElement[]) => {
-  tabs.forEach(tab => {
-    if (tab.id === tabID) {
-      tab.classList.remove(cssHide);
-      tab.classList.add(cssFadeIn);
-    } else {
-      tab.classList.add(cssHide);
-      tab.classList.remove(cssFadeIn);
-    }
-  })
+const toggleTab = (content: HTMLElement | null, hide = cssHide, transition = cssFadeIn) => {
+  // tabs.forEach(tab => {
+  //   if (tab.id === tabID) {
+  //     tab.classList.remove(cssHide);
+  //     tab.classList.add(cssFadeIn);
+  //   } else {
+  //     tab.classList.add(cssHide);
+  //     tab.classList.remove(cssFadeIn);
+  //   }
+  // });
+  try {
+    if (!content) return;
+    const container = content.parentElement as HTMLElement;
+    (Array.from(container.children) as HTMLElement[]).forEach(child => {
+      child.classList.add(hide);
+      child.classList.remove(transition);
+    });
+    content.classList.remove(hide);
+    content.classList.add(transition);
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 /**
