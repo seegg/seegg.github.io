@@ -10,6 +10,7 @@ const cssFadeOut = 'anim-fadeout-deck';
 const cssOpenCard = 'anim-open-deck';
 const cssCloseCard = 'card-closed';
 const cssCardClass = 'project-card';
+const cssNoTransition = 'disable-transitions';
 
 /**
  * Add css class to current selected project card to make its height smaller
@@ -104,7 +105,7 @@ export const setStashCardsInRange = (
   deck: HTMLElement[],
   start: number,
   end: number,
-  noCssTransition = 'disable-transitions'
+  noCssTransition = cssNoTransition
 ) => {
   for (let i = start; i < end; i++) {
     deck[i].classList.add(noCssTransition);
@@ -204,10 +205,25 @@ export const closeDeck = async (
   container.offsetHeight;
   container.classList.add(fadeOut);
   const deck = Array.from(container.querySelectorAll('.' + cardClass)) as HTMLElement[];
-  deck?.forEach(card => {
-    card.classList.add(closeCard);
-    card.classList.remove(cssOpenCard);
-  });
+
+  if (deck.length > 9) {
+    for (let i = 0; i < deck.length - 9; i++) {
+      deck[i].classList.add(cssNoTransition, closeCard);
+      deck[i].classList.remove(cssOpenCard);
+      deck[i].offsetHeight;
+      deck[i].classList.remove(cssNoTransition);
+    }
+
+    for (let i = deck.length - 9; i < deck.length; i++) {
+      deck[i].classList.add(closeCard);
+      deck[i].classList.remove(cssOpenCard);
+    }
+  } else {
+    for (let i = 0; i < deck.length; i++) {
+      deck[i].classList.add(closeCard);
+      deck[i].classList.remove(cssOpenCard);
+    }
+  }
   await sleep(duration);
 };
 
