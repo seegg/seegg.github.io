@@ -13,6 +13,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: pull from gh-pages branch
+        run: git pull origin gh-pages
       - name: Build project
         run: npm run build
       - name: track main.bundle.js and commit
