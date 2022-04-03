@@ -22,9 +22,6 @@ const cssFadeIn = 'anim-fadein';
 const beforeNavCallbacks: NavigationCallback[] = [];
 const afternavCallbacks: NavigationCallback[] = [];
 
-//save the value as object property to make sure it's up to date and not just a snapshot.
-const latestInputIndex: { current: number } = { current: 0 };
-
 //hash values for routes
 export const [project, blog, contact, fallback] = ['#project', '#blog', '#contact', '#fallback'];
 
