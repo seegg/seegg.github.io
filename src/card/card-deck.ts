@@ -208,7 +208,6 @@ export const closeDeck = async (
     card.classList.add(closeCard);
     card.classList.remove(cssOpenCard);
   });
-  console.log('close deck');
   await sleep(duration);
 };
 
@@ -229,7 +228,6 @@ export const openDeck = async (
   deck.forEach(card => {
     card.classList.remove(closeCard);
   });
-  console.log('open deck');
 };
 
 /**

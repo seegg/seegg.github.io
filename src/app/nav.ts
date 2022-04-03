@@ -46,7 +46,7 @@ export const setUpNavBar = async (widthThreshold = 570) => {
   //handle route change when hash changes
   window.addEventListener('hashchange', () => {
     const hash = location.hash;
-    if (hash === prevHash) return;
+    if (hash === currentHash) return;
     navigateToHashRoute(hash);
   });
 
@@ -94,11 +94,13 @@ const addRoute =
     navigationRoutes.set(hash, () => {
       //trigger callbacks that are to be ran at the start of navigation.
       beforeNavCallbacks.forEach(callback => { callback(prevHash, hash) });
-      //set the seleted tab to the tab associated with the path.
+      //set the tab associated with the path to be the selected tab.
       setSelectedTab(navTab);
-      prevHash = location.hash;
+      prevHash = currentHash;
       addItemToNavigationQueue(
+        //navigate to selected content.
         () => { toggleTab(contentTabID, contentTabs) },
+        //before and after callback functions.
         async () => {
           if (before) await before();
         },
