@@ -43,7 +43,6 @@ export function debounce(callback: (...param: unknown[]) => void, wait = 300) {
  */
 export function createElementWithClasses<T extends keyof HTMLElementTagNameMap>(tagName: T, ...args: string[]) {
   const elem = document.createElement(tagName);
-  if (args.includes('anim-open-deck')) console.log('open deck');
   elem.classList.add(...args);
   return elem;
 }
