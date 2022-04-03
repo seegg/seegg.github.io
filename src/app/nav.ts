@@ -25,13 +25,16 @@ const afternavCallbacks: NavigationCallback[] = [];
 //save the value as object property to make sure it's up to date and not just a snapshot.
 const latestInputIndex: { current: number } = { current: 0 };
 
-let currentHash = '#projects';
-let prevHash = '#projects';
+//hash values for routes
+export const [project, blog, contact] = ['#project', '#blog', '#contact'];
+
+let currentHash = project;
+let prevHash = project;
 let isNavBarFixed = false;
 
 
 export const setUpNavBar = async (widthThreshold = 570) => {
-
+  //fixed the nav bar to the top when scrolling below the screen.
   document.addEventListener('scroll', () => {
     const { top } = navBarParentElement.getBoundingClientRect();
     if (top < 0) {
@@ -40,77 +43,84 @@ export const setUpNavBar = async (widthThreshold = 570) => {
       toggleNavBarFixedPosition('not-fixed');
     }
   });
-
-
-  //registering routes.
-  addRoute('#projects', 'projects-wrapper', navTabs[0],
-    () => { if (window.innerWidth >= widthThreshold) openDeck(document.getElementById('projects-wrapper')); });
-
-  addRoute('#blog', 'about', navTabs[1],
-    async () => {
-      if (currentHash === '#projects' && window.innerWidth >= widthThreshold) {
-        await closeDeck(document.getElementById('projects-wrapper'));
-      }
-    }
-  );
-
-  addRoute('#contacts', 'contacts', navTabs[2],
-    async () => {
-      if (currentHash === '#projects' && window.innerWidth >= widthThreshold) {
-        await closeDeck(document.getElementById('projects-wrapper'));
-      }
-    }
-  );
-
-  if (location.hash !== currentHash) {
-    const route = navigationRoutes.get(location.hash);
-    if (typeof route === 'function') route();
-  }
-
+  //handle route change when hash changes
   window.addEventListener('hashchange', () => {
     const hash = location.hash;
     if (hash === prevHash) return;
-    const navFunction = navigationRoutes.get(hash);
-    if (typeof navFunction === 'function') {
-      navFunction();
-    }
+    navigateToHashRoute(hash);
   });
+
+  //register routes.
+
+  //add a self removing callback that plays the leaving transition when navigating away from projects.
+  addRoute(project, 'projects-wrapper', contentTabs, navTabs[0],
+    () => { if (window.innerWidth >= widthThreshold) openDeck(document.getElementById('projects-wrapper')); },
+    () => {
+      addNavCallback(function playLeaveTransition() {
+        if (window.innerWidth >= widthThreshold) {
+          addItemToNavigationQueue(async () => { await closeDeck(document.getElementById('projects-wrapper')); });
+        }
+        removeNavCallback(playLeaveTransition, 'before');
+      }, 'before');
+    }
+  );
+
+  addRoute(blog, 'about', contentTabs, navTabs[1],);
+
+  addRoute(contact, 'contacts', contentTabs, navTabs[2],);
+
+  //check hash value at start
+  if (location.hash !== '') {
+    navigateToHashRoute(location.hash);
+  } else {
+    navigateToHashRoute(currentHash);
+  }
+
 };
 
+const navigateToHashRoute = (hash: string, storedHashRoutes = navigationRoutes) => {
+  const route = storedHashRoutes.get(hash);
+  if (typeof route === 'function') {
+    console.log(prevHash);
+    route();
+  }
+}
 
 /**
  * Wrapper function for adding hash route entries
  */
-const addRoute = (hash: string, contentTabID: string, navTab: HTMLElement, before?: (() => void) | null, after?: (() => void) | null) => {
-  navigationRoutes.set(hash, () => {
-    //trigger callbacks that are to be ran at the start of navigation.
-    beforeNavCallbacks.forEach(callback => { callback(prevHash, hash) });
-    //set the seleted tab to the tab associated with the path.
-    setSelectedTab(navTab);
-    prevHash = location.hash;
-    addItemToNavigationQueue(contentTabID,
-      async () => {
-        if (before) await before();
-      },
-      async () => {
-        //trigger callbacks for end of navigation.
-        afternavCallbacks.forEach(callback => { callback(currentHash, hash) });
-        currentHash = hash;
-        if (after) await after();
-      });
-  });
-}
+const addRoute =
+  (hash: string, contentTabID: string, contentTabs: HTMLElement[], navTab: HTMLElement, before?: (() => void) | null, after?: (() => void) | null) => {
+    navigationRoutes.set(hash, () => {
+      //trigger callbacks that are to be ran at the start of navigation.
+      beforeNavCallbacks.forEach(callback => { callback(prevHash, hash) });
+      //set the seleted tab to the tab associated with the path.
+      setSelectedTab(navTab);
+      prevHash = location.hash;
+      addItemToNavigationQueue(
+        () => { toggleTab(contentTabID, contentTabs) },
+        async () => {
+          if (before) await before();
+        },
+        async () => {
+          //trigger callbacks for end of navigation.
+          afternavCallbacks.forEach(callback => { callback(currentHash, hash) });
+          currentHash = hash;
+          if (after) await after();
+        });
+    });
+  }
 
 /**
  * Helper function for adding items to the navigation queue. 
  * @param before optional callback for before navigation.
  * @param after optional callback for after navigation.
  */
-const addItemToNavigationQueue = (tabID: string, before?: (() => void) | null, after?: (() => void) | null) => {
+const addItemToNavigationQueue = (item: () => void, before?: (() => void) | null, after?: (() => void) | null) => {
   navigationQueue.empty();
   navigationQueue.add(async () => {
     if (before) await before();
-    toggleTab(tabID, contentTabs);
+    await item();
     if (after) await after();
   })
 }

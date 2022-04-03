@@ -1,4 +1,4 @@
-import { addNavCallback, navBar, removeAllNavCallbacks } from "../app";
+import { addNavCallback, navBar, removeAllNavCallbacks, project as projectHash } from "../app";
 import { setElementHeight, scrollToPosAndPause, SyncAutoQueue } from "../util";
 import { UpdateDeckFn, CardFn } from "../types";
 import {
@@ -47,7 +47,6 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
     } else {
       contentScrollContainer.style.removeProperty('height');
       contentScrollContainer.classList.remove('anim-fadein-long');
-      // resetDeck(deck);
     }
   });
 
@@ -177,14 +176,14 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
   //navigating from projects tab
   addNavCallback((from) => {
     //only take effect if screen width is >= maxwidth
-    if (window.innerWidth >= maxWidth || from !== '#projects') return;
+    if (window.innerWidth >= maxWidth || from !== projectHash) return;
     autoQueue.empty();
     contentScrollContainer.style.removeProperty('height');
   }, 'before');
 
   //navigating to projects tab
   addNavCallback((from, to) => {
-    isInProjectsTab = to === '#projects';
+    isInProjectsTab = to === projectHash;
     if (window.innerWidth >= maxWidth || !isInProjectsTab) return;
     setElementHeight(contentScrollContainer, window.innerHeight + (deck.length * cardScrollThreshold));
     window.scrollTo({ top: lastScrollYPos, behavior: 'auto' });

@@ -197,7 +197,6 @@ export const closeDeck = async (
   container: HTMLElement | null,
   duration = 500,
   fadeOut = cssFadeOut,
-  openCard = cssOpenCard,
   closeCard = cssCloseCard,
   cardClass = cssCardClass
 ) => {
@@ -205,7 +204,6 @@ export const closeDeck = async (
   container.classList.add(fadeOut);
   const deck = Array.from(container.querySelectorAll('.' + cardClass)) as HTMLElement[];
   deck?.forEach(card => {
-    card.classList.remove(openCard);
     card.classList.add(closeCard);
   });
   await sleep(duration);
@@ -217,7 +215,6 @@ export const closeDeck = async (
 export const openDeck = (
   container: HTMLElement | null,
   fadeOut = cssFadeOut,
-  openCard = cssOpenCard,
   closeCard = cssCloseCard,
   cardClass = cssCardClass
 ) => {
@@ -225,7 +222,6 @@ export const openDeck = (
   container.classList.remove(fadeOut);
   const deck = Array.from(container.querySelectorAll('.' + cardClass)) as HTMLElement[];
   deck.forEach(card => {
-    card.classList.add(openCard);
     card.classList.remove(closeCard);
   });
 };

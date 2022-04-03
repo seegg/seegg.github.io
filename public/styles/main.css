@@ -698,7 +698,6 @@ ol {
   }
 
   .anim-close-deck {
-    /* animation: close-deck 1s ease-in-out; */
     width: 10px;
     transition: all 0.5s, z-index 0s, width 1s;
   }
