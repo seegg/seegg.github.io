@@ -178,6 +178,7 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
     if (window.innerWidth >= maxWidth || from !== projectHash) return;
     autoQueue.empty();
     contentScrollContainer.style.removeProperty('height');
+    if (window.scrollY > 200) window.scrollTo(0, 200);
   }, 'before');
 
   //navigating to projects tab
@@ -185,7 +186,7 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
     isInProjectsTab = to === projectHash;
     if (window.innerWidth >= maxWidth || !isInProjectsTab) return;
     setElementHeight(contentScrollContainer, window.innerHeight + (deck.length * cardScrollThreshold));
-    window.scrollTo({ top: lastScrollYPos, behavior: 'auto' });
+    if (currentIndex.value > 0) window.scrollTo({ top: lastScrollYPos, behavior: 'auto' });
   }, 'after')
 
   /**
