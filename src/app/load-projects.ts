@@ -46,6 +46,8 @@ export const loadProjects = async (projects: Project[], widthThreshold = 570) =>
           document.removeEventListener('scroll', introDeckAnimation);
         }
       });
+    } else {
+      //
     }
 
     //wait until all cards are loaded before adding the scrolling deck effect for small screens.
@@ -61,12 +63,11 @@ export const loadProjects = async (projects: Project[], widthThreshold = 570) =>
             if (visibleProjectHeight < visibleHeightThreshold) {
               toggleIntroDeckAnimation(projectCard, true);
             }
-            return projectCard as HTMLElement;
+            return projectCard;
           })()
         )
       }).then((card) => {
         placeHolder.replaceWith(card);
-        (card as HTMLElement).classList.add('anim-fadein');
         return card;
       }).catch(err => console.error(err));
     }));
