@@ -291,8 +291,8 @@ main {
   background-color: black;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  /* border-right: 2px solid var(--background-card-bg-colour);
-  border-left: 2px solid var(--inner-highlight-full); */
+  border-right: 2px solid var(--background-card-bg-colour);
+  border-left: 2px solid var(--inner-highlight-full);
   width: 280px;
   height: 260px;
 }

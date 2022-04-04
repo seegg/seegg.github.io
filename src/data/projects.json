@@ -48,20 +48,20 @@
       "description": "Simple calculator app for learning JS and CSS."
     },
     {
-      "name": "Personal Page",
-      "title": "Personal Porfolio",
-      "repo": "https://github.com/seegg/seegg.github.io",
-      "url": "https://seegg.github.io/demo.html",
-      "image": "../public/images/githubpage.png",
-      "description": "This web page, responsive, mobile first. Click link for test page with large number of cards."
-    },
-    {
       "name": "JS Date Picker",
       "title": "JS Date Picker",
       "repo": "https://github.com/seegg/date-picker",
       "url": "https://seegg.github.io/date-picker",
       "image": "../public/images/date-picker.png",
       "description": "A date picker widget created using vanilla JS that can easily be added to any webpage."
+    },
+    {
+      "name": "Personal Page",
+      "title": "Personal Porfolio",
+      "repo": "https://github.com/seegg/seegg.github.io",
+      "url": "https://seegg.github.io/demo.html",
+      "image": "../public/images/githubpage.png",
+      "description": "This web page, responsive, mobile first. Click link for test page with large number of cards."
     }
   ],
   "test-projects": [
