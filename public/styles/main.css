@@ -9,6 +9,7 @@
   --card-highlight: hsla(0, 10%, 45%, 0.5);
   --card-highlight-partial: hsla(0, 10%, 30%, 0.5);
   --card-highlight-full: hsla(0, 10%, 65%, 0.5);
+  --inner-highlight-full: hsl(0, 20%, 60%);
   --min-content-height: 608px;
   --card-border-radius: 5px;
   --card-height: 450px;
@@ -290,6 +291,8 @@ main {
   background-color: black;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+  /* border-right: 2px solid var(--background-card-bg-colour);
+  border-left: 2px solid var(--inner-highlight-full); */
   width: 280px;
   height: 260px;
 }
@@ -644,6 +647,8 @@ ol {
 
   .project-img-container {
     width: 100%;
+    border-right: 2px solid var(--background-card-bg-colour);
+    border-left: 2px solid var(--card-bg-colour);
   }
 
   .placeholder-image {
@@ -664,6 +669,16 @@ ol {
   .background-card {
     background-color: var(--background-card-bg-colour);
     border-color: transparent;
+  }
+
+  .current-card .project-img-container {
+    border-right: 2px solid var(--card-partial-bg-colour);
+    border-left: 2px solid var(--inner-highlight-full);
+  }
+
+  .background-card .project-img-container {
+    border-right: 2px solid var(--background-card-bg-colour);
+    border-left: 2px solid var(--background-card-bg-colour);
   }
 }
 
