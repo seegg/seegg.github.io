@@ -122,7 +122,7 @@ export const scrollToPosAndPause = (element: HTMLElement, yCoord: number, pauseD
   setTimeout(() => {
     element.style.overflowY = 'auto';
   }, pauseDuration);
-}
+};
 
 /**
  * helper function for preloading images
@@ -138,4 +138,19 @@ export const loadImage = (src: string, onLoadCallback?: loadImageCallback, onErr
   }
 
   return image;
+};
+
+/**
+ * attach a loading screen to and html element.
+ * @param parentElement 
+ * @param loadingImgSrc 
+ * @returns function to remove the loading element.
+ */
+export const attachLoadingScreen = (parentElement: HTMLElement, loadingImgSrc = '../public/images/loading.svg') => {
+  const loadingElem = createElementWithClasses('div', 'loading');
+  const loadingImg = new Image();
+  loadingImg.src = loadingImgSrc;
+  loadingElem.appendChild(loadingImg);
+  parentElement?.appendChild(loadingElem);
+  return () => { parentElement?.removeChild(loadingElem) };
 }

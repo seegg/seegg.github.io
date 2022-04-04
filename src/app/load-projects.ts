@@ -1,5 +1,6 @@
 import { createProjectCard, createProjectPlaceholder, collapseDeckOnScroll } from "../card";
-import { Project } from "../types";
+import { getProjects } from "../data";
+import { attachLoadingScreen } from "../util";
 
 
 const projectsContainer = document.getElementById('projects');
@@ -20,10 +21,18 @@ const cssInvisible = 'invisible';
 /**
  * load all the projects for display.
  */
-export const loadProjects = async (projects: Project[], widthThreshold = 570) => {
+export const loadProjects = async (path: string, isDemo = false, widthThreshold = 570) => {
 
   if (projectsContainer && contentContainer) {
     projectsContainer.replaceChildren();
+
+    const removeLoadingScreen = attachLoadingScreen(contentContainer);
+
+    const data = await getProjects(path);
+    const projects = data[isDemo ? 'test-projects' : 'projects'];
+
+    removeLoadingScreen();
+
     //Calculate initial size of project container.
     setprojectsContainerWidth(projects.length, fullCardWidth, partialCardWidth, maxWidth, minWidth);
 

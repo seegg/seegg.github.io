@@ -93,6 +93,21 @@ main {
   width: 100%;
 }
 
+.loading {
+  /* position: absolute; */
+  /* left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0; */
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 100;
+}
+
 .projects-scroll {
   box-sizing: border-box;
   position: relative;
@@ -128,6 +143,7 @@ main {
 }
 
 .content {
+  /* position: relative; */
   padding-top: 10px;
   opacity: 0;
   min-width: 340px;
@@ -157,6 +173,7 @@ main {
 }
 
 .projects {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   transition: all 0.25s ease-in-out;

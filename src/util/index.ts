@@ -9,5 +9,6 @@ export {
   scrollYViewport,
   setElementHeight,
   sleep,
-  loadImage
+  loadImage,
+  attachLoadingScreen
 } from './util';

@@ -3,6 +3,7 @@ import { loadImageCallback } from "../types";
 
 const content = document.getElementById('content');
 const introContainer = document.getElementById('intro-container');
+const preload = [];
 
 export const intro = async () => {
 
@@ -16,9 +17,8 @@ export const intro = async () => {
   };
   loadImage('../public/images/sunset.png', introBGCallback, introBGCallback);
 
-  //preload placeholder image
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const placeHolderImg = loadImage('../public/images/placeholder.png');
+  //preload images
+  preload.push(loadImage('../public/images/placeholder.png'), loadImage('../public/images/loading.svg'));
 
   changeContentOpacityOnHeightShown();
 
