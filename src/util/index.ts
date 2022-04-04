@@ -3,6 +3,7 @@ export {
   addCssClassToTouchDevices,
   between,
   createElementWithClasses,
+  createElementWithIDAndClasses,
   createNavItem,
   debounce,
   scrollToPosAndPause,

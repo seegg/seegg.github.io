@@ -41,11 +41,18 @@ export function debounce(callback: (...param: unknown[]) => void, wait = 300) {
  * @param arg comma seperated class names
  * @returns 
  */
-export function createElementWithClasses<T extends keyof HTMLElementTagNameMap>(tagName: T, ...args: string[]) {
+export const createElementWithClasses = <T extends keyof HTMLElementTagNameMap>(tagName: T, ...args: string[]) => {
   const elem = document.createElement(tagName);
   elem.classList.add(...args);
   return elem;
 }
+
+export const createElementWithIDAndClasses =
+  <T extends keyof HTMLElementTagNameMap>(tagName: T, id: string, ...args: string[]) => {
+    const element = createElementWithClasses(tagName, ...args);
+    element.id = id;
+    return element;
+  }
 
 /**
  * create a nav item for project cards.
