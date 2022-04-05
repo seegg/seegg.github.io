@@ -7,7 +7,7 @@ import { ReflectionsBlog, AllProjects } from '../types';
  * @param path GET projects
  * @returns 
  */
-export const getProjects = async (path: string): Promise<AllProjects> => {
+export const getProjects = async (path = 'https://seegg.github.io/src/data/projects.json'): Promise<AllProjects> => {
   try {
     return await fetchJSONData(path);
   } catch (err) {

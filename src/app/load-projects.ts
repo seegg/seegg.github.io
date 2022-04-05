@@ -21,14 +21,14 @@ const cssInvisible = 'invisible';
 /**
  * load all the projects for display.
  */
-export const loadProjects = async (path: string, isDemo = false) => {
+export const loadProjects = async (isDemo = false) => {
 
   if (projectsContainer && contentContainer) {
     projectsContainer.replaceChildren();
 
     const removeLoadingScreen = attachLoadingScreen(contentContainer);
 
-    const data = await getProjects(path);
+    const data = await getProjects();
     const projects = data[isDemo ? 'test-projects' : 'projects'];
 
     removeLoadingScreen();
