@@ -1,4 +1,4 @@
-import { intro, loadProjects, loadRamblings, setUpNavBar } from "./app";
+import { setUpNavBar, intro, loadProjects, loadRamblings } from "./app";
 import { addCssClassToTouchDevices } from './util';
 
 //add hasTouch class to content container to check whether it's touch device or not.

@@ -3,7 +3,7 @@ export { loadRamblings } from './load-blog';
 export { loadProjects } from './load-projects';
 export {
   addNavCallback,
-  navBar,
+  getNavBar,
   project,
   blog,
   contact,

@@ -84,7 +84,7 @@ export const loadProjects = async (path: string, isDemo = false, widthThreshold 
     const projectCards =
       promiseResults.map(result => { if (result.status === 'fulfilled') return result.value }) as HTMLElement[];
 
-    collapseDeckOnScroll(projectCards, widthThreshold);
+    collapseDeckOnScroll(projectCards);
 
   } else {
     throw new Error('Some error');

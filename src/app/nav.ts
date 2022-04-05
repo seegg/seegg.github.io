@@ -2,7 +2,7 @@ import { NavigationCallback } from "../types";
 import { openDeck, closeDeck } from '../card'
 import { SyncAutoQueue } from "../util";
 
-
+console.log('nav');
 const navTabs = Array.from(document.getElementsByClassName('tab-nav')) as HTMLElement[];
 
 export const navBar = document.getElementById('tab-nav-bar');
@@ -219,3 +219,7 @@ export const removeAllNavCallbacks = () => {
   beforeNavCallbacks.length = 0;
   afternavCallbacks.length = 0;
 };
+
+export const getNavBar = () => {
+  return navBar;
+}

@@ -251,7 +251,7 @@ export const openDeck = async (
  * @param deck 
  */
 export const resetDeck = (
-  deck: HTMLElement[],
+  deck: HTMLElement[] | null,
   closeCard = cssCloseCardPartial,
   hide = cssHide,
   backgroundCard = cssBackgroundCard,
@@ -262,6 +262,7 @@ export const resetDeck = (
   projectSelected = 'project-select',
   moveNavYAxis = 'nav-project-moveY'
 ) => {
+  if (deck === null) return;
   deck.forEach(card => {
     card.classList.remove(closeCard, hide, zindex20, overlaySize, 'hide', 'card-closed');
     card.querySelector('.project')?.classList.remove(backgroundCard, projectSelected);

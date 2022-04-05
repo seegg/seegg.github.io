@@ -1,4 +1,4 @@
-import { addNavCallback, navBar, removeAllNavCallbacks, project as projectHash } from "../app";
+import { addNavCallback, getNavBar, removeAllNavCallbacks, project as projectHash } from "../app";
 import { setElementHeight, scrollToPosAndPause, SyncAutoQueue } from "../util";
 import { UpdateDeckFn, CardFn } from "../types";
 import {
@@ -12,22 +12,58 @@ import {
 
 const contentContainer = document.getElementById('content') as HTMLDivElement;
 const projectDisplay = document.querySelector('.projects-display') as HTMLDivElement;
-const projectNavID = 'nav-projects';
+const contentScrollContainer = document.querySelector('.projects-scroll') as HTMLElement;
+const intro = document.getElementById('intro-container');
+const autoQueue = new SyncAutoQueue<UpdateDeckFn>(); //queue responsible for scheduling card actions.
+const currentIndex = { value: 0 }; //store as an object property to makesure all requests reflects latest value.
+const [maxWidth, cardHeight, cardScrollThreshold] = [570, 450, 200];
+const heightRatio = cardHeight / cardScrollThreshold;
 let currentListener: (() => void) | null = null;
+let isInProjectsTab = true;
+let isDisplayFixed = false; //boolean flag to keep track whether project container is fixed to minimise calculations.
+let lastScrollYPos = 0;
+let prevSavedIndex = 0;
+let isFromTop = true;
+let prevTime = 0;
+let deck: HTMLElement[];
 
-export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHeight = 450, cardScrollThreshold = 200) => {
-  const currentIndex = { value: 0 }; //store as an object property to makesure all requests reflects latest value.
-  const heightRatio = cardHeight / cardScrollThreshold;
-  const autoQueue = new SyncAutoQueue<UpdateDeckFn>(); //queue responsible for scheduling card actions.
+export const setUpSmallScreenScrolling = (newDeck: HTMLElement[]) => {
+  deck = newDeck;
 
-  const contentScrollContainer = document.querySelector('.projects-scroll') as HTMLElement;
-  let isInProjectsTab = navBar ? navBar.querySelector('.selected')?.id === projectNavID : true;
-  let isDisplayFixed = false; //boolean flag to keep track whether project container is fixed to minimise calculations.
-  let lastScrollYPos = 0;
-  let prevSavedIndex = 0;
-  let isFromTop = true;
-  let prevTime = 0;
+  //resize observer to set the scroll container height reset the cards.
+  const introResizeObserver = new ResizeObserver(entries => {
+    const { inlineSize } = entries[0].contentBoxSize[0];
+    if (inlineSize < maxWidth) {
+      projectDisplay.classList.add('attach-to-top');
+      window.scrollTo(0, 0);
+      setElementHeight(contentScrollContainer, window.innerHeight + (deck.length * cardScrollThreshold));
+      contentScrollContainer.classList.add('anim-fadein-long');
+      resetDeck(deck);
+    } else {
+      contentScrollContainer.style.removeProperty('height');
+      contentScrollContainer.classList.remove('anim-fadein-long');
+    }
+  });
 
+  //remove selected css class from nav icons when intro element is 25% or more visible.
+  const introIntersectObserver = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting && currentIndex.value < deck.length - 1) {
+      switchSelectedNavIcons(null, deck[currentIndex.value]);
+    }
+  }, { rootMargin: '0px', threshold: 0.25 })
+
+  //add intro to resize and intersection observer.
+  if (intro) {
+    introResizeObserver.observe(intro);
+    introIntersectObserver.observe(intro);
+  }
+
+}
+
+
+export const collapseDeckOnScroll = (deck: HTMLElement[]) => {
+
+  isInProjectsTab = document.getElementById('tab-nav-bar')?.querySelector('.selected')?.id === 'nav-projects';
   //when the screen width meets the threshold, add height to scroll container to control the card deck.
   if (window.innerWidth < maxWidth) {
     setElementHeight(contentScrollContainer, window.innerHeight + (deck.length * cardScrollThreshold));
@@ -73,7 +109,7 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
   }
   if (deck.length <= 0) return;
 
-  const scrollListener = async () => {
+  const onScrollListener = () => {
     if (!contentScrollContainer) return;
     if (isInProjectsTab && window.innerWidth < maxWidth) {
       const { top: scrollContainerTop, bottom: scrollContainerBottom } = contentScrollContainer.getBoundingClientRect();
@@ -85,7 +121,7 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
       if (contentTopDistance < 0 && containerBtmDistance < 0) {
         if (!isDisplayFixed) {
           switchSelectedNavIcons(deck[0]);
-          toggleProjectDisplayFixedPosition(true);
+          setProjectDisplayFixedPosition(true);
           isDisplayFixed = true;
         }
         //calculate the index value corresponding to the y scroll position. 
@@ -144,7 +180,7 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
           }
         } else {//scroll container top is below screen top.
           if (isDisplayFixed || contentTopDistance > 0) {
-            toggleProjectDisplayFixedPosition(false);
+            setProjectDisplayFixedPosition(false);
             projectDisplay.classList.add('attach-to-top');
             isDisplayFixed = false;
           }
@@ -168,8 +204,8 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
     }
   };
 
-  document.addEventListener('scroll', scrollListener);
-  currentListener = scrollListener;
+  document.addEventListener('scroll', onScrollListener);
+  currentListener = onScrollListener;
 
   //add callback for navigating to and from projects tab.
   //navigating from projects tab
@@ -233,10 +269,11 @@ export const collapseDeckOnScroll = (deck: HTMLElement[], maxWidth = 570, cardHe
 /**
  * toggle whether project card display container is fixed or not
  */
-const toggleProjectDisplayFixedPosition = (state: boolean) => {
+const setProjectDisplayFixedPosition = (state: boolean) => {
   if (state) {
     projectDisplay.classList.add('fixed', 'mt-82');
   } else {
     projectDisplay.classList.remove('fixed', 'mt-82');
   }
+  return state;
 };
