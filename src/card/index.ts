@@ -13,4 +13,4 @@ export {
 
 export { createProjectCard, createProjectPlaceholder } from './project-card';
 
-export { collapseDeckOnScroll } from './collapseDeckOnScroll'; 
+export { updateScrollDeck, setUpSmallScreenScrolling, isScrollDeckNull } from './collapseDeckOnScroll'; 

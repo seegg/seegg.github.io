@@ -1,4 +1,4 @@
-import { createProjectCard, createProjectPlaceholder, collapseDeckOnScroll } from "../card";
+import { createProjectCard, createProjectPlaceholder, setUpSmallScreenScrolling, isScrollDeckNull, updateScrollDeck } from "../card";
 import { getProjects } from "../data";
 import { attachLoadingScreen } from "../util";
 
@@ -21,7 +21,7 @@ const cssInvisible = 'invisible';
 /**
  * load all the projects for display.
  */
-export const loadProjects = async (path: string, isDemo = false, widthThreshold = 570) => {
+export const loadProjects = async (path: string, isDemo = false) => {
 
   if (projectsContainer && contentContainer) {
     projectsContainer.replaceChildren();
@@ -84,7 +84,13 @@ export const loadProjects = async (path: string, isDemo = false, widthThreshold 
     const projectCards =
       promiseResults.map(result => { if (result.status === 'fulfilled') return result.value }) as HTMLElement[];
 
-    collapseDeckOnScroll(projectCards);
+
+    if (isScrollDeckNull()) {
+      setUpSmallScreenScrolling(projectCards);
+    } else {
+      updateScrollDeck(projectCards);
+    }
+
 
   } else {
     throw new Error('Some error');

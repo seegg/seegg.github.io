@@ -102,17 +102,22 @@ export const toggleBackgroundCard = (
  * @param end 
  */
 export const setStashCardsInRange = (
-  deck: HTMLElement[],
+  deck: HTMLElement[] | null,
   start: number,
   end: number,
   noCssTransition = cssNoTransition
 ) => {
-  for (let i = start; i < end; i++) {
-    deck[i].classList.add(noCssTransition);
-    stashCard(deck[i + 1], deck[i]);
-    toggleBackgroundCard(deck, i, 'add');
-    deck[i].offsetHeight;
-    deck[i].classList.remove(noCssTransition);
+  if (!deck) return;
+  try {
+    for (let i = start; i < end; i++) {
+      deck[i].classList.add(noCssTransition);
+      stashCard(deck[i + 1], deck[i]);
+      toggleBackgroundCard(deck, i, 'add');
+      deck[i].offsetHeight;
+      deck[i].classList.remove(noCssTransition);
+    }
+  } catch (err) {
+    console.error('card deck', err, deck);
   }
 }
 
@@ -137,11 +142,12 @@ export const stashCardsInRange = async (deck: HTMLElement[], start: number, end:
  * @param end 
  */
 export const setDrawCardsInRange = (
-  deck: HTMLElement[],
+  deck: HTMLElement[] | null,
   start: number,
   end: number,
   noCssTransition = 'disable-transitions'
 ) => {
+  if (deck === null) return;
   for (let i = start; i > end; i--) {
     deck[i].classList.add(noCssTransition);
     drawCard(deck[i - 1], deck[i]);
