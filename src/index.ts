@@ -11,9 +11,11 @@ const setUp = async () => {
   intro();
   setUpNavBar(widthThreshold);
 
-  loadProjects('https://seegg.github.io/src/data/projects.json', document.body.id === 'demo');
+  loadProjects(document.body.id === 'demo');
 
   loadRamblings();
+
+  // document.addEventListener('click', () => { loadProjects() });
 };
 
 setUp();

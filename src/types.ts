@@ -27,4 +27,6 @@ export type UpdateDeckFn = (duration: number) => Promise<void>;
 
 export type CardFn = (deck: HTMLElement[], start: number, end: number, waitPerCard: number) => Promise<void>;
 
+export type CardSetFn = (deck: HTMLElement[] | null, start: number, end: number, noTransitionCss?: string) => void;
+
 export type loadImageCallback = ((img: HTMLImageElement, evt?: Event | string) => void) | null;
