@@ -21,7 +21,7 @@ const beforeNavCallbacks: NavigationCallback[] = [];
 const afternavCallbacks: NavigationCallback[] = [];
 
 //hash values for routes
-export const [project, blog, contact, fallback] = ['#projects', '#blog', '#contacts', '#fallback'];
+export const [project, blog, contact, fallback] = ['#project', '#blog', '#contacts', '#fallback'];
 
 let currentHash = project;
 let prevHash = project;
