@@ -31,7 +31,6 @@ let deck: HTMLElement[] | null = null;
  */
 export const setUpSmallScreenScrolling = (newDeck: HTMLElement[]) => {
   deck = newDeck;
-  console.log('called');
   isInProjectsTab = document.getElementById('tab-nav-bar')?.querySelector('.selected')?.id === 'nav-projects';
   //when the screen width meets the threshold, add height to scroll container to control the card deck.
   if (window.innerWidth < maxWidth) {
@@ -69,7 +68,7 @@ export const setUpSmallScreenScrolling = (newDeck: HTMLElement[]) => {
   }
 
   //add callback for navigating to and from projects tab.
-  //navigating from projects tab
+  //callback for navigating from projects tab
   addNavCallback((from) => {
     //only take effect if screen width is >= maxwidth
     if (window.innerWidth >= maxWidth || from !== projectHash) return;
@@ -78,7 +77,7 @@ export const setUpSmallScreenScrolling = (newDeck: HTMLElement[]) => {
     contentScrollContainer.style.removeProperty('height');
   }, 'before');
 
-  //navigating to projects tab
+  //callback for navigating to projects tab
   addNavCallback((from, to) => {
     isInProjectsTab = to === projectHash;
     if (window.innerWidth >= maxWidth || !isInProjectsTab) return;
@@ -96,7 +95,6 @@ export const setUpSmallScreenScrolling = (newDeck: HTMLElement[]) => {
 
 //update to a new project card deck.
 export const updateScrollDeck = (newDeck: HTMLElement[]) => {
-  console.log('updated');
   deck = newDeck;
   currentIndex.value = 0;
   lastScrollYPos = 0;

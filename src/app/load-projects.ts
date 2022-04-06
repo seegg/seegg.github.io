@@ -48,10 +48,7 @@ export const loadProjects = async (isDemo = false) => {
     //project is consider visible when it's pass the threshold in px.
     const isProjectVisible = window.innerHeight - projectsContainer.getBoundingClientRect().top >= visibleHeightThreshold;
 
-
-    const projectResults = await loadProjectCards(projects, projectsContainer, isProjectVisible);
-    const projectCards =
-      projectResults.map(result => { if (result.status === 'fulfilled') return result.value }) as HTMLElement[];
+    const projectCards = await loadProjectCards(projects, projectsContainer, isProjectVisible);
     //add a scroll to trigger the opening deck transition if cards are initially out of view.
     if (!isProjectVisible) {
       removeIntroListener = cardIntroScrollListener(projectCards, projectsContainer);
@@ -101,7 +98,7 @@ const cardIntroScrollListener = (projects: HTMLElement[], container: HTMLElement
  */
 const loadProjectCards =
   async (projects: Project[], container: HTMLElement, isProjectVisible: boolean) => {
-    const promiseResults = await Promise.allSettled(
+    const results = await Promise.allSettled(
       projects.map(project => {
         //create place holder project card and replace it when the acutal project loads.
         const placeHolder = createProjectPlaceholder();
@@ -119,7 +116,8 @@ const loadProjectCards =
           return card;
         }).catch(err => console.error(err));
       }));
-    return promiseResults;
+
+    return results.map(result => { if (result.status === 'fulfilled') return result.value }) as HTMLElement[];
   };
 
 /**

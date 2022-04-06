@@ -21,7 +21,7 @@ const beforeNavCallbacks: NavigationCallback[] = [];
 const afternavCallbacks: NavigationCallback[] = [];
 
 //hash values for routes
-export const [project, blog, contact, fallback] = ['#project', '#blog', '#contact', '#fallback'];
+export const [project, blog, contact, fallback] = ['#projects', '#blog', '#contacts', '#fallback'];
 
 let currentHash = project;
 let prevHash = project;
@@ -89,6 +89,7 @@ const navigateToHashRoute = (hash: string, storedHashRoutes = navigationRoutes) 
  */
 const addRoute =
   (hash: string, content: HTMLElement | null, navTab?: HTMLElement | null, before?: (() => void) | null, after?: (() => void) | null) => {
+    if (navTab) (<HTMLAnchorElement>navTab.querySelector('a')).href = hash;
     navigationRoutes.set(hash, () => {
       //set the tab associated with the path to be the selected tab.
       setSelectedTab(navTab || null);
@@ -138,15 +139,6 @@ const setSelectedTab = (tab: HTMLElement | null, selected = cssSelected, navItem
  * Toggle which tab gets displayed.
  */
 const toggleTab = (content: HTMLElement | null, hide = cssHide, transition = cssFadeIn) => {
-  // tabs.forEach(tab => {
-  //   if (tab.id === tabID) {
-  //     tab.classList.remove(cssHide);
-  //     tab.classList.add(cssFadeIn);
-  //   } else {
-  //     tab.classList.add(cssHide);
-  //     tab.classList.remove(cssFadeIn);
-  //   }
-  // });
   try {
     if (!content) return;
     const container = content.parentElement as HTMLElement;
