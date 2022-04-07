@@ -12,9 +12,9 @@
       "name": "Animate trace border",
       "title": "Trace Border",
       "repo": "https://github.com/seegg/trace-border-animation",
-      "url": "https://seegg.github.io/trace-border-animation/demo",
+      "url": "https://seegg.github.io/trace-border-animation/",
       "image": "../public/images/img1.png",
-      "description": "React wrapper component to animate tracing a border around wrapped contents."
+      "description": "React wrapper component to animate tracing a border around wrapped contents. Customise animation and border styles without touching any css or additional JS."
     },
     {
       "name": "Tournament brackets",
@@ -30,14 +30,14 @@
       "repo": "https://github.com/seegg/bounce",
       "url": "https://seegg.github.io/bounce",
       "image": "../public/images/bounce.png",
-      "description": "Drag and flings balls in a canvas, uses ellastic to model the collision between the balls. upload or link images to decorate the balls."
+      "description": "Drag and flings balls in a canvas. Uses ellastic to model the collision between the balls. upload or link images to decorate the balls."
     },
     {
       "name": "Budget Tracker API",
       "title": "Budget Tracker API",
       "repo": "https://github.com/seegg/budget-tracker",
       "url": "https://github.com/seegg/budget-tracker",
-      "description": "REST API for Budget Tracker app using Node and express."
+      "description": "REST API for Budget Tracker app made using Node and express."
     },
     {
       "name": "Calculator",
@@ -61,7 +61,7 @@
       "repo": "https://github.com/seegg/seegg.github.io",
       "url": "https://seegg.github.io/demo.html",
       "image": "../public/images/githubpage.png",
-      "description": "This web page, responsive, mobile first. Click link for test page with large number of cards."
+      "description": "This page, personal site with a playing card theme. responsive, mobile first. Click link for test page with large number of cards."
     }
   ],
   "test-projects": [

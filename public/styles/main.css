@@ -267,6 +267,8 @@ main {
   border-bottom-left-radius: var(--card-border-radius);
   background-color: var(--description-bg-colour);
   width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: darkgray;
   transition: background-color 0.25s ease-out;
 }
 
