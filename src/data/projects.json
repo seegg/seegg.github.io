@@ -30,7 +30,7 @@
       "repo": "https://github.com/seegg/bounce",
       "url": "https://seegg.github.io/bounce",
       "image": "../public/images/bounce.png",
-      "description": "Drag and flings balls in a canvas. Uses ellastic to model the collision between the balls. upload or link images to decorate the balls."
+      "description": "Drag and flings balls in a canvas. Uses ellastic collision to model the bounce between the balls. upload or link images to decorate the balls."
     },
     {
       "name": "Budget Tracker API",
