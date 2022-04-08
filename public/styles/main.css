@@ -46,7 +46,6 @@ a:visited {
 
 .intro * {
   user-select: none;
-  pointer-events: none;
 }
 
 .intro {
@@ -73,6 +72,8 @@ a:visited {
 @media screen and (min-width: 570px) {
   section .intro {
     height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
 }
 
