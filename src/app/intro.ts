@@ -3,6 +3,7 @@ import { loadImageCallback } from "../types";
 
 const content = document.getElementById('content');
 const introContainer = document.getElementById('intro-container');
+const scrollReminder = document.getElementById('scroll-reminder');
 const preload = [];
 
 export const intro = async () => {
@@ -15,9 +16,9 @@ export const intro = async () => {
       introContainer.classList.add('anim-fadein-long');
     }
   };
-  loadImage('../public/images/sunset.png', introBGCallback, introBGCallback);
 
   //preload images
+  loadImage('../public/images/sunset.png', introBGCallback, introBGCallback);
   preload.push(loadImage('../public/images/placeholder.png'), loadImage('../public/images/loading.svg'));
 
   changeContentOpacityOnHeightShown();
@@ -31,6 +32,13 @@ export const intro = async () => {
     changeContentOpacityOnHeightShown();
     showScrollReminder();
   }, false);
+
+  scrollReminder?.addEventListener('click', () => {
+    window.scrollTo({
+      top: introContainer?.getBoundingClientRect().height,
+      behavior: 'smooth'
+    })
+  })
 
 };
 
@@ -54,8 +62,8 @@ const changeContentOpacityOnHeightShown = (threshold = 500) => {
 const showScrollReminder = () => {
   if (!content) return;
   if (window.innerHeight - content.getBoundingClientRect().top > 0) {
-    document.getElementById('scroll-reminder')?.classList.remove('show-scroll');
+    scrollReminder?.classList.remove('show-scroll');
   } else {
-    document.getElementById('scroll-reminder')?.classList.add('show-scroll');
+    scrollReminder?.classList.add('show-scroll');
   }
 };
