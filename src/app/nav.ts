@@ -2,7 +2,6 @@ import { NavigationCallback } from "../types";
 import { openDeck, closeDeck } from '../card'
 import { SyncAutoQueue } from "../util";
 
-console.log('nav');
 const navTabs = Array.from(document.getElementsByClassName('tab-nav')) as HTMLElement[];
 
 export const navBar = document.getElementById('tab-nav-bar');

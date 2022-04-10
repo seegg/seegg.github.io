@@ -18,14 +18,8 @@ export const createProjectCard =
     const projectContainer = createElementWithClasses('section', 'project-card', 'anim-open-deck');
     projectContainer.tabIndex = -1;
 
-    //link to repo with github logo
-    const repoLink = createTopNavIcons(project);
-    // projectContainer.appendChild(repoLink);
-
-    //container for the project image and project details
-    // const secondArticle = createElementWithClasses('article', 'project');
-    const secondArticle = createInfoCard(project);
-    // projectContainer.appendChild(secondArticle);
+    const repoLink = createTopNavIcons(project);//link to repo with github log
+    const secondArticle = createInfoCard(project);//container for the project image and project details
     projectContainer.append(repoLink, secondArticle);
 
     //remove selected status from the card when an external link is clicked.
@@ -38,10 +32,7 @@ export const createProjectCard =
     /**
      * Wrapper for addListener function
      */
-    const addListenerToComponent = (
-      eventType: keyof HTMLElementEventMap,
-      state: InputState,
-      input?: InputType) => {
+    const addListenerToComponent = (eventType: keyof HTMLElementEventMap, state: InputState, input?: InputType) => {
       const callback = () => { animateMouseEnterArticle(secondArticle, repoLink, projectContainer, state); };
       addListener(projectContainer, eventType, callback, contentContainer, input);
     }

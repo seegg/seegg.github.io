@@ -28,7 +28,7 @@ let removeIntroListener: (() => void) | null = null;
 export const loadProjects = async (isDemo = false) => {
 
   if (projectsContainer && contentContainer) {
-    //clean up
+    //clean up, remove any listeners associated with old project cards.
     removeResizeListener?.();
     removeIntroListener?.();
 
@@ -43,14 +43,15 @@ export const loadProjects = async (isDemo = false) => {
 
     //Calculate initial width of project container.
     setprojectsContainerWidth(projects.length, fullCardWidth, partialCardWidth, maxWidth, minWidth);
-    removeResizeListener = changeWidthOnResize(projects);
+    removeResizeListener = changeWidthOnResize(projects); //add resize event listener and return remove function.
 
     //project is consider visible when it's pass the threshold in px.
     const isProjectVisible = window.innerHeight - projectsContainer.getBoundingClientRect().top >= visibleHeightThreshold;
 
     const projectCards = await loadProjectCards(projects, projectsContainer, isProjectVisible);
-    //add a scroll to trigger the opening deck transition if cards are initially out of view.
     if (!isProjectVisible) {
+      //add a scroll event listener to trigger the opening deck transition if cards are initially out of view.
+      //returns function to remove the listener for clean up.
       removeIntroListener = cardIntroScrollListener(projectCards, projectsContainer);
     }
     //wait until all cards are loaded before adding the scrolling deck effect for small screens.
@@ -70,7 +71,7 @@ export const loadProjects = async (isDemo = false) => {
  */
 const changeWidthOnResize =
   (projects: Project[], cardWidthMax = fullCardWidth, cardWidthPartial = partialCardWidth, max = maxWidth, min = minWidth) => {
-    const handleResize = () => { setprojectsContainerWidth(projects?.length, cardWidthMax, cardWidthPartial, max, min); console.log('resie') };
+    const handleResize = () => { setprojectsContainerWidth(projects?.length, cardWidthMax, cardWidthPartial, max, min); };
     window.addEventListener('resize', handleResize);
     return () => { window.removeEventListener('resize', handleResize) };
   };
