@@ -61,7 +61,7 @@ const changeContentOpacityOnHeightShown = (threshold = 500) => {
  */
 const showScrollReminder = () => {
   if (!content) return;
-  if (window.innerHeight - content.getBoundingClientRect().top > 0) {
+  if (window.innerHeight - content.getBoundingClientRect().top > 100) {
     scrollReminder?.classList.remove('show-scroll');
   } else {
     scrollReminder?.classList.add('show-scroll');
