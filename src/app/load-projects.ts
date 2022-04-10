@@ -105,7 +105,7 @@ const loadProjectCards =
         container.appendChild(placeHolder);
 
         return new Promise<HTMLElement>(resolve => {
-          resolve(createProjectCard(project, container));
+          resolve(createProjectCard(project));
         }).then((card) => {
           //toggle the card to 'close' state if it was not on screen when created.
           //replace the placeholder with actual card once card is ready.

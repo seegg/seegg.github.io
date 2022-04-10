@@ -10,7 +10,7 @@ type InputType = 'touch' | 'mouse';
  * @returns 
  */
 export const createProjectCard =
-  (project: Project, contentContainer: HTMLElement, focusWidth = 570): HTMLElement => {
+  (project: Project, focusWidth = 570): HTMLElement => {
     //project container 
     const projectContainer = createElementWithClasses('section', 'project-card', 'anim-open-deck');
     projectContainer.tabIndex = -1;
@@ -40,7 +40,7 @@ export const createProjectCard =
     const addListenerToComponent = (
       component: HTMLElement, eventType: keyof HTMLElementEventMap, state: InputState, input?: InputType) => {
       const callback = () => { animateMouseEnterArticle(secondArticle, repoLink, projectContainer, state); };
-      addListener(component, eventType, callback, contentContainer, input);
+      addListener(component, eventType, callback, <HTMLElement>document.getElementById('content'), input);
     }
 
     //animate the log and article body when mousing over it.
@@ -48,7 +48,7 @@ export const createProjectCard =
       if (window.innerWidth >= focusWidth) projectContainer.focus();
       animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
     };
-    addListenerToComponent(projectContainer, 'pointerleave', 'leaving', 'mouse');
+    // addListenerToComponent(projectContainer, 'pointerleave', 'leaving', 'mouse');
     addListenerToComponent(projectContainer, 'pointercancel', 'leaving');
     addListenerToComponent(projectContainer, 'blur', 'leaving', 'touch');
     addListenerToComponent(projectContainer, 'focus', 'entering', 'touch');
