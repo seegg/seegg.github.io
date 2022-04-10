@@ -4,6 +4,9 @@ import { Project } from "../types";
 type InputState = 'entering' | 'leaving';
 type InputType = 'touch' | 'mouse';
 
+
+const contentContainer = <HTMLElement>document.getElementById('content');
+
 /**
  * Create the product card to display a project.
  * @param project 
@@ -16,16 +19,14 @@ export const createProjectCard =
     projectContainer.tabIndex = -1;
 
     //link to repo with github logo
-    const repoLink = createElementWithClasses('nav', 'nav-project', 'anim-fadein-long');
-    const gitHubLink = createNavItem(project.repo || '#', "../public/images/GitHub-Mark-Light-32px.png", 'nav-icon');
-    repoLink.appendChild(gitHubLink);
-    //external link for project, if any.
-    const link = createNavItem(project.url || '#', '../public/images/link.png', 'nav-icon');
-    repoLink.prepend(link);
-    projectContainer.appendChild(repoLink);
+    const repoLink = createTopNavIcons(project);
+    // projectContainer.appendChild(repoLink);
 
     //container for the project image and project details
-    const secondArticle = createElementWithClasses('article', 'project');
+    // const secondArticle = createElementWithClasses('article', 'project');
+    const secondArticle = createInfoCard(project);
+    // projectContainer.appendChild(secondArticle);
+    projectContainer.append(repoLink, secondArticle);
 
     //remove selected status from the card when an external link is clicked.
     repoLink.childNodes.forEach(child => {
@@ -38,38 +39,57 @@ export const createProjectCard =
      * Wrapper for addListener function
      */
     const addListenerToComponent = (
-      component: HTMLElement, eventType: keyof HTMLElementEventMap, state: InputState, input?: InputType) => {
+      eventType: keyof HTMLElementEventMap,
+      state: InputState,
+      input?: InputType) => {
       const callback = () => { animateMouseEnterArticle(secondArticle, repoLink, projectContainer, state); };
-      addListener(component, eventType, callback, <HTMLElement>document.getElementById('content'), input);
+      addListener(projectContainer, eventType, callback, contentContainer, input);
     }
 
-    //animate the log and article body when mousing over it.
+    //animate the log and article body when mousing over it. set focus on the element for touch events.
     secondArticle.onpointerenter = () => {
       if (window.innerWidth >= focusWidth) projectContainer.focus();
       animateMouseEnterArticle(secondArticle, repoLink, projectContainer, 'entering');
     };
-    // addListenerToComponent(projectContainer, 'pointerleave', 'leaving', 'mouse');
-    addListenerToComponent(projectContainer, 'pointercancel', 'leaving');
-    addListenerToComponent(projectContainer, 'blur', 'leaving', 'touch');
-    addListenerToComponent(projectContainer, 'focus', 'entering', 'touch');
-
-    const projectImg = project.image ? project.image : null;
-    // image for the project
-    const imgWrapper: HTMLDivElement = createProjectImage(projectImg);
-    secondArticle.appendChild(imgWrapper);
-
-    //inner article for descriptions
-    const innerArticle = createElementWithClasses('article', 'project-description');
-
-    innerArticle.innerHTML = `<h4 class="project-title"><a href="${project.url}"><span class="material-icons">link</span></a>${project.name}</h4><p>${project.description}</p>`
-    secondArticle.appendChild(innerArticle);
-    projectContainer.appendChild(secondArticle);
+    //handling different events and conditions
+    addListenerToComponent('pointerleave', 'leaving', 'mouse');
+    addListenerToComponent('pointercancel', 'leaving');
+    addListenerToComponent('blur', 'leaving', 'touch');
+    addListenerToComponent('focus', 'entering', 'touch');
 
     return projectContainer;
   };
 
+const createTopNavIcons = (project: Project) => {
+  const repoLink = createElementWithClasses('nav', 'nav-project', 'anim-fadein-long');
+  const gitHubLink = createNavItem(project.repo || '#', "../public/images/GitHub-Mark-Light-32px.png", 'nav-icon');
+  repoLink.appendChild(gitHubLink);
+  //external link for project, if any.
+  const link = createNavItem(project.url || '#', '../public/images/link.png', 'nav-icon');
+  repoLink.prepend(link);
+  return repoLink;
+};
+
 /**
- * wrapper for animating the enter and leave effects for the card.
+ * The part of the card below the nav icons.
+ */
+const createInfoCard = (project: Project) => {
+  //container for the project image and project details
+  const infoCard = createElementWithClasses('article', 'project');
+  const projectImg = project.image ? project.image : null;
+  const imgWrapper: HTMLDivElement = createProjectImage(projectImg);
+  infoCard.appendChild(imgWrapper);
+
+  //inner article for descriptions
+  const innerArticle = createElementWithClasses('article', 'project-description');
+
+  innerArticle.innerHTML = `<h4 class="project-title"><a href="${project.url}"><span class="material-icons">link</span></a>${project.name}</h4><p>${project.description}</p>`
+  infoCard.appendChild(innerArticle);
+  return infoCard;
+}
+
+/**
+ * Helper function for animation and transitions for the project card.
  */
 const animateMouseEnterArticle =
   (article: HTMLElement, repoLink: HTMLElement, container: HTMLElement, state: InputState, widthThreshold = 570) => {
@@ -80,6 +100,7 @@ const animateMouseEnterArticle =
       repoLink.classList.add('nav-project-moveY');
       logoImgs.forEach(img => img.classList.add('nav-icon-partial'));
       container.classList.add('full-card-size');
+      //move the card to the top after 350ms if it's still selected.
       setTimeout(() => {
         if (container.classList.contains('full-card-size')) {
           container.classList.add('z-20', 'overlay-card-size');
