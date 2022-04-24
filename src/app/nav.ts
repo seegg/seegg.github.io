@@ -2,6 +2,8 @@ import { NavigationCallback } from "../types";
 import { openDeck, closeDeck } from '../card'
 import { SyncAutoQueue } from "../util";
 
+type RouteCallback = (target: HTMLElement | null) => void;
+
 const navTabs = Array.from(document.getElementsByClassName('tab-nav')) as HTMLElement[];
 
 export const navBar = document.getElementById('tab-nav-bar');
@@ -20,7 +22,7 @@ const beforeNavCallbacks: NavigationCallback[] = [];
 const afternavCallbacks: NavigationCallback[] = [];
 
 //hash values for routes
-export const [project, blog, contact, fallback] = ['#project', '#blog', '#contacts', '#fallback'];
+export const [project, blog, contact, fallback] = ['#projects', '#blog', '#contacts', '#fallback'];
 
 let currentHash = project;
 let prevHash = project;
@@ -44,21 +46,21 @@ export const setUpNavBar = async (widthThreshold = 570) => {
     navigateToHashRoute(hash);
   });
 
-  //registering routes.
 
-  //add a self removing callback that plays the leaving transition when navigating away from projects.
-  addRoute(project, document.getElementById('projects-wrapper'), navTabs[0],
-    null,
-    async () => {
-      await openDeck(document.getElementById('projects-wrapper'));
-      addNavCallback(function playLeaveTransition() {
-        if (window.innerWidth >= widthThreshold) {
-          addItemToNavigationQueue(async () => { await closeDeck(document.getElementById('projects-wrapper')); });
-        }
-        removeNavCallback(playLeaveTransition, 'before');
-      }, 'before');
-    }
-  );
+  //function to play the open/close deck transition when navigating to and from portfolio.
+  const portfolioTransition: RouteCallback = async (target: HTMLElement | null) => {
+    await openDeck(target);
+    //self removing callback for away transition
+    addNavCallback(function playLeaveTransition() {
+      if (window.innerWidth >= widthThreshold) {
+        addItemToNavigationQueue(async () => { await closeDeck(target); });
+      }
+      removeNavCallback(playLeaveTransition, 'before');
+    }, 'before');
+  }
+
+  //registering routes.
+  addRoute(project, document.getElementById('projects-wrapper'), navTabs[0], null, portfolioTransition);
 
   addRoute(blog, document.getElementById('about'), navTabs[1],);
 
@@ -84,29 +86,35 @@ const navigateToHashRoute = (hash: string, storedHashRoutes = navigationRoutes) 
 };
 
 /**
- * Wrapper function for adding hash route entries
+ * 
+ * @param hash hash string for the route
+ * @param content content for the route
+ * @param navTab navigation menu icon
+ * @param before callbacks before naviagtion
+ * @param after callbacks after navitagion
  */
 const addRoute =
-  (hash: string, content: HTMLElement | null, navTab?: HTMLElement | null, before?: (() => void) | null, after?: (() => void) | null) => {
+  (hash: string, content: HTMLElement | null, navTab?: HTMLElement | null,
+    before?: RouteCallback | null, after?: RouteCallback | null) => {
     if (navTab) (<HTMLAnchorElement>navTab.querySelector('a')).href = hash;
     navigationRoutes.set(hash, () => {
       //set the tab associated with the path to be the selected tab.
       setSelectedTab(navTab || null);
       prevHash = currentHash;
       //trigger callbacks that are to be ran at the start of navigation.
-      beforeNavCallbacks.forEach(callback => { callback(prevHash, hash) });
+      beforeNavCallbacks.forEach(callback => { callback(prevHash, hash, content) });
       addItemToNavigationQueue(
         //navigate to selected content.
         () => { toggleTab(content) },
         //before and after callback functions.
         async () => {
-          if (before) await before();
+          if (before) await before(content);
         },
         async () => {
           //trigger callbacks for end of navigation.
-          afternavCallbacks.forEach(callback => { callback(currentHash, hash) });
+          afternavCallbacks.forEach(callback => { callback(currentHash, hash, content) });
           currentHash = hash;
-          if (after) await after();
+          if (after) await after(content);
         });
     });
   };

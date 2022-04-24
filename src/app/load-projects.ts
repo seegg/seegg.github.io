@@ -3,7 +3,7 @@ import { getProjects } from "../data";
 import { Project } from "../types";
 import { attachLoadingScreen } from "../util";
 
-const projectsContainer = document.getElementById('projects');
+const projectsContainer = document.getElementById('project');
 const contentContainer = document.getElementById('content');
 
 //project card dimensions.
