@@ -47,7 +47,7 @@ export const setUpNavBar = async (widthThreshold = 570) => {
   });
 
 
-  //function to play the open/close deck transition when navigating to and from portfolio.
+  //play the open/close deck transition when navigating to and from portfolio.
   const portfolioTransition: RouteCallback = async (target: HTMLElement | null) => {
     await openDeck(target);
     //self removing callback for away transition
