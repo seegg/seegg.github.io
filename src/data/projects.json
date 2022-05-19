@@ -6,7 +6,7 @@
       "repo": "https://github.com/seegg/safe-houses",
       "url": "https://tuohunga.herokuapp.com/",
       "image": "../public/images/home.png",
-      "description": "Nodejs web application for managing safe house informations. Built using react and express.it uses multi tier user roles for access control. Test logins: generaluser@safehouse.com, pw: generalUser!"
+      "description": "Web application for managing safe house information. Uses user roles for access control. React, Express, and PostgreSQL. Test logins: generaluser@safehouse.com pw: generalUser!"
     },
     {
       "name": "Animate trace border",
