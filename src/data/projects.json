@@ -14,7 +14,7 @@
       "repo": "https://github.com/seegg/trace-border-animation",
       "url": "https://seegg.github.io/trace-border-animation/",
       "image": "../public/images/img1.png",
-      "description": "React wrapper component to animate tracing a border around wrapped contents. Customise animation and border styles without touching any css or additional JS."
+      "description": "React wrapper component to animate tracing a border around child contents. Customise animation and border styles without touching any css or additional JS."
     },
     {
       "name": "Tournament brackets",
